@@ -1,0 +1,19 @@
+extend type Mutation {
+  addMediaDownload(url: String!, destinationKey: String!): Progress!
+  createMedia(key: String!, data: String!): Boolean!
+}
+
+extend type Query {
+  mediaItems(dir: String!): [MediaItem!]!
+}
+
+type MediaItem {
+  key: String!
+  type: MediaItemType!
+}
+
+enum MediaItemType {
+  file
+  directory
+  series
+}

@@ -1,0 +1,24 @@
+extend type Mutation {
+  fetchSteamGames: Progress!
+}
+
+extend type Query {
+  steamGames(page: Int!, search: String!): [SteamGame!]!
+  steamPlayer(steamId64: String!): SteamPlayer!
+  steamPlayers(steamIds64: [String!]!): [SteamPlayer!]!
+}
+
+type SteamGame {
+  _id: Int!
+  name: String!
+}
+
+type SteamPlayer {
+  _id: String!
+  nickname: String!
+  avatarUrl: String!
+  profileUrl: String!
+
+  playingGame: SteamGame
+  ownedGames: [SteamGame!]!
+}

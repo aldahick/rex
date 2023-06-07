@@ -1,0 +1,3 @@
+src/graphql.ts
+*.d.ts
+*.js

@@ -1,0 +1,13 @@
+overwrite: true
+schema: "${API_URL:http://localhost:8080}/graphql"
+generates:
+  src/graphql.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+    config:
+      maybeValue: T | undefined
+      typesPrefix: I
+      scalars:
+        DateTime: Date
+        Upload: File

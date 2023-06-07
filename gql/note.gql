@@ -1,0 +1,17 @@
+extend type Mutation {
+  createNote(title: String!): Note!
+  removeNote(id: String!): Boolean!
+  updateNoteBody(id: String!, body: String!): Boolean!
+}
+
+extend type Query {
+  note(id: String!): Note!
+  notes: [Note!]!
+}
+
+type Note {
+  _id: String!
+  createdAt: DateTime!
+  title: String!
+  body: String!
+}
