@@ -1,25 +1,26 @@
-import { LoggerService } from "@athenajs/core";
-import { injectable } from "@athenajs/core";
-import * as Gamedig from "gamedig";
-import * as _ from "lodash";
-import * as pluralize from "pluralize";
+import { Logger } from "@athenajs/core";
+import { Message } from "discord.js";
+import Gamedig from "gamedig";
+import pluralize from "pluralize";
 import * as url from "url";
 
-import { discordCommand, DiscordPayload } from "../../registry/discord";
+import {
+  DiscordCommand,
+  discordCommand,
+} from "../../service/discord.service.js";
 
-@singleton()
-export class PlayersCommand {
-  constructor(private readonly logger: LoggerService) {}
-
-  @discordCommand("players", {
-    helpText:
-      "Tells you who's playing on a given server IP (works with lots of games).",
-  })
-  async players({
-    args: [serverUrl],
-    command,
-    message,
-  }: DiscordPayload): Promise<string | undefined> {
+@discordCommand()
+export class PlayersCommand implements DiscordCommand {
+  readonly command = "players";
+  readonly helpText =
+    "Tells you who's playing on a given server IP. (Works with lots of games!)";
+  constructor(private readonly logger: Logger) {}
+  async handle(
+    message: Message<boolean>,
+    args: string[],
+    command: string
+  ): Promise<string | undefined> {
+    const [serverUrl] = args;
     if (!serverUrl) {
       return `Usage: ${command} <game>://<host>:[port] (example: ${command} minecraft://tiin57.net:25565) (port is not required)`;
     }
@@ -36,14 +37,16 @@ export class PlayersCommand {
         port: Number(port),
       }).then((r) => r.players);
     } catch (err) {
-      this.logger.error(err, { serverUrl }, "discord.players");
-      await res.edit(err instanceof Error ? err.message : err);
+      this.logger.error("failed to query server for players command: " + err);
+      await res.edit(err instanceof Error ? err.message : (err as string));
       return;
     }
-    const playerNames = _.sortBy(
-      players.map((p) => p.name ?? ""),
-      (n) => n.toLowerCase()
-    ).filter((n) => !!n.trim());
+    const playerNames = players
+      .map((p) => p.name ?? "")
+      .sort((a, b) =>
+        a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+      )
+      .filter((n) => !!n.trim());
     await res.edit(
       `
 There are ${playerNames.length} ${pluralize(

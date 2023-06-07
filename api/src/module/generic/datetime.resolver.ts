@@ -1,10 +1,9 @@
-import { scalar } from "@athenajs/core";
-import { injectable } from "@athenajs/core";
+import { resolveField, resolver } from "@athenajs/core";
 import { GraphQLError, GraphQLScalarType } from "graphql";
 
-@singleton()
+@resolver()
 export class DateTimeScalarResolver {
-  @scalar("DateTime")
+  @resolveField("DateTime")
   dateTime = new GraphQLScalarType({
     name: "DateTime",
     serialize: (date: Date): string => {

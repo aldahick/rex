@@ -9,20 +9,10 @@ import "./module/role/index.js";
 import "./module/steam/index.js";
 import "./module/user/index.js";
 
-import { container, createApp } from "@athenajs/core";
-
-import { DiscordRegistry } from "./registry/discord/index.js";
-import { DatabaseService } from "./service/database/index.js";
+import { createApp } from "@athenajs/core";
 
 const main = async (): Promise<void> => {
   const app = createApp();
-  const discordRegistry = container.resolve(DiscordRegistry);
-  await discordRegistry.init();
-  // TODO on server close, stop discord bot
-
-  const db = container.resolve(DatabaseService);
-  await db.init();
-
   await app.start();
 };
 

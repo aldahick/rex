@@ -11,7 +11,7 @@
     "docker:build": "bash scripts/docker-build.sh",
     "lint": "eslint src",
     "generate:graphql": "graphql-codegen --config codegen.graphql.yml",
-    "db": "ts-node --esm src/service/database/orchid-cli.ts"
+    "db": "ts-node --esm src/util/orchid.ts"
   },
   "repository": {
     "type": "git",
@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/aldahick/rex#readme",
   "dependencies": {
-    "@athenajs/core": "^0.0.12",
+    "@athenajs/core": "^0.0.13",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "discord.js": "^14.11.0",

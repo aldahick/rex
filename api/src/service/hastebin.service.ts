@@ -1,7 +1,7 @@
 import { injectable } from "@athenajs/core";
 import axios from "axios";
 
-@singleton()
+@injectable()
 export class HastebinService {
   /** returns url */
   async create(body: string): Promise<string> {

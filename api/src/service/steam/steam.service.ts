@@ -2,16 +2,17 @@ import { injectable } from "@athenajs/core";
 import axios from "axios";
 import { resolve as resolveUrl } from "url";
 
-import { ConfigService } from "../config";
-import * as IPlayerService from "./dto/IPlayerService";
-import * as ISteamUser from "./dto/ISteamUser";
-import { SteamPlayer } from "./SteamPlayer";
+import { Config } from "../../config.js";
+import { GetOwnedGames } from "./dto/GetOwnedGames.js";
+import { GetPlayerSummaries } from "./dto/GetPlayerSummaries.js";
+import { ResolveVanityUrl } from "./dto/ResolveVanityUrl.js";
+import { SteamPlayer } from "./SteamPlayer.js";
 
 const BASE_URL = "https://api.steampowered.com";
 
-@singleton()
+@injectable()
 export class SteamService {
-  constructor(private readonly config: ConfigService) {}
+  constructor(private readonly config: Config) {}
 
   async getAllGames(): Promise<{ id: number; name: string }[]> {
     const url = resolveUrl(BASE_URL, "/ISteamApps/GetAppList/v2/");
@@ -32,7 +33,7 @@ export class SteamService {
       data: {
         response: { players },
       },
-    } = await axios.get<ISteamUser.GetPlayerSummaries>(
+    } = await axios.get<GetPlayerSummaries>(
       url +
         new URLSearchParams({
           key: this.apiKey,
@@ -62,7 +63,7 @@ export class SteamService {
       data: {
         response: { games },
       },
-    } = await axios.get<IPlayerService.GetOwnedGames>(
+    } = await axios.get<GetOwnedGames>(
       url +
         new URLSearchParams({
           key: this.apiKey,
@@ -80,7 +81,7 @@ export class SteamService {
       data: {
         response: { steamid },
       },
-    } = await axios.get<ISteamUser.ResolveVanityUrl>(
+    } = await axios.get<ResolveVanityUrl>(
       url +
         new URLSearchParams({
           key: this.apiKey,

@@ -1,2 +1,2 @@
-export * from "./steam.service";
-export * from "./SteamPlayer";
+export * from "./steam.service.js";
+export * from "./SteamPlayer.js";
