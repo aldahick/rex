@@ -1,34 +1,47 @@
-import { MongoService } from "@athenajs/core";
 import { injectable } from "@athenajs/core";
-import { ReturnModelType } from "@typegoose/typegoose";
+import { DbTable, OrchidORM, orchidORM } from "orchid-orm";
 
-import { Progress } from "../../model";
-import { Role } from "../../model";
-import { SteamGame } from "../../module/steam/model";
-import { User } from "../../module/user/model";
-import { ConfigService } from "../config";
+import { Config } from "../../config.js";
+import { ProgressTable } from "../../model/progress.model.js";
+import { ProgressLogTable } from "../../model/progressLog.model.js";
+import { RoleTable } from "../../model/role.model.js";
+import { SteamGameTable } from "../../model/steamGame.model.js";
+import { UserTable } from "../../model/user.model.js";
+import { UserNoteTable } from "../../model/userNote.model.js";
 
-@singleton()
-export class DatabaseService {
-  progress!: ReturnModelType<typeof Progress>;
+const tables = {
+  progress: ProgressTable,
+  progressLogs: ProgressLogTable,
+  roles: RoleTable,
+  steamGames: SteamGameTable,
+  users: UserTable,
+  userNotes: UserNoteTable,
+};
+type DbTables = {
+  [Key in keyof typeof tables]: DbTable<(typeof tables)[Key]>;
+};
 
-  roles!: ReturnModelType<typeof Role>;
+@injectable()
+export class DatabaseService extends OrchidORM {
+  readonly orm: OrchidORM<typeof tables>;
 
-  steamGames!: ReturnModelType<typeof SteamGame>;
+  readonly progress;
+  readonly users: DbTables["users"];
 
-  users!: ReturnModelType<typeof User>;
+  constructor(config: Config) {
+    this.orm = orchidORM(
+      {
+        databaseURL: config.postgresUrl,
+        log: false,
+      },
+      tables
+    );
 
-  constructor(
-    private readonly config: ConfigService,
-    private readonly mongo: MongoService
-  ) {}
-
-  async init(): Promise<void> {
-    await this.mongo.init(this.config.mongoUrl);
-
-    this.progress = this.mongo.getModel(Progress, "progress");
-    this.steamGames = this.mongo.getModel(SteamGame, "steamGames");
-    this.roles = this.mongo.getModel(Role, "roles");
-    this.users = this.mongo.getModel(User, "users");
+    this.medias = this.orm.medias;
+    this.mediaAudios = this.orm.mediaAudios;
+    this.mediaStoryChapters = this.orm.mediaStoryChapters;
+    this.mediaFavorites = this.orm.mediaFavorites;
+    this.mediaTags = this.orm.mediaTags;
+    this.users = this.orm.users;
   }
 }

@@ -10,7 +10,8 @@
     "build": "tsc",
     "docker:build": "bash scripts/docker-build.sh",
     "lint": "eslint src",
-    "generate:graphql": "graphql-codegen --config codegen.graphql.yml"
+    "generate:graphql": "graphql-codegen --config codegen.graphql.yml",
+    "db": "ts-node --esm src/service/database/orchid-cli.ts"
   },
   "repository": {
     "type": "git",
@@ -55,6 +56,7 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "prettier": "^2.8.8",
     "rake-db": "^2.8.44",
+    "ts-node": "^10.9.1",
     "tsc-watch": "^6.0.4",
     "typescript": "^5.1.3"
   }

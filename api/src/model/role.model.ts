@@ -8,4 +8,13 @@ export class RoleTable extends BaseTable {
     name: t.varchar(),
     permissions: t.array(t.varchar()),
   }));
+  relations = {
+    roles: this.hasAndBelongsToMany(() => RoleTable, {
+      primaryKey: "id",
+      foreignKey: "roleId",
+      associationPrimaryKey: "id",
+      associationForeignKey: "userId",
+      joinTable: "user_roles",
+    }),
+  };
 }
