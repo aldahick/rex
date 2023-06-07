@@ -1,24 +1,25 @@
-import * as bcrypt from "bcrypt";
 import { injectable } from "@athenajs/core";
+import * as bcrypt from "bcrypt";
 
 import { DatabaseService } from "../../service/database";
 import { User } from "./model";
 
 @singleton()
 export class UserPasswordManager {
-  constructor(
-    private readonly db: DatabaseService
-  ) { }
+  constructor(private readonly db: DatabaseService) {}
 
   async set(user: User, password: string): Promise<void> {
     const hash = await this.hash(password);
-    await this.db.users.updateOne({
-      _id: user._id
-    }, {
-      $set: {
-        "auth.passwordHash": hash
+    await this.db.users.updateOne(
+      {
+        _id: user._id,
+      },
+      {
+        $set: {
+          "auth.passwordHash": hash,
+        },
       }
-    });
+    );
   }
 
   hash(password: string): Promise<string> {

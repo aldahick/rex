@@ -1,6 +1,6 @@
 import { LoggerService } from "@athenajs/core";
-import { Message } from "discord.js";
 import { injectable } from "@athenajs/core";
+import { Message } from "discord.js";
 
 import { discordCommand, DiscordPayload } from "../../registry/discord";
 import { ConfigService } from "../../service/config";
@@ -12,13 +12,22 @@ export class LeagueCommand {
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
     private readonly leagueManager: LeagueManager
-  ) { }
+  ) {}
 
   @discordCommand(["league", "lol", "ub", "ultimateBravery"], {
-    helpText: "Do things with League of Legends"
+    helpText: "Do things with League of Legends",
   })
-  async league({ args, command, message }: DiscordPayload): Promise<string | undefined> {
-    if (["ub", "ultimatebravery"].some(c => command.toLowerCase().endsWith(c)) || args[0]?.toLowerCase() === "ub") {
+  async league({
+    args,
+    command,
+    message,
+  }: DiscordPayload): Promise<string | undefined> {
+    if (
+      ["ub", "ultimatebravery"].some((c) =>
+        command.toLowerCase().endsWith(c)
+      ) ||
+      args[0]?.toLowerCase() === "ub"
+    ) {
       await this.createUltimateBravery(message);
       return;
     }
@@ -29,7 +38,9 @@ export class LeagueCommand {
     const response = await message.reply("Creating lobby...");
     try {
       const url = await this.leagueManager.createUltimateBravery();
-      await response.edit(`Here's your lobby, <@${message.author.id}>: <${url}>`);
+      await response.edit(
+        `Here's your lobby, <@${message.author.id}>: <${url}>`
+      );
     } catch (err) {
       this.logger.error(err, "discord.league.ultimateBravery");
       if (err instanceof Error) {

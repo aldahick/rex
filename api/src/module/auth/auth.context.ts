@@ -19,10 +19,7 @@ export class AuthContext implements BaseAuthContext {
 
   private _roles?: Role[];
 
-  constructor(
-    readonly req: Request,
-    private payload?: IAuthTokenPayload
-  ) { }
+  constructor(readonly req: Request, private payload?: IAuthTokenPayload) {}
 
   setPayload(payload: IAuthTokenPayload): void {
     this.payload = payload;

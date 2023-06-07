@@ -1,5 +1,5 @@
-import axios from "axios";
 import { injectable } from "@athenajs/core";
+import axios from "axios";
 
 const STATIC_URL = "https://static.developer.riotgames.com";
 
@@ -11,12 +11,15 @@ export class LeagueService {
     if (this.maps) {
       return this.maps;
     }
-    this.maps = (await axios.get<{
-      mapId: number;
-      mapName: string;
-      notes: string;
-    }[]>(`${STATIC_URL}/docs/lol/maps.json`)).data
-      .map(m => ({ id: m.mapId, name: m.mapName }));
+    this.maps = (
+      await axios.get<
+        {
+          mapId: number;
+          mapName: string;
+          notes: string;
+        }[]
+      >(`${STATIC_URL}/docs/lol/maps.json`)
+    ).data.map((m) => ({ id: m.mapId, name: m.mapName }));
     return this.maps;
   }
 }

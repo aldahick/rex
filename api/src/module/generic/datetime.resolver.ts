@@ -1,6 +1,6 @@
 import { scalar } from "@athenajs/core";
-import { GraphQLError, GraphQLScalarType } from "graphql";
 import { injectable } from "@athenajs/core";
+import { GraphQLError, GraphQLScalarType } from "graphql";
 
 @singleton()
 export class DateTimeScalarResolver {
@@ -12,6 +12,6 @@ export class DateTimeScalarResolver {
         throw new GraphQLError("can't serialize non-Date value as DateTime");
       }
       return date.toISOString();
-    }
+    },
   });
 }

@@ -1,4 +1,4 @@
-import { createBaseTable } from 'orchid-orm';
+import { createBaseTable } from "orchid-orm";
 
 export const BaseTable = createBaseTable({
   columnTypes: (t) => ({

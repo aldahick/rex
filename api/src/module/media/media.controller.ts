@@ -1,7 +1,12 @@
-import { controller, ControllerPayload, guard, HttpError } from "@athenajs/core";
+import {
+  controller,
+  ControllerPayload,
+  guard,
+  HttpError,
+} from "@athenajs/core";
+import { injectable } from "@athenajs/core";
 import * as _ from "lodash";
 import * as mime from "mime";
-import { injectable } from "@athenajs/core";
 
 import { AuthContext } from "../auth";
 import { User } from "../user";
@@ -11,14 +16,12 @@ const HTTP_PARTIAL_CODE = 206;
 
 @singleton()
 export class MediaController {
-  constructor(
-    private readonly mediaManager: MediaManager
-  ) { }
+  constructor(private readonly mediaManager: MediaManager) {}
 
   @guard({
     resource: "mediaItem",
     action: "readOwn",
-    attributes: "content"
+    attributes: "content",
   })
   @controller("get", "/v1/media/content")
   async handle(payload: ControllerPayload<AuthContext>): Promise<void> {
@@ -39,11 +42,18 @@ export class MediaController {
     }
 
     const { start, end } = await this.sendHeaders(payload, user, key);
-    const stream = this.mediaManager.createReadStream(user, key, { start, end });
+    const stream = this.mediaManager.createReadStream(user, key, {
+      start,
+      end,
+    });
     stream.pipe(res);
   }
 
-  private async sendHeaders({ req, res }: ControllerPayload<AuthContext>, user: User, key: string): Promise<{ start: number; end?: number }> {
+  private async sendHeaders(
+    { req, res }: ControllerPayload<AuthContext>,
+    user: User,
+    key: string
+  ): Promise<{ start: number; end?: number }> {
     const mimeType = mime.getType(key) ?? "text/plain";
     let start = 0;
     let end: number | undefined;
@@ -53,7 +63,9 @@ export class MediaController {
 
     const size = await this.mediaManager.getSize(user, key);
     if (req.headers.range !== undefined) {
-      [start, end] = _.compact(req.headers.range.replace("bytes=", "").split("-")).map(Number);
+      [start, end] = _.compact(
+        req.headers.range.replace("bytes=", "").split("-")
+      ).map(Number);
     }
     if (end === undefined) {
       end = size - 1;
@@ -63,7 +75,7 @@ export class MediaController {
       "Accept-Range": "bytes",
       "Content-Length": end - start + 1,
       "Content-Range": `bytes ${start}-${end}/${size}`,
-      "Content-Type": mimeType
+      "Content-Type": mimeType,
       /* eslint-enable @typescript-eslint/naming-convention */
     });
     return { start, end };

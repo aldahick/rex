@@ -1,16 +1,18 @@
 import { HttpError, LoggerService } from "@athenajs/core";
+import { injectable } from "@athenajs/core";
 import axios, { AxiosResponse as OldAxiosResponse } from "axios";
 import * as fs from "fs-extra";
 import * as path from "path";
 import { Readable } from "stream";
-import { injectable } from "@athenajs/core";
 
 import { IMediaItem, IMediaItemType, IProgressStatus } from "../../graphql";
 import { ConfigService } from "../../service/config";
 import { Progress, ProgressManager } from "../progress";
 import { User } from "../user";
 
-type AxiosResponse<T> = Omit<OldAxiosResponse<T>, "headers"> & { headers: Record<string, string> };
+type AxiosResponse<T> = Omit<OldAxiosResponse<T>, "headers"> & {
+  headers: Record<string, string>;
+};
 
 @singleton()
 export class MediaManager {
@@ -18,9 +20,14 @@ export class MediaManager {
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
     private readonly progressManager: ProgressManager
-  ) { }
+  ) {}
 
-  async download({ user, url, destinationKey, progress }: {
+  async download({
+    user,
+    url,
+    destinationKey,
+    progress,
+  }: {
     user: User;
     url: string;
     destinationKey: string;
@@ -28,31 +35,58 @@ export class MediaManager {
   }): Promise<void> {
     const filename = this.toFilename(user, destinationKey);
     await fs.mkdirp(path.dirname(filename));
-    const { data: stream, headers } = await axios.get<Readable, AxiosResponse<Readable>>(url, { responseType: "stream" });
+    const { data: stream, headers } = await axios.get<
+      Readable,
+      AxiosResponse<Readable>
+    >(url, { responseType: "stream" });
     const totalSize = Number(headers["content-length"]);
     let fetchedSize = 0;
     const loggedPercents = [0];
     const onLogError = (err: Error): void => {
-      this.logger.error("downloadMedia.logComplete", err, { destinationKey, progressId: progress._id, url, userId: user._id });
+      this.logger.error("downloadMedia.logComplete", err, {
+        destinationKey,
+        progressId: progress._id,
+        url,
+        userId: user._id,
+      });
     };
     stream.pause();
     stream.on("data", (chunk: Buffer) => {
-      const percentComplete = Math.floor(fetchedSize / totalSize * 100);
+      const percentComplete = Math.floor((fetchedSize / totalSize) * 100);
       fetchedSize += chunk.byteLength;
-      if (percentComplete % 10 === 0 && !loggedPercents.includes(percentComplete)) {
-        this.progressManager.addLogs(progress, `${percentComplete}% complete`).catch(onLogError);
+      if (
+        percentComplete % 10 === 0 &&
+        !loggedPercents.includes(percentComplete)
+      ) {
+        this.progressManager
+          .addLogs(progress, `${percentComplete}% complete`)
+          .catch(onLogError);
         loggedPercents.push(percentComplete);
       }
     });
     stream.pipe(fs.createWriteStream(filename));
     stream.on("end", () => {
-      this.progressManager.addLogs(progress, `Finished downloading ${url} to ${destinationKey}`, IProgressStatus.Complete).catch(onLogError);
+      this.progressManager
+        .addLogs(
+          progress,
+          `Finished downloading ${url} to ${destinationKey}`,
+          IProgressStatus.Complete
+        )
+        .catch(onLogError);
     });
-    await this.progressManager.addLogs(progress, "Started download", IProgressStatus.InProgress);
+    await this.progressManager.addLogs(
+      progress,
+      "Started download",
+      IProgressStatus.InProgress
+    );
     stream.resume();
   }
 
-  async create({ user, key, data }: {
+  async create({
+    user,
+    key,
+    data,
+  }: {
     user: User;
     key: string;
     data: string;
@@ -71,16 +105,23 @@ export class MediaManager {
       this.logger.error("media.list", err, { userId: user._id, dir });
       throw HttpError.internalError();
     }
-    return Promise.all(files.filter(f => !f.startsWith(".")).map(async filename => {
-      const stats = await fs.stat(path.resolve(baseDir, filename));
-      return {
-        key: filename.split("/").slice(-1)[0],
-        type: stats.isFile() ? IMediaItemType.File :
-          await fs.pathExists(path.resolve(baseDir, filename, ".series"))
-            ? IMediaItemType.Series
-            : IMediaItemType.Directory
-      };
-    }));
+    return Promise.all(
+      files
+        .filter((f) => !f.startsWith("."))
+        .map(async (filename) => {
+          const stats = await fs.stat(path.resolve(baseDir, filename));
+          return {
+            key: filename.split("/").slice(-1)[0],
+            type: stats.isFile()
+              ? IMediaItemType.File
+              : (await fs.pathExists(
+                  path.resolve(baseDir, filename, ".series")
+                ))
+              ? IMediaItemType.Series
+              : IMediaItemType.Directory,
+          };
+        })
+    );
   }
 
   async getSize(user: User, key: string): Promise<number> {
@@ -88,7 +129,11 @@ export class MediaManager {
     return size;
   }
 
-  createReadStream(user: User, key: string, { start, end }: { start: number; end?: number }): Readable {
+  createReadStream(
+    user: User,
+    key: string,
+    { start, end }: { start: number; end?: number }
+  ): Readable {
     return fs.createReadStream(this.toFilename(user, key), { start, end });
   }
 
@@ -115,6 +160,10 @@ export class MediaManager {
     if (mediaDir === "") {
       throw new Error("Missing environment variable MEDIA_DIR");
     }
-    return path.resolve(mediaDir, user.email, key.replace(/^\//, "").replace(/\.\./g, ""));
+    return path.resolve(
+      mediaDir,
+      user.email,
+      key.replace(/^\//, "").replace(/\.\./g, "")
+    );
   }
 }

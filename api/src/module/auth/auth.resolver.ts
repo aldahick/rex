@@ -1,7 +1,13 @@
 import { guard, HttpError, mutation } from "@athenajs/core";
 import { injectable } from "@athenajs/core";
 
-import { IAuthToken, IMutation, IMutationCreateAuthTokenArgs, IMutationCreateAuthTokenGoogleArgs, IMutationCreateAuthTokenLocalArgs } from "../../graphql";
+import {
+  IAuthToken,
+  IMutation,
+  IMutationCreateAuthTokenArgs,
+  IMutationCreateAuthTokenGoogleArgs,
+  IMutationCreateAuthTokenLocalArgs,
+} from "../../graphql";
 import { DatabaseService } from "../../service/database";
 import { GoogleAuthService } from "../../service/google";
 import { User, UserManager } from "../user";
@@ -14,13 +20,20 @@ export class AuthResolver {
     private readonly authManager: AuthManager,
     private readonly db: DatabaseService,
     private readonly googleAuthService: GoogleAuthService,
-    private readonly userManager: UserManager,
-  ) { }
+    private readonly userManager: UserManager
+  ) {}
 
   @mutation()
-  async createAuthTokenGoogle(root: unknown, { googleIdToken, clientType }: IMutationCreateAuthTokenGoogleArgs, context: AuthContext): Promise<IMutation["createAuthTokenGoogle"]> {
+  async createAuthTokenGoogle(
+    root: unknown,
+    { googleIdToken, clientType }: IMutationCreateAuthTokenGoogleArgs,
+    context: AuthContext
+  ): Promise<IMutation["createAuthTokenGoogle"]> {
     const clientId = this.authManager.google.getClientIdFromType(clientType);
-    const googlePayload = await this.googleAuthService.getIdTokenPayload(googleIdToken, clientId);
+    const googlePayload = await this.googleAuthService.getIdTokenPayload(
+      googleIdToken,
+      clientId
+    );
     if (!googlePayload) {
       throw HttpError.forbidden("Invalid Google token");
     }
@@ -32,17 +45,23 @@ export class AuthResolver {
   }
 
   @mutation()
-  async createAuthTokenLocal(root: unknown, { username, password }: IMutationCreateAuthTokenLocalArgs, context: AuthContext): Promise<IMutation["createAuthTokenLocal"]> {
+  async createAuthTokenLocal(
+    root: unknown,
+    { username, password }: IMutationCreateAuthTokenLocalArgs,
+    context: AuthContext
+  ): Promise<IMutation["createAuthTokenLocal"]> {
     const user = await this.db.users.findOne({
-      $or: [
-        { username },
-        { email: username }
-      ]
+      $or: [{ username }, { email: username }],
     });
     if (!user || user.auth.passwordHash === undefined) {
       throw HttpError.forbidden("Invalid username/email or password");
     }
-    if (!await this.userManager.password.isValid(password, user.auth.passwordHash)) {
+    if (
+      !(await this.userManager.password.isValid(
+        password,
+        user.auth.passwordHash
+      ))
+    ) {
       throw HttpError.forbidden("Invalid username/email or password");
     }
     return this.getAuthToken(user, context);
@@ -51,10 +70,13 @@ export class AuthResolver {
   @guard({
     resource: "user",
     action: "createAny",
-    attributes: "token"
+    attributes: "token",
   })
   @mutation()
-  async createAuthToken(root: unknown, { userId }: IMutationCreateAuthTokenArgs): Promise<IMutation["createAuthToken"]> {
+  async createAuthToken(
+    root: unknown,
+    { userId }: IMutationCreateAuthTokenArgs
+  ): Promise<IMutation["createAuthToken"]> {
     return this.getAuthToken(await this.userManager.get(userId));
   }
 
@@ -65,7 +87,7 @@ export class AuthResolver {
     }
     return {
       token: this.authManager.signToken(payload),
-      user
+      user,
     };
   }
 }

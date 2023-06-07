@@ -1,6 +1,6 @@
 import { AuthCheck, authProvider, AuthService } from "@athenajs/core";
-import * as express from "express";
 import { injectable } from "@athenajs/core";
+import * as express from "express";
 
 import { Role, RoleManager } from "../role";
 import { AuthContext, IAuthTokenPayload } from "./auth.context";
@@ -13,7 +13,7 @@ export class AuthManager {
     readonly google: AuthGoogleManager,
     private readonly authService: AuthService,
     private readonly roleManager: RoleManager
-  ) { }
+  ) {}
 
   signToken(payload: IAuthTokenPayload): string {
     return this.authService.signToken(payload);

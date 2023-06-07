@@ -5,5 +5,5 @@ export * from "./model";
 export * from "./user.manager";
 
 export const userModule: IModule = {
-  resolvers: [UserResolver]
+  resolvers: [UserResolver],
 };

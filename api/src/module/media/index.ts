@@ -6,5 +6,5 @@ export * from "./media.manager";
 
 export const mediaModule: IModule = {
   controllers: [MediaController],
-  resolvers: [MediaResolver]
+  resolvers: [MediaResolver],
 };

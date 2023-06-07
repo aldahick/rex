@@ -6,7 +6,7 @@ import { UltimateBraveryService } from "../../service/ultimateBravery";
 export class LeagueManager {
   constructor(
     private readonly ultimateBraveryService: UltimateBraveryService
-  ) { }
+  ) {}
 
   createUltimateBravery(): Promise<string> {
     return this.ultimateBraveryService.createLobby({
@@ -15,7 +15,7 @@ export class LeagueManager {
       mapId: 12,
       size: 10,
       level: 10,
-      isPublic: false
+      isPublic: false,
     });
   }
 }

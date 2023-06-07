@@ -1,6 +1,6 @@
 import { MongoService } from "@athenajs/core";
-import { ReturnModelType } from "@typegoose/typegoose";
 import { injectable } from "@athenajs/core";
+import { ReturnModelType } from "@typegoose/typegoose";
 
 import { Progress } from "../../model";
 import { Role } from "../../model";
@@ -21,7 +21,7 @@ export class DatabaseService {
   constructor(
     private readonly config: ConfigService,
     private readonly mongo: MongoService
-  ) { }
+  ) {}
 
   async init(): Promise<void> {
     await this.mongo.init(this.config.mongoUrl);

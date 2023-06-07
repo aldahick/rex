@@ -5,9 +5,7 @@ import { ConfigService } from "../../service/config";
 
 @singleton()
 export class AuthGoogleManager {
-  constructor(
-    private readonly config: ConfigService
-  ) { }
+  constructor(private readonly config: ConfigService) {}
 
   getClientIdFromType(clientType: IAuthClientType): string | undefined {
     switch (clientType) {

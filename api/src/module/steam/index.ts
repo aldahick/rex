@@ -8,5 +8,5 @@ export * from "./steamPlayer.manager";
 
 export const steamModule: IModule = {
   commands: [SteamGamesCommand],
-  resolvers: [SteamResolver]
+  resolvers: [SteamResolver],
 };

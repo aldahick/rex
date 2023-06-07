@@ -5,5 +5,5 @@ export * from "./auth.context";
 export * from "./auth.manager";
 
 export const authModule: IModule = {
-  resolvers: [AuthResolver]
+  resolvers: [AuthResolver],
 };

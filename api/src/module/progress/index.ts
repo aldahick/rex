@@ -5,5 +5,5 @@ export * from "../../model";
 export * from "./progress.manager";
 
 export const progressModule: IModule = {
-  resolvers: [ProgressResolver]
+  resolvers: [ProgressResolver],
 };

@@ -1,5 +1,5 @@
-import * as google from "googleapis";
 import { injectable } from "@athenajs/core";
+import * as google from "googleapis";
 
 import { ConfigService } from "../config";
 
@@ -11,11 +11,12 @@ export interface GoogleTokenPayload {
 
 @singleton()
 export class GoogleAuthService {
-  constructor(
-    private readonly config: ConfigService
-  ) { }
+  constructor(private readonly config: ConfigService) {}
 
-  async getIdTokenPayload(idToken: string, clientId: string | undefined): Promise<GoogleTokenPayload | undefined> {
+  async getIdTokenPayload(
+    idToken: string,
+    clientId: string | undefined
+  ): Promise<GoogleTokenPayload | undefined> {
     if (clientId === undefined) {
       throw new Error("Missing Google client ID");
     }

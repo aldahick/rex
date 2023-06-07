@@ -5,5 +5,5 @@ import { PlayersCommand } from "./players.command";
 
 export const genericModule: IModule = {
   commands: [HelpCommand, PlayersCommand],
-  resolvers: [DateTimeScalarResolver]
+  resolvers: [DateTimeScalarResolver],
 };

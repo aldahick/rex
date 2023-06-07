@@ -1,7 +1,15 @@
 import { guard, HttpError, mutation, query, resolver } from "@athenajs/core";
 import { injectable } from "@athenajs/core";
 
-import { IMutation, IMutationAddRoleToUserArgs, IMutationCreateUserArgs, IMutationSetUserPasswordArgs, IQuery, IQueryUserArgs, IUser } from "../../graphql";
+import {
+  IMutation,
+  IMutationAddRoleToUserArgs,
+  IMutationCreateUserArgs,
+  IMutationSetUserPasswordArgs,
+  IQuery,
+  IQueryUserArgs,
+  IUser,
+} from "../../graphql";
 import { AuthContext } from "../auth";
 import { RoleManager } from "../role";
 import { User } from "./model";
@@ -12,19 +20,29 @@ export class UserResolver {
   constructor(
     private readonly roleManager: RoleManager,
     private readonly userManager: UserManager
-  ) { }
+  ) {}
 
   @query()
-  async user(root: unknown, { id }: IQueryUserArgs, context: AuthContext): Promise<IQuery["user"]> {
-    if (id !== undefined && await context.isAuthorized({
-      resource: "user",
-      action: "readAny"
-    })) {
+  async user(
+    root: unknown,
+    { id }: IQueryUserArgs,
+    context: AuthContext
+  ): Promise<IQuery["user"]> {
+    if (
+      id !== undefined &&
+      (await context.isAuthorized({
+        resource: "user",
+        action: "readAny",
+      }))
+    ) {
       return this.userManager.get(id);
-    } else if (context.userId !== undefined && await context.isAuthorized({
-      resource: "user",
-      action: "readOwn"
-    })) {
+    } else if (
+      context.userId !== undefined &&
+      (await context.isAuthorized({
+        resource: "user",
+        action: "readOwn",
+      }))
+    ) {
       return this.userManager.get(context.userId);
     } else {
       throw HttpError.forbidden();
@@ -33,7 +51,7 @@ export class UserResolver {
 
   @guard({
     resource: "user",
-    action: "readAny"
+    action: "readAny",
   })
   @query()
   async users(): Promise<IQuery["users"]> {
@@ -42,7 +60,7 @@ export class UserResolver {
 
   @guard({
     resource: "role",
-    action: "readAny"
+    action: "readAny",
   })
   @resolver("User.roles")
   async roles(root: User): Promise<IUser["roles"]> {
@@ -51,7 +69,7 @@ export class UserResolver {
 
   @guard({
     resource: "role",
-    action: "readAny"
+    action: "readAny",
   })
   @resolver("User.permissions")
   async permissions(root: User): Promise<IUser["permissions"]> {
@@ -62,10 +80,13 @@ export class UserResolver {
   @guard({
     resource: "user",
     action: "updateAny",
-    attributes: "role"
+    attributes: "role",
   })
   @mutation()
-  async addRoleToUser(root: unknown, { userId, roleId }: IMutationAddRoleToUserArgs): Promise<IMutation["addRoleToUser"]> {
+  async addRoleToUser(
+    root: unknown,
+    { userId, roleId }: IMutationAddRoleToUserArgs
+  ): Promise<IMutation["addRoleToUser"]> {
     const user = await this.userManager.get(userId);
     const role = await this.roleManager.get(roleId);
 
@@ -76,20 +97,26 @@ export class UserResolver {
 
   @guard({
     resource: "user",
-    action: "createAny"
+    action: "createAny",
   })
   @mutation()
-  async createUser(root: unknown, { email, username, password }: IMutationCreateUserArgs): Promise<IMutation["createUser"]> {
+  async createUser(
+    root: unknown,
+    { email, username, password }: IMutationCreateUserArgs
+  ): Promise<IMutation["createUser"]> {
     return this.userManager.create({ email, username, password });
   }
 
   @guard({
     resource: "user",
     action: "updateAny",
-    attributes: "password"
+    attributes: "password",
   })
   @mutation()
-  async setUserPassword(root: unknown, { userId, password }: IMutationSetUserPasswordArgs): Promise<IMutation["setUserPassword"]> {
+  async setUserPassword(
+    root: unknown,
+    { userId, password }: IMutationSetUserPasswordArgs
+  ): Promise<IMutation["setUserPassword"]> {
     const user = await this.userManager.get(userId);
     await this.userManager.password.set(user, password);
     return true;
