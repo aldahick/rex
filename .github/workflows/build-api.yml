@@ -1,0 +1,10 @@
+name: build-api
+on:
+  push:
+    paths:
+      - api/**
+jobs:
+  build-api:
+    uses: ./.github/workflows/build-package.yml
+    with:
+      directory: api

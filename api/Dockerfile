@@ -1,15 +1,19 @@
-FROM node:12.18-alpine
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-RUN apk add python
-
-COPY package.json ./
-COPY yarn.lock ./
-RUN yarn
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
 COPY tsconfig.json ./
 COPY src ./src
 RUN yarn build
 
-CMD yarn start:dev
+FROM node:18-alpine AS runner
+
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --prod --frozen-lockfile
+
+COPY --from=builder dist ./dist
+COPY gql ./gql
+CMD yarn start

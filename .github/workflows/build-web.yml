@@ -1,0 +1,10 @@
+name: build-web
+on:
+  push:
+    paths:
+      - web/**
+jobs:
+  build-web:
+    uses: ./.github/workflows/build-package.yml
+    with:
+      directory: web
