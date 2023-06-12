@@ -1,17 +1,16 @@
-import { HttpError } from "@athenajs/core";
 import { injectable } from "@athenajs/core";
-import * as _ from "lodash";
+import { compact } from "@athenajs/utils";
 
-import { SteamPlayer, SteamService } from "../../service/steam";
-import { SteamGame } from "./model";
-import { SteamGameManager } from "./steamGame.manager";
+import { SteamGameModel } from "../../model/index.js";
+import { SteamPlayer, SteamService } from "../../service/steam/index.js";
+import { SteamGameManager } from "./steamGame.manager.js";
 
 export interface SteamPlayerWithGames {
-  ownedGames?: SteamGame[];
+  ownedGames?: SteamGameModel[];
   player: SteamPlayer;
 }
 
-@singleton()
+@injectable()
 export class SteamPlayerManager {
   constructor(
     private readonly steamGameManager: SteamGameManager,
@@ -21,7 +20,7 @@ export class SteamPlayerManager {
   async get(steamId64: string): Promise<SteamPlayerWithGames> {
     const player = await this.steamService.getPlayerSummary(steamId64);
     if (!player) {
-      throw HttpError.notFound(`steam player id=${steamId64}`);
+      throw new Error(`Steam player ${steamId64} not found`);
     }
     const ownedGameIds = await this.steamService.getPlayerOwnedGameIds(
       steamId64
@@ -36,7 +35,7 @@ export class SteamPlayerManager {
   }
 
   async getMany(steamIds64: string[]): Promise<SteamPlayerWithGames[]> {
-    const players = _.compact(
+    const players = compact(
       await Promise.all(
         steamIds64.map(async (steamId64) => {
           const player = await this.steamService.getPlayerSummary(steamId64);
@@ -52,15 +51,15 @@ export class SteamPlayerManager {
       )
     );
     if (players.length !== steamIds64.length) {
-      throw HttpError.notFound("steam players");
+      throw new Error("Some steam players could not be found");
     }
     const ownedGames = await this.steamGameManager.getMany(
-      _.flatten(players.map((p) => p.ownedGameIds ?? []))
+      players.flatMap((p) => p.ownedGameIds ?? [])
     );
     return players.map(({ player, ownedGameIds }) => ({
       player,
       ownedGames: ownedGameIds
-        ? ownedGames.filter((g) => ownedGameIds.includes(g._id))
+        ? ownedGames.filter((g) => ownedGameIds.includes(g.id))
         : ownedGameIds,
     }));
   }

@@ -1,15 +1,15 @@
 import { injectable } from "@athenajs/core";
-import * as _ from "lodash";
+import { chunk } from "@athenajs/utils";
 
-import { IProgressStatus } from "../../graphql";
-import { DatabaseService } from "../../service/database";
-import { SteamService } from "../../service/steam";
-import { Progress, ProgressManager } from "../progress";
-import { SteamGame } from "./model";
+import { IProgressStatus } from "../../graphql.js";
+import { SteamGameModel } from "../../model/index.js";
+import { DatabaseService } from "../../service/database.service.js";
+import { SteamService } from "../../service/steam/index.js";
+import { ProgressManager } from "../progress/index.js";
 
 const FETCH_CHUNK_SIZE = 1000;
 
-@singleton()
+@injectable()
 export class SteamGameManager {
   constructor(
     private readonly db: DatabaseService,
@@ -17,41 +17,33 @@ export class SteamGameManager {
     private readonly steamService: SteamService
   ) {}
 
-  getMany(ids: number[]): Promise<SteamGame[]> {
-    return this.db.steamGames
-      .find({
-        _id: { $in: ids },
-      })
-      .exec();
+  async getMany(ids: number[]): Promise<SteamGameModel[]> {
+    return this.db.steamGames.whereIn("id", ids).selectAll();
   }
 
-  async fetchAll(progress: Progress): Promise<void> {
+  async fetchAll(progressId: string): Promise<void> {
     await this.progressManager.addLogs(
-      progress,
+      progressId,
       "Deleting all previous games...",
       IProgressStatus.InProgress
     );
-    await this.db.steamGames.deleteMany({});
-    await this.progressManager.addLogs(progress, "Fetching games...");
+    await this.db.steamGames.where().delete();
+    await this.progressManager.addLogs(progressId, "Fetching games...");
     const allGames = await this.steamService.getAllGames();
-    const gameChunks = _.chunk(allGames, FETCH_CHUNK_SIZE);
-    for (let i = 0; i < gameChunks.length; i++) {
+    for (const gameChunk of chunk(allGames, FETCH_CHUNK_SIZE)) {
       await this.progressManager.addLogs(
-        progress,
-        `Saving game chunk ${i}/${gameChunks.length}...`
+        progressId,
+        `Saving game chunk, #${gameChunk.length} of ${allGames.length} total`
       );
-      await this.db.steamGames.create(
-        gameChunks[i].map(
-          (game) =>
-            new SteamGame({
-              _id: game.id,
-              name: game.name,
-            })
-        )
+      await this.db.steamGames.createMany(
+        gameChunk.map((game) => ({
+          id: game.id,
+          name: game.name,
+        }))
       );
     }
     await this.progressManager.addLogs(
-      progress,
+      progressId,
       `Finished inserting ${allGames.length} games.`,
       IProgressStatus.Complete
     );
@@ -60,16 +52,15 @@ export class SteamGameManager {
   async search(
     text: string,
     { offset, limit }: { offset: number; limit: number }
-  ): Promise<SteamGame[]> {
-    return this.db.steamGames.aggregate([
-      {
-        $match: {
-          name: new RegExp(text, "i"),
+  ): Promise<SteamGameModel[]> {
+    return this.db.steamGames
+      .where({
+        name: {
+          contains: text,
         },
-      },
-      { $skip: offset },
-      { $limit: limit },
-      { $sort: { name: 1 } },
-    ]);
+      })
+      .offset(offset)
+      .limit(limit)
+      .order("name");
   }
 }

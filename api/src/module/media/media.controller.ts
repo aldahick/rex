@@ -1,57 +1,57 @@
-import {
-  controller,
-  ControllerPayload,
-  guard,
-  HttpError,
-} from "@athenajs/core";
-import { injectable } from "@athenajs/core";
-import * as _ from "lodash";
-import * as mime from "mime";
+import { controller, get, HttpRequest, HttpResponse } from "@athenajs/core";
+import mime from "mime";
 
-import { AuthContext } from "../auth";
-import { User } from "../user";
-import { MediaManager } from "./media.manager";
+import { IAuthPermission } from "../../graphql.js";
+import { UserModel } from "../../model/index.js";
+import { AuthContext } from "../auth/index.js";
+import { UserManager } from "../user/index.js";
+import { MediaManager } from "./media.manager.js";
 
 const HTTP_PARTIAL_CODE = 206;
 
-@singleton()
+@controller()
 export class MediaController {
-  constructor(private readonly mediaManager: MediaManager) {}
+  constructor(
+    private readonly mediaManager: MediaManager,
+    private readonly userManager: UserManager
+  ) {}
 
-  @guard({
-    resource: "mediaItem",
-    action: "readOwn",
-    attributes: "content",
-  })
-  @controller("get", "/v1/media/content")
-  async handle(payload: ControllerPayload<AuthContext>): Promise<void> {
-    const { req, res, context } = payload;
-    const { key } = req.query;
+  @get("/v1/media/content")
+  async handle(
+    req: HttpRequest,
+    res: HttpResponse,
+    context: AuthContext
+  ): Promise<void> {
+    if (!(await context.isAuthorized(IAuthPermission.ManageMediaSelf))) {
+      throw new Error("Forbidden");
+    }
+    // const { req, res, context } = payload;
+    const { key } = req.query as Record<string, string>;
     if (typeof key !== "string") {
-      throw HttpError.badRequest("Missing required query parameter `key`");
+      throw new Error("Missing required query parameter `key`");
     }
 
-    const user = await context.user();
-    if (!user) {
-      throw HttpError.forbidden("Requires user token");
+    if (!context.userId) {
+      throw new Error("Requires user token");
     }
-
+    const user = { email: await this.userManager.fetchEmail(context.userId) };
     const isFile = await this.mediaManager.exists(user, key);
     if (!isFile) {
-      throw HttpError.notFound();
+      throw new Error(`Media "${key}" not found`);
     }
 
-    const { start, end } = await this.sendHeaders(payload, user, key);
+    const { start, end } = await this.sendHeaders(req, res, user, key);
     const stream = this.mediaManager.createReadStream(user, key, {
       start,
       end,
     });
-    stream.pipe(res);
+    res.send(stream);
   }
 
   private async sendHeaders(
-    { req, res }: ControllerPayload<AuthContext>,
-    user: User,
+    req: HttpRequest,
+    res: HttpResponse,
+    user: Pick<UserModel, "email">,
     key: string
   ): Promise<{ start: number; end?: number }> {
     const mimeType = mime.getType(key) ?? "text/plain";
@@ -63,20 +63,20 @@ export class MediaController {
 
     const size = await this.mediaManager.getSize(user, key);
     if (req.headers.range !== undefined) {
-      [start, end] = _.compact(
-        req.headers.range.replace("bytes=", "").split("-")
-      ).map(Number);
+      const tokens = req.headers.range.replace("bytes=", "").split("-");
+      if (tokens.length === 2) {
+        start = Number(tokens[0]);
+        end = Number(tokens[1]);
+      }
     }
     if (end === undefined) {
       end = size - 1;
     }
-    res.writeHead(HTTP_PARTIAL_CODE, {
-      /* eslint-disable @typescript-eslint/naming-convention */
+    res.status(HTTP_PARTIAL_CODE).headers({
       "Accept-Range": "bytes",
       "Content-Length": end - start + 1,
       "Content-Range": `bytes ${start}-${end}/${size}`,
       "Content-Type": mimeType,
-      /* eslint-enable @typescript-eslint/naming-convention */
     });
     return { start, end };
   }

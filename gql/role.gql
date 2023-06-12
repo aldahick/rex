@@ -1,0 +1,16 @@
+extend type Mutation {
+  createRole(name: String!): Role!
+  deleteRole(id: ID!): Boolean!
+  updateRole(id: ID!, name: String!): Boolean!
+  updateRolePermissions(id: ID!, permissions: [AuthPermission!]!): Boolean!
+}
+
+extend type Query {
+  roles: [Role!]!
+}
+
+type Role {
+  id: ID!
+  name: String!
+  permissions: [AuthPermission!]!
+}

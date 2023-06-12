@@ -1,30 +1,33 @@
-import { LoggerService } from "@athenajs/core";
-import { injectable } from "@athenajs/core";
-import * as _ from "lodash";
+import { Logger } from "@athenajs/core";
+import { compact } from "@athenajs/utils";
+import { Message } from "discord.js";
 
-import { discordCommand, DiscordPayload } from "../../registry/discord";
-import { HastebinService } from "../../service/hastebin";
+import {
+  DiscordCommand,
+  discordCommand,
+} from "../../service/discord.service.js";
+import { HastebinService } from "../../service/hastebin.service.js";
 import {
   SteamPlayerManager,
   SteamPlayerWithGames,
-} from "./steamPlayer.manager";
+} from "./steamPlayer.manager.js";
 
-@singleton()
-export class SteamGamesCommand {
+@discordCommand()
+export class SteamGamesCommand implements DiscordCommand {
+  command = ["steamGames", "commonSteamGames"];
+  helpText = "Finds all games that the given Steam users have in common.";
+
   constructor(
     private readonly hastebinService: HastebinService,
-    private readonly logger: LoggerService,
+    private readonly logger: Logger,
     private readonly steamPlayerManager: SteamPlayerManager
   ) {}
 
-  @discordCommand(["steamGames", "commonSteamGames"], {
-    helpText: "Finds all games that given Steam users have in common.",
-  })
-  async steamGames({
-    args: identifiers,
-    command,
-    message,
-  }: DiscordPayload): Promise<string | undefined> {
+  async handle(
+    message: Message,
+    identifiers: string[],
+    command: string
+  ): Promise<string | undefined> {
     if (!identifiers.length) {
       return `Usage: ${command} <steam usernames or ids...>`;
     }
@@ -36,7 +39,7 @@ export class SteamGamesCommand {
     try {
       players = await this.steamPlayerManager.getMany(steamIds);
     } catch (err) {
-      this.logger.error(err, "discord.steamGames");
+      this.logger.error(err);
       if (err instanceof Error) {
         await res.edit(
           `
@@ -49,33 +52,38 @@ You may have given a bad user ID - make sure to use your steam ID (if your profi
     }
     const playersWithoutGames = players.filter((p) => !p.ownedGames);
     const playersWithGames = players.filter((p) => !!p.ownedGames);
-    const allGames = _.flatten(playersWithGames.map((p) => p.ownedGames ?? []));
-    const commonGames = _.compact(
-      _.uniq(allGames.map((g) => g._id))
-        .map((id) => ({
-          id,
-          count: allGames.filter((g) => g._id === id).length,
-        }))
-        .filter(({ count }) => count === playersWithGames.length)
-        .map(({ id }) => allGames.find((g) => g._id === Number(id)))
-    );
-    const body = _.sortBy(
-      commonGames.map((g) => `* ${g.name}`),
-      (g) => g.toLowerCase()
-    ).join("\n");
+    const allOwnedGames = playersWithGames.flatMap((p) => p.ownedGames ?? []);
+    const gameNames = new Map(allOwnedGames.map((g) => [g.id, g.name]));
+    const gameCounts = new Map<number, number>();
+    for (const game of allOwnedGames) {
+      gameCounts.set(game.id, (gameCounts.get(game.id) ?? 0) + 1);
+    }
+    const commonGameNames = [];
+    for (const [gameId, count] of gameCounts.entries()) {
+      if (count === playersWithGames.length) {
+        commonGameNames.push(gameNames.get(gameId));
+      }
+    }
+    const body = compact(commonGameNames)
+      .sort((a, b) =>
+        a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+      )
+      .map((name) => `* ${name}`)
+      .join("\n");
     const hastebinUrl = await this.hastebinService.create(body);
+    const gamePlayerNames = playersWithGames
+      .map((p) => p.player.nickname)
+      .join(", ");
+    const noGamePlayerNames = playersWithoutGames
+      .map((p) => p.player.nickname)
+      .join(", ");
     await res.edit(
-      `
-Common Steam games for ${playersWithGames
-        .map((p) => p.player.nickname)
-        .join(", ")}: ${hastebinUrl}.md
-${
-  playersWithoutGames.length
-    ? `Some of them have their profiles set to private: ${playersWithoutGames
-        .map((p) => p.player.nickname)
-        .join(", ")}`
-    : ""
-}
+      `Common Steam games for ${gamePlayerNames}: ${hastebinUrl}.md
+      ${
+        noGamePlayerNames.length
+          ? `Some of them have their profiles set to private: ${noGamePlayerNames}`
+          : ""
+      }
 `.trim()
     );
   }

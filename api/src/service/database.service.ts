@@ -8,6 +8,7 @@ import { RoleTable } from "../model/role.model.js";
 import { SteamGameTable } from "../model/steamGame.model.js";
 import { UserTable } from "../model/user.model.js";
 import { UserNoteTable } from "../model/userNote.model.js";
+import { UserRoleTable } from "../model/userRole.model.js";
 
 const tables = {
   progress: ProgressTable,
@@ -16,6 +17,7 @@ const tables = {
   steamGames: SteamGameTable,
   users: UserTable,
   userNotes: UserNoteTable,
+  userRoles: UserRoleTable,
 };
 type DbTables = {
   [Key in keyof typeof tables]: DbTable<(typeof tables)[Key]>;
@@ -31,6 +33,7 @@ export class DatabaseService implements DbTables {
   readonly steamGames: DbTables["steamGames"];
   readonly users: DbTables["users"];
   readonly userNotes: DbTables["userNotes"];
+  readonly userRoles: DbTables["userRoles"];
 
   constructor(config: Config) {
     this.orm = orchidORM(
@@ -47,5 +50,6 @@ export class DatabaseService implements DbTables {
     this.steamGames = this.orm.steamGames;
     this.users = this.orm.users;
     this.userNotes = this.orm.userNotes;
+    this.userRoles = this.orm.userRoles;
   }
 }

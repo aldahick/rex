@@ -1,93 +1,100 @@
-import { guard, HttpError, mutation } from "@athenajs/core";
-import { injectable } from "@athenajs/core";
+import { resolveMutation, resolver } from "@athenajs/core";
 
+import { Config } from "../../config.js";
 import {
+  IAuthClientType,
+  IAuthPermission,
   IAuthToken,
   IMutation,
   IMutationCreateAuthTokenArgs,
   IMutationCreateAuthTokenGoogleArgs,
   IMutationCreateAuthTokenLocalArgs,
-} from "../../graphql";
-import { DatabaseService } from "../../service/database";
-import { GoogleAuthService } from "../../service/google";
-import { User, UserManager } from "../user";
-import { AuthContext } from "./auth.context";
-import { AuthManager } from "./auth.manager";
+} from "../../graphql.js";
+import { DatabaseService } from "../../service/database.service.js";
+import { GoogleAuthService } from "../../service/googleAuth.service.js";
+import { UserManager } from "../user/index.js";
+import { AuthContext } from "./auth.context.js";
+import { AuthManager } from "./auth.manager.js";
 
-@singleton()
+const clientIdsByType: Record<
+  IAuthClientType,
+  keyof Config["googleAuth"]["clientIds"]
+> = {
+  [IAuthClientType.Mobile]: "mobile",
+  [IAuthClientType.Web]: "web",
+};
+
+@resolver()
 export class AuthResolver {
   constructor(
     private readonly authManager: AuthManager,
+    private readonly config: Config,
     private readonly db: DatabaseService,
     private readonly googleAuthService: GoogleAuthService,
     private readonly userManager: UserManager
   ) {}
 
-  @mutation()
+  @resolveMutation()
   async createAuthTokenGoogle(
-    root: unknown,
-    { googleIdToken, clientType }: IMutationCreateAuthTokenGoogleArgs,
-    context: AuthContext
+    root: never,
+    { googleIdToken, clientType }: IMutationCreateAuthTokenGoogleArgs
   ): Promise<IMutation["createAuthTokenGoogle"]> {
-    const clientId = this.authManager.google.getClientIdFromType(clientType);
     const googlePayload = await this.googleAuthService.getIdTokenPayload(
       googleIdToken,
-      clientId
+      this.config.googleAuth.clientIds[clientIdsByType[clientType]]
     );
     if (!googlePayload) {
-      throw HttpError.forbidden("Invalid Google token");
+      throw new Error("Invalid Google token");
     }
-    const user = await this.db.users.findOne({ email: googlePayload.email });
-    if (!user) {
-      throw HttpError.forbidden(`Missing user email=${googlePayload.email}`);
+    const userId = await this.userManager.fetchId(googlePayload.email);
+    if (!userId) {
+      throw Error(`User not found: ${googlePayload.email}`);
     }
-    return this.getAuthToken(user, context);
+    return this.getAuthToken(userId);
   }
 
-  @mutation()
+  @resolveMutation()
   async createAuthTokenLocal(
-    root: unknown,
-    { username, password }: IMutationCreateAuthTokenLocalArgs,
-    context: AuthContext
+    root: never,
+    { username, password }: IMutationCreateAuthTokenLocalArgs
   ): Promise<IMutation["createAuthTokenLocal"]> {
-    const user = await this.db.users.findOne({
-      $or: [{ username }, { email: username }],
-    });
-    if (!user || user.auth.passwordHash === undefined) {
-      throw HttpError.forbidden("Invalid username/email or password");
+    const [user] = await this.userManager
+      .whereEmailOrUsername(username)
+      .select("id", "passwordHash");
+    if (!user?.passwordHash) {
+      throw new Error("Invalid username/email or password");
     }
-    if (
-      !(await this.userManager.password.isValid(
-        password,
-        user.auth.passwordHash
-      ))
-    ) {
-      throw HttpError.forbidden("Invalid username/email or password");
+    const isValid = await this.authManager.comparePassword(
+      password,
+      user.passwordHash
+    );
+    if (!isValid) {
+      throw new Error("Invalid username/email or password");
     }
-    return this.getAuthToken(user, context);
+    return this.getAuthToken(user.id);
   }
 
-  @guard({
-    resource: "user",
-    action: "createAny",
-    attributes: "token",
-  })
-  @mutation()
+  @resolveMutation()
   async createAuthToken(
-    root: unknown,
-    { userId }: IMutationCreateAuthTokenArgs
+    root: never,
+    { userId }: IMutationCreateAuthTokenArgs,
+    context: AuthContext
   ): Promise<IMutation["createAuthToken"]> {
-    return this.getAuthToken(await this.userManager.get(userId));
+    if (!(await context.isAuthorized(IAuthPermission.ManageUsers))) {
+      throw new Error("Forbidden");
+    }
+    if (await this.userManager.exists(userId)) {
+      return this.getAuthToken(userId);
+    } else {
+      throw new Error(`User ${userId} not found`);
+    }
   }
 
-  private getAuthToken(user: User, context?: AuthContext): IAuthToken {
-    const payload = { userId: user._id };
-    if (context) {
-      context.setPayload(payload);
-    }
+  private getAuthToken(userId: string): IAuthToken {
     return {
-      token: this.authManager.signToken(payload),
-      user,
+      token: this.authManager.signToken(userId),
+      userId,
+      user: {} as never,
     };
   }
 }

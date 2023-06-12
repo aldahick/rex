@@ -1,50 +1,86 @@
-import { HttpError } from "@athenajs/core";
 import { injectable } from "@athenajs/core";
 
-import { DatabaseService } from "../../service/database";
-import { Role } from "../role";
-import { User } from "./model";
-import { UserPasswordManager } from "./userPassword.manager";
+import { IAuthPermission } from "../../graphql.js";
+import { RoleModel } from "../../model/role.model.js";
+import { UserModel } from "../../model/user.model.js";
+import { DatabaseService } from "../../service/database.service.js";
+import { AuthManager } from "../auth/auth.manager.js";
 
-@singleton()
+@injectable()
 export class UserManager {
   constructor(
-    readonly password: UserPasswordManager,
+    private readonly authManager: AuthManager,
     private readonly db: DatabaseService
   ) {}
 
-  async get(id: string): Promise<User> {
+  async exists(id: string): Promise<boolean> {
+    return (await this.db.users.where({ id }).count()) === 1;
+  }
+
+  async fetchId(email: string): Promise<string> {
+    return (await this.db.users.findBy({ email }).select("id")).id;
+  }
+
+  async fetchEmail(id: string): Promise<string> {
+    return (await this.db.users.find(id).select("email")).email;
+  }
+
+  async fetchPermissions(userId: string): Promise<Set<IAuthPermission>> {
+    const roles = await this.db.userRoles
+      .where({ userId })
+      .join("role")
+      .select("role.permissions");
+    const permissions = roles
+      .flatMap((r) => r.permissions)
+      .map((p) => IAuthPermission[p as keyof typeof IAuthPermission]);
+    return new Set(permissions);
+  }
+
+  async fetch(id: string): Promise<UserModel> {
     const user = await this.getSafe(id);
     if (!user) {
-      throw HttpError.notFound(`user id=${id} not found`);
+      throw new Error(`user id=${id} not found`);
     }
     return user;
   }
 
-  async getSafe(id: string): Promise<User | undefined> {
-    const user = await this.db.users.findById(id);
-    return (user?.toObject() as User | undefined) ?? undefined;
+  async fetchMany(): Promise<UserModel[]> {
+    return this.db.users.where().selectAll();
   }
 
-  async getAll(): Promise<User[]> {
-    return this.db.users.find();
+  async getSafe(id: string): Promise<UserModel | undefined> {
+    const [user] = await this.db.users.selectAll().where({ id });
+    return user;
   }
 
-  async addRole(user: User, role: Role): Promise<void> {
-    await this.db.users.updateOne(
-      { _id: user._id },
-      {
-        $addToSet: {
-          roleIds: role._id,
-        },
-      }
-    );
+  async addRole(userId: string, roleId: string): Promise<void> {
+    await this.db.userRoles.create({ userId, roleId });
   }
 
-  async getRoles(user: User): Promise<Role[]> {
-    return this.db.roles.find({
-      _id: { $in: user.roleIds },
-    });
+  async fetchRolesByUser(userId: string): Promise<RoleModel[]> {
+    const userRoles = await this.db.userRoles
+      .join("role")
+      .select("role.*")
+      .where({ userId });
+    return userRoles.map((ur) => ur.role);
+  }
+
+  /**
+   * @returns key: user ID
+   */
+  async fetchRolesByUsers(
+    userIds: string[]
+  ): Promise<Map<string, RoleModel[]>> {
+    const userRoles = await this.db.userRoles
+      .join("role")
+      .select("role.*", "userId")
+      .whereIn("userId", userIds);
+    const roleMap = new Map<string, RoleModel[]>();
+    for (const { userId, role } of userRoles) {
+      const mappedRoles = roleMap.get(userId);
+      roleMap.set(userId, (mappedRoles ?? []).concat([role]));
+    }
+    return roleMap;
   }
 
   async create({
@@ -55,32 +91,31 @@ export class UserManager {
     email: string;
     username?: string;
     password?: string;
-  }): Promise<User> {
-    const existing = await this.db.users.findOne({
-      $or: [
-        { email },
-        { username: email },
-        ...(username !== undefined && username.length > 0
-          ? [{ username }, { email: username }]
-          : []),
-      ],
-    });
-    if (existing) {
-      throw HttpError.conflict(`user email=${email} already exists`);
+  }): Promise<UserModel> {
+    const query = this.whereEmailOrUsername(email, username);
+    if (await query.count()) {
+      throw new Error(`User ${email} already exists`);
     }
-    return this.db.users.create(
-      new User({
-        email,
-        username,
-        auth: {
-          passwordHash:
-            password !== undefined && password.length > 0
-              ? await this.password.hash(password)
-              : undefined,
-        },
-        roleIds: [],
-        notes: [],
-      })
-    );
+    return await this.db.users.create({
+      email,
+      username,
+      ...(password
+        ? { passwordHash: await this.authManager.hashPassword(password) }
+        : {}),
+    });
+  }
+
+  async updatePassword(id: string, password: string): Promise<void> {
+    await this.db.users.find(id).update({
+      passwordHash: await this.authManager.hashPassword(password),
+    });
+  }
+
+  whereEmailOrUsername(email: string, username?: string) {
+    let query = this.db.users.where({ email }).or({ username: email });
+    if (username?.length) {
+      query = query.or({ username }).or({ email: username });
+    }
+    return query;
   }
 }

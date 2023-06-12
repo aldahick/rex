@@ -1,29 +1,31 @@
-import { injectable } from "@athenajs/core";
+import { Config } from "../../config.js";
+import {
+  DiscordCommand,
+  discordCommand,
+  DiscordService,
+} from "../../service/discord.service.js";
 
-import { discordCommand, DiscordRegistry } from "../../registry/discord";
-import { ConfigService } from "../../service/config";
+@discordCommand()
+export class HelpCommand implements DiscordCommand {
+  command = "help";
+  helpText = "Don't read this";
 
-@singleton()
-export class HelpCommand {
   constructor(
-    private readonly config: ConfigService,
-    private readonly discordRegistry: DiscordRegistry
+    private readonly config: Config,
+    private readonly discordService: DiscordService
   ) {}
 
-  @discordCommand("help", {
-    helpText: "Don't read this.",
-  })
-  help(): string {
+  async handle(): Promise<string> {
     /*
     ends up like:
     **Commands:**
     `~a`, `~b`: this is help text
     `~c`: and this is more
     */
-    return `**Commands:**\n${this.discordRegistry.commandMetadatas
+    return `**Commands:**\n${Array.from(this.discordService.commands.values())
       .map(
-        ({ commands, helpText }) =>
-          `${commands
+        ({ command, helpText }) =>
+          `${(command instanceof Array ? command : [command])
             .map(
               (command) => `\`${this.config.discord.commandPrefix}${command}\``
             )

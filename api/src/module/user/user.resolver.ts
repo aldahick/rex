@@ -1,7 +1,12 @@
-import { guard, HttpError, mutation, query, resolver } from "@athenajs/core";
-import { injectable } from "@athenajs/core";
+import {
+  resolveField,
+  resolveMutation,
+  resolveQuery,
+  resolver,
+} from "@athenajs/core";
 
 import {
+  IAuthPermission,
   IMutation,
   IMutationAddRoleToUserArgs,
   IMutationCreateUserArgs,
@@ -9,116 +14,123 @@ import {
   IQuery,
   IQueryUserArgs,
   IUser,
-} from "../../graphql";
-import { AuthContext } from "../auth";
-import { RoleManager } from "../role";
-import { User } from "./model";
-import { UserManager } from "./user.manager";
+} from "../../graphql.js";
+import { UserModel } from "../../model/index.js";
+import { AuthContext } from "../auth/index.js";
+import { RoleManager, RoleResolver } from "../role/index.js";
+import { UserManager } from "./user.manager.js";
 
-@singleton()
+@resolver()
 export class UserResolver {
   constructor(
     private readonly roleManager: RoleManager,
+    private readonly roleResolver: RoleResolver,
     private readonly userManager: UserManager
   ) {}
 
-  @query()
+  @resolveQuery()
   async user(
-    root: unknown,
+    root: never,
     { id }: IQueryUserArgs,
     context: AuthContext
   ): Promise<IQuery["user"]> {
-    if (
-      id !== undefined &&
-      (await context.isAuthorized({
-        resource: "user",
-        action: "readAny",
-      }))
-    ) {
-      return this.userManager.get(id);
-    } else if (
-      context.userId !== undefined &&
-      (await context.isAuthorized({
-        resource: "user",
-        action: "readOwn",
-      }))
-    ) {
-      return this.userManager.get(context.userId);
-    } else {
-      throw HttpError.forbidden();
+    let userId = context.userId;
+    if (!userId) {
+      throw new Error("Forbidden");
     }
+    if (id && (await context.isAuthorized(IAuthPermission.ManageUsers))) {
+      userId = id;
+    }
+    return this.makeGql(await this.userManager.fetch(userId));
   }
 
-  @guard({
-    resource: "user",
-    action: "readAny",
-  })
-  @query()
-  async users(): Promise<IQuery["users"]> {
-    return this.userManager.getAll();
+  @resolveQuery()
+  async users(
+    root: never,
+    args: never,
+    context: AuthContext
+  ): Promise<IQuery["users"]> {
+    if (!(await context.isAuthorized(IAuthPermission.ManageUsers))) {
+      throw new Error("Forbidden");
+    }
+    const users = await this.userManager.fetchMany();
+    return users.map((u) => this.makeGql(u));
   }
 
-  @guard({
-    resource: "role",
-    action: "readAny",
-  })
-  @resolver("User.roles")
-  async roles(root: User): Promise<IUser["roles"]> {
-    return this.userManager.getRoles(root);
-  }
-
-  @guard({
-    resource: "role",
-    action: "readAny",
-  })
-  @resolver("User.permissions")
-  async permissions(root: User): Promise<IUser["permissions"]> {
-    const roles = await this.userManager.getRoles(root);
-    return this.roleManager.toPermissions(roles);
-  }
-
-  @guard({
-    resource: "user",
-    action: "updateAny",
-    attributes: "role",
-  })
-  @mutation()
+  @resolveMutation()
   async addRoleToUser(
-    root: unknown,
-    { userId, roleId }: IMutationAddRoleToUserArgs
+    root: never,
+    { userId, roleId }: IMutationAddRoleToUserArgs,
+    context: AuthContext
   ): Promise<IMutation["addRoleToUser"]> {
-    const user = await this.userManager.get(userId);
-    const role = await this.roleManager.get(roleId);
-
-    await this.userManager.addRole(user, role);
-
+    if (
+      !(await context.isAuthorized(IAuthPermission.ManageUsers)) ||
+      !(await context.isAuthorized(IAuthPermission.ManageRoles))
+    ) {
+      throw new Error("Forbidden");
+    }
+    await this.userManager.addRole(userId, roleId);
     return true;
   }
 
-  @guard({
-    resource: "user",
-    action: "createAny",
-  })
-  @mutation()
+  @resolveMutation()
   async createUser(
-    root: unknown,
-    { email, username, password }: IMutationCreateUserArgs
+    root: never,
+    { email, username, password }: IMutationCreateUserArgs,
+    context: AuthContext
   ): Promise<IMutation["createUser"]> {
-    return this.userManager.create({ email, username, password });
+    if (!(await context.isAuthorized(IAuthPermission.ManageUsers))) {
+      throw new Error("Forbidden");
+    }
+    const user = await this.userManager.create({ email, username, password });
+    return this.makeGql(user);
   }
 
-  @guard({
-    resource: "user",
-    action: "updateAny",
-    attributes: "password",
-  })
-  @mutation()
+  @resolveMutation()
   async setUserPassword(
     root: unknown,
-    { userId, password }: IMutationSetUserPasswordArgs
+    { userId, password }: IMutationSetUserPasswordArgs,
+    context: AuthContext
   ): Promise<IMutation["setUserPassword"]> {
-    const user = await this.userManager.get(userId);
-    await this.userManager.password.set(user, password);
+    let id = context.userId;
+    if (userId && (await context.isAuthorized(IAuthPermission.ManageUsers))) {
+      id = userId;
+    } else if (!id) {
+      throw new Error("Forbidden");
+    }
+    await this.userManager.updatePassword(id, password);
     return true;
+  }
+
+  @resolveField("User.roles", true)
+  async roles(users: IUser[]): Promise<IUser["roles"][]> {
+    const userRoles = await this.userManager.fetchRolesByUsers(
+      users.map((u) => u.id)
+    );
+    return users.map(
+      (u) => userRoles.get(u.id)?.map((r) => this.roleResolver.makeGql(r)) ?? []
+    );
+  }
+
+  @resolveField("User.permissions", true)
+  async permissions(users: IUser[]): Promise<IUser["permissions"][]> {
+    const userRoles = await this.userManager.fetchRolesByUsers(
+      users.map((u) => u.id)
+    );
+    return users.map(
+      (u) =>
+        userRoles
+          .get(u.id)
+          ?.flatMap((r) =>
+            r.permissions.map((p) => IAuthPermission[p as never])
+          ) ?? []
+    );
+  }
+
+  makeGql(user: UserModel): IUser {
+    return {
+      ...user,
+      username: user.username ?? undefined,
+    };
   }
 }

@@ -9,12 +9,12 @@ extend type Query {
 }
 
 type SteamGame {
-  _id: Int!
+  id: Int!
   name: String!
 }
 
 type SteamPlayer {
-  _id: String!
+  id: String!
   nickname: String!
   avatarUrl: String!
   profileUrl: String!

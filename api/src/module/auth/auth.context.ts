@@ -1,61 +1,57 @@
-import { AuthCheck, BaseAuthContext } from "@athenajs/core";
-import { Request } from "express";
-import { container } from "tsyringe";
+import {
+  ContextGenerator,
+  contextGenerator,
+  ContextRequest,
+} from "@athenajs/core";
+import { IncomingHttpHeaders } from "http";
 
-import { Role } from "../role";
-import { User, UserManager } from "../user";
-import { AuthManager } from "./auth.manager";
+import { IAuthPermission } from "../../graphql.js";
+import { UserManager } from "../user/user.manager.js";
+import { AuthManager } from "./auth.manager.js";
 
-export interface IAuthTokenPayload {
-  userId: string;
-}
+export class AuthContext {
+  private permissions?: Set<IAuthPermission>;
 
-export class AuthContext implements BaseAuthContext {
-  private readonly authManager = container.resolve(AuthManager);
+  constructor(
+    private readonly userManager: UserManager,
+    readonly token?: string,
+    readonly userId?: string
+  ) {}
 
-  private readonly userManager = container.resolve(UserManager);
-
-  private _user?: User | "notFound";
-
-  private _roles?: Role[];
-
-  constructor(readonly req: Request, private payload?: IAuthTokenPayload) {}
-
-  setPayload(payload: IAuthTokenPayload): void {
-    this.payload = payload;
-    this._user = undefined;
-  }
-
-  get userId(): string | undefined {
-    return this.payload?.userId;
-  }
-
-  async user(): Promise<User | undefined> {
-    if (this.payload?.userId === undefined || this._user === "notFound") {
-      return undefined;
-    }
-    if (this._user) {
-      return this._user;
-    }
-    this._user = await this.userManager.getSafe(this.payload.userId);
-    if (!this._user) {
-      this._user = "notFound";
-      return undefined;
-    }
-    return this._user;
-  }
-
-  async isAuthorized(check?: AuthCheck): Promise<boolean> {
-    const user = await this.user();
-    if (!user) {
+  async isAuthorized(permission: IAuthPermission): Promise<boolean> {
+    if (!this.userId) {
       return false;
     }
-    if (!check) {
-      return true;
+    if (this.permissions) {
+      return this.permissions.has(permission);
     }
-    if (!this._roles) {
-      this._roles = await this.userManager.getRoles(user);
+    this.permissions = await this.userManager.fetchPermissions(this.userId);
+    return this.permissions.has(permission);
+  }
+}
+
+@contextGenerator()
+export class AuthContextGenerator implements ContextGenerator {
+  constructor(
+    private readonly authManager: AuthManager,
+    private readonly userManager: UserManager
+  ) {}
+
+  async generateContext({ headers }: ContextRequest): Promise<AuthContext> {
+    const token = this.getToken(headers);
+    if (!token) {
+      return new AuthContext(this.userManager);
     }
-    return this.authManager.isAuthorized(this._roles, check);
+    const userId = this.authManager.getTokenUserId(token);
+    return new AuthContext(this.userManager, token, userId);
+  }
+
+  private getToken(headers: IncomingHttpHeaders): string | undefined {
+    const auth = headers["authorization"];
+    if (!auth) {
+      return undefined;
+    }
+    const [type, token] = auth.split(" ");
+    return type?.toLocaleLowerCase() === "bearer" ? token : undefined;
   }
 }

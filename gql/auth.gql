@@ -16,15 +16,16 @@ enum AuthClientType {
 
 type AuthToken {
   token: String!
+  userId: ID!
   user: User!
 }
 
-type AuthPermission {
-  resource: String!
-  action: String!
-}
-
-input AuthPermissionInput {
-  resource: String!
-  action: String!
+enum AuthPermission {
+  MANAGE_MEDIA_SELF,
+  MANAGE_MEDIA_ALL,
+  MANAGE_NOTES_SELF,
+  MANAGE_NOTES_ALL,
+  MANAGE_ROLES,
+  MANAGE_STEAM_GAMES,
+  MANAGE_USERS
 }

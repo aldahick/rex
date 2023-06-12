@@ -1,79 +1,34 @@
-import { HttpError } from "@athenajs/core";
 import { injectable } from "@athenajs/core";
 
-import { DatabaseService } from "../../service/database";
-import { User, UserNote } from "../user";
+import { UserNoteModel } from "../../model/index.js";
+import { DatabaseService } from "../../service/database.service.js";
 
-@singleton()
+@injectable()
 export class NoteManager {
   constructor(private readonly db: DatabaseService) {}
 
-  async update(
-    user: User,
-    { id, body }: { id: string; body: string }
-  ): Promise<void> {
-    await this.db.users.updateOne(
-      {
-        notes: {
-          $elemMatch: {
-            _id: id,
-          },
-        },
-      },
-      {
-        $set: {
-          "notes.$.body": body,
-        },
-      }
-    );
+  async fetch(id: string, userId: string): Promise<UserNoteModel | undefined> {
+    return this.db.userNotes.findBy({ userId, id }).selectAll();
   }
 
-  async create(
-    user: User,
-    { title }: Pick<UserNote, "title">
-  ): Promise<UserNote> {
-    const note = new UserNote({
+  async fetchMany(userId: string): Promise<UserNoteModel[]> {
+    return this.db.userNotes.where({ userId }).selectAll();
+  }
+
+  async updateBody(id: string, userId: string, body: string): Promise<void> {
+    await this.db.userNotes.where({ id, userId }).update({ body });
+  }
+
+  async create(userId: string, title: string): Promise<UserNoteModel> {
+    return this.db.userNotes.create({
+      userId,
       title,
-      body: "",
       createdAt: new Date(),
+      body: "",
     });
-    await this.db.users.updateOne(
-      {
-        _id: user._id,
-      },
-      {
-        $push: {
-          notes: note,
-        },
-      }
-    );
-    const updatedUser = await this.db.users.findById(user._id);
-    if (!updatedUser) {
-      // just a possible race condition
-      throw HttpError.notFound(`user id=${user._id}`);
-    }
-    const createdNote = updatedUser.notes.find(
-      (n) =>
-        n.title === note.title &&
-        n.createdAt.getTime() === note.createdAt.getTime()
-    );
-    if (!createdNote) {
-      // another race condition
-      throw HttpError.notFound("created note");
-    }
-    return createdNote;
   }
 
-  async remove(user: User, noteId: string): Promise<void> {
-    await this.db.users.updateOne(
-      {
-        _id: user._id,
-      },
-      {
-        $pull: {
-          notes: { _id: noteId },
-        },
-      }
-    );
+  async remove(id: string, userId: string): Promise<void> {
+    await this.db.userNotes.where({ userId, id }).delete();
   }
 }

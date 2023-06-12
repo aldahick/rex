@@ -1,10 +1,10 @@
 extend type Query {
-  progress(id: String!): Progress!
-  progresses(ids: [String!]!): [Progress!]!
+  progress(id: ID!): Progress!
+  progresses(ids: [ID!]!): [Progress!]!
 }
 
 type Progress {
-  _id: String!
+  id: ID!
   action: String!
   createdAt: DateTime!
   status: ProgressStatus!

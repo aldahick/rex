@@ -1,9 +1,3 @@
-import { IModule } from "../../IModule";
-import { AuthResolver } from "./auth.resolver";
-
-export * from "./auth.context";
-export * from "./auth.manager";
-
-export const authModule: IModule = {
-  resolvers: [AuthResolver],
-};
+export * from "./auth.context.js";
+export * from "./auth.manager.js";
+export * from "./auth.resolver.js";

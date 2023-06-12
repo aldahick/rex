@@ -1,12 +1,12 @@
-import { resolveField, resolver } from "@athenajs/core";
+import { resolver, resolveScalar } from "@athenajs/core";
 import { GraphQLError, GraphQLScalarType } from "graphql";
 
 @resolver()
 export class DateTimeScalarResolver {
-  @resolveField("DateTime")
+  @resolveScalar("DateTime")
   dateTime = new GraphQLScalarType({
     name: "DateTime",
-    serialize: (date: Date): string => {
+    serialize: (date: unknown): string => {
       if (!(date instanceof Date)) {
         throw new GraphQLError("can't serialize non-Date value as DateTime");
       }

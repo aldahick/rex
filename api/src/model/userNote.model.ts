@@ -1,6 +1,7 @@
 import { BaseTable } from "./base.table.js";
 import { UserTable } from "./user.model.js";
 
+export type UserNoteModel = UserNoteTable["columns"]["type"];
 export class UserNoteTable extends BaseTable {
   table = "user_notes";
   columns = this.setColumns((t) => ({

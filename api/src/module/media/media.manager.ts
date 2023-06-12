@@ -1,24 +1,19 @@
-import { HttpError, LoggerService } from "@athenajs/core";
-import { injectable } from "@athenajs/core";
-import axios, { AxiosResponse as OldAxiosResponse } from "axios";
-import * as fs from "fs-extra";
-import * as path from "path";
+import { injectable, Logger } from "@athenajs/core";
+import axios from "axios";
+import { createReadStream, createWriteStream, promises as fs } from "fs";
+import path from "path";
 import { Readable } from "stream";
 
-import { IMediaItem, IMediaItemType, IProgressStatus } from "../../graphql";
-import { ConfigService } from "../../service/config";
-import { Progress, ProgressManager } from "../progress";
-import { User } from "../user";
+import { Config } from "../../config.js";
+import { IMediaItem, IMediaItemType, IProgressStatus } from "../../graphql.js";
+import { UserModel } from "../../model/index.js";
+import { ProgressManager } from "../progress/index.js";
 
-type AxiosResponse<T> = Omit<OldAxiosResponse<T>, "headers"> & {
-  headers: Record<string, string>;
-};
-
-@singleton()
+@injectable()
 export class MediaManager {
   constructor(
-    private readonly config: ConfigService,
-    private readonly logger: LoggerService,
+    private readonly config: Config,
+    private readonly logger: Logger,
     private readonly progressManager: ProgressManager
   ) {}
 
@@ -26,28 +21,27 @@ export class MediaManager {
     user,
     url,
     destinationKey,
-    progress,
+    progressId,
   }: {
-    user: User;
+    user: Pick<UserModel, "id" | "email">;
     url: string;
     destinationKey: string;
-    progress: Progress;
+    progressId: string;
   }): Promise<void> {
     const filename = this.toFilename(user, destinationKey);
-    await fs.mkdirp(path.dirname(filename));
-    const { data: stream, headers } = await axios.get<
-      Readable,
-      AxiosResponse<Readable>
-    >(url, { responseType: "stream" });
+    await fs.mkdir(path.dirname(filename), { recursive: true });
+    const { data: stream, headers } = await axios.get<Readable>(url, {
+      responseType: "stream",
+    });
     const totalSize = Number(headers["content-length"]);
     let fetchedSize = 0;
     const loggedPercents = [0];
     const onLogError = (err: Error): void => {
       this.logger.error("downloadMedia.logComplete", err, {
         destinationKey,
-        progressId: progress._id,
+        progressId,
         url,
-        userId: user._id,
+        userId: user.id,
       });
     };
     stream.pause();
@@ -59,23 +53,23 @@ export class MediaManager {
         !loggedPercents.includes(percentComplete)
       ) {
         this.progressManager
-          .addLogs(progress, `${percentComplete}% complete`)
+          .addLogs(progressId, `${percentComplete}% complete`)
           .catch(onLogError);
         loggedPercents.push(percentComplete);
       }
     });
-    stream.pipe(fs.createWriteStream(filename));
+    stream.pipe(createWriteStream(filename));
     stream.on("end", () => {
       this.progressManager
         .addLogs(
-          progress,
+          progressId,
           `Finished downloading ${url} to ${destinationKey}`,
           IProgressStatus.Complete
         )
         .catch(onLogError);
     });
     await this.progressManager.addLogs(
-      progress,
+      progressId,
       "Started download",
       IProgressStatus.InProgress
     );
@@ -87,66 +81,65 @@ export class MediaManager {
     key,
     data,
   }: {
-    user: User;
+    user: Pick<UserModel, "email">;
     key: string;
     data: string;
   }): Promise<void> {
     const filename = this.toFilename(user, key);
-    await fs.mkdirp(path.dirname(filename));
+    await fs.mkdir(path.dirname(filename), { recursive: true });
     await fs.writeFile(filename, data);
   }
 
-  async list(user: User, dir: string): Promise<IMediaItem[]> {
+  async list(
+    user: Pick<UserModel, "id" | "email">,
+    dir: string
+  ): Promise<IMediaItem[]> {
     const baseDir = this.toFilename(user, dir);
-    let files: string[];
-    try {
-      files = await fs.readdir(baseDir);
-    } catch (err) {
-      this.logger.error("media.list", err, { userId: user._id, dir });
-      throw HttpError.internalError();
-    }
+    const files = (await fs.readdir(baseDir)).filter((f) => !f.startsWith("."));
     return Promise.all(
-      files
-        .filter((f) => !f.startsWith("."))
-        .map(async (filename) => {
-          const stats = await fs.stat(path.resolve(baseDir, filename));
-          return {
-            key: filename.split("/").slice(-1)[0],
-            type: stats.isFile()
-              ? IMediaItemType.File
-              : (await fs.pathExists(
-                  path.resolve(baseDir, filename, ".series")
-                ))
-              ? IMediaItemType.Series
-              : IMediaItemType.Directory,
-          };
-        })
+      files.map(async (filename) => {
+        const stats = await fs.stat(path.resolve(baseDir, filename));
+        let type = IMediaItemType.File;
+        if (stats.isDirectory()) {
+          const seriesStats = await fs
+            .stat(path.resolve(baseDir, filename, ".series"))
+            .catch(() => undefined);
+          type = seriesStats?.isFile()
+            ? IMediaItemType.Series
+            : IMediaItemType.Directory;
+        }
+        const [key = ""] = filename.split("/").slice(-1);
+        return {
+          key,
+          type,
+        };
+      })
     );
   }
 
-  async getSize(user: User, key: string): Promise<number> {
+  async getSize(user: Pick<UserModel, "email">, key: string): Promise<number> {
     const { size } = await fs.stat(this.toFilename(user, key));
     return size;
   }
 
   createReadStream(
-    user: User,
+    user: Pick<UserModel, "email">,
     key: string,
     { start, end }: { start: number; end?: number }
   ): Readable {
-    return fs.createReadStream(this.toFilename(user, key), { start, end });
+    return createReadStream(this.toFilename(user, key), { start, end });
   }
 
-  async exists(user: User, key: string): Promise<boolean> {
+  async exists(user: Pick<UserModel, "email">, key: string): Promise<boolean> {
     try {
-      await fs.stat(this.toFilename(user, key));
+      await fs.access(this.toFilename(user, key));
       return true;
     } catch (err) {
       return false;
     }
   }
 
-  async isFile(user: User, key: string): Promise<boolean> {
+  async isFile(user: Pick<UserModel, "email">, key: string): Promise<boolean> {
     try {
       const stats = await fs.stat(this.toFilename(user, key));
       return stats.isFile();
@@ -155,7 +148,7 @@ export class MediaManager {
     }
   }
 
-  private toFilename(user: User, key: string): string {
+  private toFilename(user: Pick<UserModel, "email">, key: string): string {
     const { mediaDir = "" } = this.config;
     if (mediaDir === "") {
       throw new Error("Missing environment variable MEDIA_DIR");

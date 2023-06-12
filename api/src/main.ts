@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import "./module/auth/index.js";
 import "./module/generic/index.js";
-import "./module/league/index.js";
 import "./module/media/index.js";
 import "./module/note/index.js";
 import "./module/progress/index.js";

@@ -1,8 +1,2 @@
-import { IModule } from "../../IModule";
-import { NoteResolver } from "./note.resolver";
-
-export * from "./note.manager";
-
-export const noteModule: IModule = {
-  resolvers: [NoteResolver],
-};
+export * from "./note.manager.js";
+export * from "./note.resolver.js";

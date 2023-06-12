@@ -1,77 +1,54 @@
-import { HttpError } from "@athenajs/core";
 import { injectable } from "@athenajs/core";
 
-import { IProgressStatus } from "../../graphql";
-import { Progress, ProgressLog } from "../../model";
-import { DatabaseService } from "../../service/database";
+import { IProgressStatus } from "../../graphql.js";
+import { ProgressModel } from "../../model/index.js";
+import { DatabaseService } from "../../service/database.service.js";
 
-@singleton()
+@injectable()
 export class ProgressManager {
-  readonly find = this.db.progress.find.bind(this.db.progress);
-
   constructor(private readonly db: DatabaseService) {}
 
-  async get(id: string): Promise<Progress> {
-    const progress = await this.db.progress.findById(id);
+  async fetch(id: string): Promise<ProgressModel> {
+    const progress = await this.db.progress.find(id).selectAll();
     if (!progress) {
-      throw HttpError.notFound(`progress id=${id} not found`);
+      throw new Error(`Progress ${id} not found`);
     }
     return progress;
   }
 
-  async create(action: string): Promise<Progress> {
-    return this.db.progress.create(
-      new Progress({
-        action,
-        createdAt: new Date(),
-        status: IProgressStatus.Created,
-        logs: [],
-      })
-    );
+  async fetchMany(ids: string[]): Promise<ProgressModel[]> {
+    return await this.db.progress.whereIn("id", ids);
+  }
+
+  async create(action: string): Promise<ProgressModel> {
+    return this.db.progress.create({
+      action,
+      createdAt: new Date(),
+      status: IProgressStatus.Created,
+    });
   }
 
   async addLogs(
-    progress: Progress,
+    id: string,
     logs: string | string[],
     status?: IProgressStatus
   ): Promise<void> {
-    await this.db.progress.updateOne(
-      {
-        _id: progress._id,
-      },
-      {
-        $push: {
-          logs: {
-            $each: (logs instanceof Array ? logs : [logs]).map(
-              (text) =>
-                new ProgressLog({
-                  text,
-                  createdAt: new Date(),
-                })
-            ),
-          },
-        },
-      }
+    await this.db.progressLogs.createMany(
+      (logs instanceof Array ? logs : [logs]).map((text) => ({
+        text,
+        createdAt: new Date(),
+      }))
     );
-    if (status !== undefined) {
-      await this.db.progress.updateOne(
-        {
-          _id: progress._id,
-        },
-        {
-          $set: {
-            status,
-          },
-        }
-      );
+    if (status) {
+      await this.db.progress.where({ id }).update({ status });
     }
   }
 
-  resolveSafe(progress: Progress, promise: Promise<void>): void {
+  resolveSafe(progressId: string, promise: Promise<void>): void {
     promise.catch(async (err: unknown) => {
       const errorMessage = err instanceof Error ? err.message : (err as string);
       await this.addLogs(
-        progress,
+        progressId,
         `An unexpected error occurred: ${errorMessage}`
       );
     });

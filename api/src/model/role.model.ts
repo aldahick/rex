@@ -1,4 +1,5 @@
 import { BaseTable } from "./base.table.js";
+import { UserRoleTable } from "./userRole.model.js";
 
 export type RoleModel = RoleTable["columns"]["type"];
 export class RoleTable extends BaseTable {
@@ -9,12 +10,9 @@ export class RoleTable extends BaseTable {
     permissions: t.array(t.varchar()),
   }));
   relations = {
-    roles: this.hasAndBelongsToMany(() => RoleTable, {
+    users: this.hasMany(() => UserRoleTable, {
       primaryKey: "id",
       foreignKey: "roleId",
-      associationPrimaryKey: "id",
-      associationForeignKey: "userId",
-      joinTable: "user_roles",
     }),
   };
 }

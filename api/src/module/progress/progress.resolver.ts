@@ -1,44 +1,46 @@
-import { guard, query } from "@athenajs/core";
-import { injectable } from "@athenajs/core";
+import { resolveQuery, resolver } from "@athenajs/core";
 
 import {
+  IProgress,
   IQuery,
   IQueryProgressArgs,
   IQueryProgressesArgs,
-} from "../../graphql";
-import { ProgressManager } from "./progress.manager";
+} from "../../graphql.js";
+import { ProgressModel } from "../../model/index.js";
+import { AuthContext } from "../auth/index.js";
+import { ProgressManager } from "./progress.manager.js";
 
-@singleton()
+@resolver()
 export class ProgressResolver {
   constructor(private readonly progressManager: ProgressManager) {}
 
-  @guard({
-    resource: "progress",
-    action: "readAny",
-  })
-  @query()
+  @resolveQuery()
   async progress(
     root: unknown,
-    { id }: IQueryProgressArgs
+    { id }: IQueryProgressArgs,
+    context: AuthContext
   ): Promise<IQuery["progress"]> {
-    return (await this.progressManager.get(id)).toGqlObject();
+    if (!context.userId) {
+      throw new Error("Forbidden");
+    }
+    const progress = await this.progressManager.fetch(id);
+    return this.makeGql(progress);
   }
 
-  @guard({
-    resource: "progress",
-    action: "readAny",
-  })
-  @query()
+  @resolveQuery()
   async progresses(
     root: unknown,
     { ids }: IQueryProgressesArgs
   ): Promise<IQuery["progresses"]> {
-    return (
-      await this.progressManager.find({
-        _id: {
-          $in: ids,
-        },
-      })
-    ).map((p) => p.toGqlObject());
+    const progresses = await this.progressManager.fetchMany(ids);
+    return progresses.map((p) => this.makeGql(p));
+  }
+
+  makeGql(progress: ProgressModel): IProgress {
+    return {
+      ...progress,
+      createdAt: new Date(progress.createdAt),
+      logs: [],
+    };
   }
 }

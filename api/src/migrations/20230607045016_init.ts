@@ -2,7 +2,7 @@ import { IProgressStatus } from "../graphql.js";
 import { ProgressTable } from "../model/progress.model.js";
 import { RoleTable } from "../model/role.model.js";
 import { UserTable } from "../model/user.model.js";
-import { change } from "../service/database/orchid-cli.js";
+import { change } from "../util/orchid.js";
 
 change(async (db) => {
   await db.createEnum(

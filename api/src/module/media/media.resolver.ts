@@ -1,5 +1,4 @@
-import { guard, HttpError, mutation, query } from "@athenajs/core";
-import { injectable } from "@athenajs/core";
+import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
 
 import {
   IMutation,
@@ -7,72 +6,72 @@ import {
   IMutationCreateMediaArgs,
   IQuery,
   IQueryMediaItemsArgs,
-} from "../../graphql";
-import { AuthContext } from "../auth";
-import { ProgressManager } from "../progress";
-import { MediaManager } from "./media.manager";
+} from "../../graphql.js";
+import { UserModel } from "../../model/index.js";
+import { AuthContext } from "../auth/index.js";
+import { ProgressManager, ProgressResolver } from "../progress/index.js";
+import { UserManager } from "../user/index.js";
+import { MediaManager } from "./media.manager.js";
 
-@singleton()
+@resolver()
 export class MediaResolver {
   constructor(
     private readonly mediaManager: MediaManager,
-    private readonly progressManager: ProgressManager
+    private readonly progressManager: ProgressManager,
+    private readonly progressResolver: ProgressResolver,
+    private readonly userManager: UserManager
   ) {}
 
-  @guard({
-    resource: "mediaItem",
-    action: "readOwn",
-  })
-  @query()
+  @resolveQuery()
   async mediaItems(
-    root: unknown,
+    root: never,
     { dir }: IQueryMediaItemsArgs,
     context: AuthContext
   ): Promise<IQuery["mediaItems"]> {
-    const user = await context.user();
-    if (!user) {
-      throw HttpError.forbidden("Requires user token");
-    }
+    const user = await this.fetchUser(context);
     return this.mediaManager.list(user, dir);
   }
 
-  @guard({
-    resource: "mediaItem",
-    action: "createOwn",
-  })
-  @mutation()
+  @resolveMutation()
   async addMediaDownload(
-    root: unknown,
+    root: never,
     { url, destinationKey }: IMutationAddMediaDownloadArgs,
     context: AuthContext
   ): Promise<IMutation["addMediaDownload"]> {
-    const user = await context.user();
-    if (!user) {
-      throw HttpError.forbidden("Requires user token");
-    }
+    const user = await this.fetchUser(context);
     const progress = await this.progressManager.create("addMediaDownload");
     this.progressManager.resolveSafe(
-      progress,
-      this.mediaManager.download({ user, url, destinationKey, progress })
+      progress.id,
+      this.mediaManager.download({
+        user,
+        url,
+        destinationKey,
+        progressId: progress.id,
+      })
     );
-    return progress.toGqlObject();
+    return this.progressResolver.makeGql(progress);
   }
 
-  @guard({
-    resource: "mediaItem",
-    action: "createOwn",
-  })
-  @mutation()
+  @resolveMutation()
   async createMedia(
-    root: unknown,
+    root: never,
     { key, data }: IMutationCreateMediaArgs,
     context: AuthContext
   ): Promise<IMutation["createMedia"]> {
-    const user = await context.user();
-    if (!user) {
-      throw HttpError.forbidden("Requires user token");
-    }
+    const user = await this.fetchUser(context);
     await this.mediaManager.create({ user, key, data });
     return true;
+  }
+
+  private async fetchUser(
+    context: AuthContext
+  ): Promise<Pick<UserModel, "id" | "email">> {
+    if (!context.userId) {
+      throw new Error("Forbidden");
+    }
+    return {
+      id: context.userId,
+      email: await this.userManager.fetchEmail(context.userId),
+    };
   }
 }

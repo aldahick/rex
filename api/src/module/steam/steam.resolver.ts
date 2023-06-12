@@ -1,52 +1,52 @@
-import { guard, mutation, query } from "@athenajs/core";
-import { injectable } from "@athenajs/core";
-import * as _ from "lodash";
+import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
 
 import {
+  IAuthPermission,
   IMutation,
   IQuery,
   IQuerySteamGamesArgs,
   IQuerySteamPlayerArgs,
   IQuerySteamPlayersArgs,
   ISteamPlayer,
-} from "../../graphql";
-import { SteamPlayer } from "../../service/steam";
-import { ProgressManager } from "../progress";
-import { SteamGame } from "./model";
-import { SteamGameManager } from "./steamGame.manager";
-import { SteamPlayerManager } from "./steamPlayer.manager";
+} from "../../graphql.js";
+import { SteamGameModel } from "../../model/index.js";
+import { SteamPlayer } from "../../service/steam/index.js";
+import { AuthContext } from "../auth/index.js";
+import { ProgressManager, ProgressResolver } from "../progress/index.js";
+import { SteamGameManager } from "./steamGame.manager.js";
+import { SteamPlayerManager } from "./steamPlayer.manager.js";
 
 const SEARCH_PAGE_SIZE = 100;
 
-@singleton()
+@resolver()
 export class SteamResolver {
   constructor(
     private readonly progressManager: ProgressManager,
+    private readonly progressResolver: ProgressResolver,
     private readonly steamGameManager: SteamGameManager,
     private readonly steamPlayerManager: SteamPlayerManager
   ) {}
 
-  @guard({
-    resource: "steamGame",
-    action: "updateAny",
-  })
-  @mutation()
-  async fetchSteamGames(): Promise<IMutation["fetchSteamGames"]> {
+  @resolveMutation()
+  async fetchSteamGames(
+    root: never,
+    args: never,
+    context: AuthContext
+  ): Promise<IMutation["fetchSteamGames"]> {
+    if (!(await context.isAuthorized(IAuthPermission.ManageSteamGames))) {
+      throw new Error("Forbidden");
+    }
     const progress = await this.progressManager.create("fetchSteamGames");
     this.progressManager.resolveSafe(
-      progress,
-      this.steamGameManager.fetchAll(progress)
+      progress.id,
+      this.steamGameManager.fetchAll(progress.id)
     );
-    return progress.toGqlObject();
+    return this.progressResolver.makeGql(progress);
   }
 
-  @guard({
-    resource: "steamGame",
-    action: "readAny",
-  })
-  @query()
+  @resolveQuery()
   async steamGames(
-    root: unknown,
+    root: never,
     { page, search }: IQuerySteamGamesArgs
   ): Promise<IQuery["steamGames"]> {
     return this.steamGameManager.search(search, {
@@ -55,48 +55,40 @@ export class SteamResolver {
     });
   }
 
-  @guard({
-    resource: "steamPlayer",
-    action: "readAny",
-  })
-  @query()
+  @resolveQuery()
   async steamPlayer(
-    root: unknown,
+    root: never,
     { steamId64 }: IQuerySteamPlayerArgs
   ): Promise<IQuery["steamPlayer"]> {
     const { player, ownedGames = [] } = await this.steamPlayerManager.get(
       steamId64
     );
-    return this.toGqlObject(player, ownedGames);
+    return this.makeGql(player, ownedGames);
   }
 
-  @guard({
-    resource: "steamPlayer",
-    action: "readAny",
-  })
-  @query()
+  @resolveQuery()
   async steamPlayers(
-    root: unknown,
+    root: never,
     { steamIds64 }: IQuerySteamPlayersArgs
   ): Promise<IQuery["steamPlayers"]> {
     const players = await this.steamPlayerManager.getMany(steamIds64);
     return players.map(({ player, ownedGames = [] }) =>
-      this.toGqlObject(player, ownedGames)
+      this.makeGql(player, ownedGames)
     );
   }
 
-  private toGqlObject(
+  private makeGql(
     player: SteamPlayer,
-    ownedGames: SteamGame[]
+    ownedGames: SteamGameModel[]
   ): ISteamPlayer {
     return {
       ...player,
-      _id: player.id,
+      id: player.id,
       playingGame:
         player.playingGameId !== undefined
-          ? ownedGames.find((g) => g._id === player.playingGameId)
+          ? ownedGames.find((g) => g.id === player.playingGameId)
           : undefined,
-      ownedGames: _.sortBy(ownedGames, (g) => g.name),
+      ownedGames: ownedGames.sort((a, b) => a.name.localeCompare(b.name)),
     };
   }
 }

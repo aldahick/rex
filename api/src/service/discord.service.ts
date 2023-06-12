@@ -31,7 +31,7 @@ export class DiscordService {
     intents: [GatewayIntentBits.GuildMessages],
   });
 
-  private readonly commands = new Map<string, DiscordCommand>();
+  readonly commands = new Map<string, DiscordCommand>();
 
   constructor(
     private readonly config: Config,

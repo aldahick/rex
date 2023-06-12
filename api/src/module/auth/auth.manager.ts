@@ -1,33 +1,35 @@
-import { AuthCheck, authProvider, AuthService } from "@athenajs/core";
 import { injectable } from "@athenajs/core";
-import * as express from "express";
+import * as bcrypt from "bcrypt";
+import * as jwt from "jsonwebtoken";
 
-import { Role, RoleManager } from "../role";
-import { AuthContext, IAuthTokenPayload } from "./auth.context";
-import { AuthGoogleManager } from "./authGoogle.manager";
+import { Config } from "../../config.js";
+import { UserModel } from "../../model/index.js";
 
-@authProvider
-@singleton()
+@injectable()
 export class AuthManager {
-  constructor(
-    readonly google: AuthGoogleManager,
-    private readonly authService: AuthService,
-    private readonly roleManager: RoleManager
-  ) {}
+  constructor(private config: Config) {}
 
-  signToken(payload: IAuthTokenPayload): string {
-    return this.authService.signToken(payload);
+  signToken(userId: string): string {
+    return jwt.sign({ sub: userId }, this.config.http.jwtKey);
   }
 
-  isAuthorized(roles: Role[], check: AuthCheck): boolean {
-    const permissions = this.roleManager.toPermissions(roles);
-    if (!permissions.length) {
-      return false;
+  comparePassword(input: string, hash: string): Promise<boolean> {
+    return bcrypt.compare(input, hash);
+  }
+
+  hashPassword(input: string): Promise<string> {
+    return bcrypt.hash(input, 16);
+  }
+
+  makeToken(user: Pick<UserModel, "id">): string {
+    return jwt.sign({ sub: user.id }, this.config.http.jwtKey);
+  }
+
+  getTokenUserId(token: string): string | undefined {
+    const payload = jwt.verify(token, this.config.http.jwtKey);
+    if (typeof payload === "string" || !payload.sub) {
+      return undefined;
     }
-    return this.authService.isCheckValid(permissions, check);
-  }
-
-  getContext(req: express.Request, payload?: IAuthTokenPayload): AuthContext {
-    return new AuthContext(req, payload);
+    return payload.sub;
   }
 }

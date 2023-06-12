@@ -17,6 +17,7 @@ export class Config extends BaseConfig {
   };
 
   readonly http = {
+    jwtKey: this.required("HTTP_JWT_KEY"),
     port: Number(this.required("HTTP_PORT")),
   };
 
