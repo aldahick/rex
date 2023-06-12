@@ -17,6 +17,7 @@ jobs:
         with:
           version: 8
       - run: pnpm install
+        working-directory: ${{ inputs.directory }}
       - run: pnpm build
         working-directory: ${{ inputs.directory }}
       - run: pnpm lint
