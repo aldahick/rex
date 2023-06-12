@@ -1,19 +1,20 @@
-FROM node:12.18-alpine
+FROM node:18-alpine AS builder
 
-EXPOSE 5000
+# TODO remove once pnpm@latest works again
+RUN npm i -g pnpm@8.6.0
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
-WORKDIR /app
+COPY src src
+COPY index.html ./
+COPY vite.config.ts tsconfig.json tsconfig.node.json .eslintrc.json ./
+RUN pnpm build
 
-COPY package.json yarn.lock ./
-RUN yarn --frozen-lockfile
+FROM node:18-alpine AS server
 
-COPY tsconfig.json craco.config.js ./
-COPY src ./src
-COPY public ./public
-RUN yarn build
+RUN npm i -g serve
 
-# allow for rebuild on container first start
-RUN yarn clean
+COPY --from=builder dist dist
+COPY scripts scripts
 
-COPY scripts ./scripts
-CMD yarn start:prod
+CMD ["sh", "scripts/serve.sh", "dist"]
