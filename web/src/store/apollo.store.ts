@@ -1,4 +1,9 @@
-import { ApolloClient, createHttpLink, InMemoryCache, NormalizedCacheObject } from "@apollo/client";
+import {
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+  NormalizedCacheObject,
+} from "@apollo/client";
 import { computed, makeObservable } from "mobx";
 import { singleton } from "tsyringe";
 
@@ -20,8 +25,11 @@ export class ApolloStore {
       link: createHttpLink({
         uri: `${this.config.apiUrl}/graphql`,
         headers: {
-          authorization: this.authStore.token !== undefined ? `Bearer ${this.authStore.token}` : ""
-        }
+          authorization:
+            this.authStore.token !== undefined
+              ? `Bearer ${this.authStore.token}`
+              : "",
+        },
       }),
       cache: new InMemoryCache(),
       defaultOptions: {

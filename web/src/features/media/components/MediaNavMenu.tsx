@@ -1,6 +1,11 @@
 import {
-  Breadcrumbs, Button, Link, makeStyles,
-  MenuItem, Select, Typography,
+  Breadcrumbs,
+  Button,
+  Link,
+  makeStyles,
+  MenuItem,
+  Select,
+  Typography,
 } from "@material-ui/core";
 import * as _ from "lodash";
 import React, { useEffect, useState } from "react";
@@ -21,7 +26,10 @@ interface MediaNavMenuProps {
 }
 
 export const MediaNavMenu: React.FC<MediaNavMenuProps> = ({
-  onSelect, onReset, selected, options,
+  onSelect,
+  onReset,
+  selected,
+  options,
 }) => {
   const [current, setCurrent] = useState<IMediaItem>();
   const classes = useStyles();
@@ -35,29 +43,30 @@ export const MediaNavMenu: React.FC<MediaNavMenuProps> = ({
   return (
     <Breadcrumbs>
       {selected.map((item, i) => (
-        <Link className={classes.breadcrumbLink} key={item.key} onClick={() => onReset(selected.slice(0, i))}>
-          <Typography>
-            {item.key}
-          </Typography>
+        <Link
+          className={classes.breadcrumbLink}
+          key={item.key}
+          onClick={() => onReset(selected.slice(0, i))}
+        >
+          <Typography>{item.key}</Typography>
         </Link>
       ))}
-      {(lastSelected?.type ?? IMediaItemType.Directory) === IMediaItemType.Directory && (
+      {(lastSelected?.type ?? IMediaItemType.Directory) ===
+        IMediaItemType.Directory && (
         <>
           <Select
             value={current?.key ?? ""}
-            onChange={evt => setCurrent(options.find(i => i.key === evt.target.value))}
+            onChange={(evt) =>
+              setCurrent(options.find((i) => i.key === evt.target.value))
+            }
           >
-            {_.sortBy(options, i => i.key).map(item => (
+            {_.sortBy(options, (i) => i.key).map((item) => (
               <MenuItem value={item.key} key={item.key}>
-                <Typography>
-                  {item.key}
-                </Typography>
+                <Typography>{item.key}</Typography>
               </MenuItem>
             ))}
           </Select>
-          <Button onClick={() => onSelect(current ?? options[0])}>
-            List
-          </Button>
+          <Button onClick={() => onSelect(current ?? options[0])}>List</Button>
         </>
       )}
     </Breadcrumbs>

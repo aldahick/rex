@@ -21,7 +21,7 @@ export class AuthStore {
     const tokenJson = localStorage.getItem(TOKEN_KEY);
 
     if (tokenJson !== null) {
-      token = JSON.parse(tokenJson) as AuthTokenData | null ?? undefined;
+      token = (JSON.parse(tokenJson) as AuthTokenData | null) ?? undefined;
     }
     if (token) {
       this.setToken(token);
@@ -59,22 +59,31 @@ export class AuthStore {
     if (!this.roles) {
       return false;
     }
-    return this.roles.some(r =>
-      this.accessControl?.can(r.name)[permission.action](permission.resource).granted
-    ) || false;
+    return (
+      this.roles.some(
+        (r) =>
+          this.accessControl
+            ?.can(r.name)
+            [permission.action](permission.resource).granted
+      ) || false
+    );
   }
 
   private get accessControl() {
     if (!this.roles) {
       return;
     }
-    return new AccessControl(_.flatten(
-      this.roles.map(role => role.permissions.map(permission => ({
-        role: role.name,
-        resource: permission.resource,
-        action: permission.action,
-        attributes: "*",
-      }))),
-    ));
+    return new AccessControl(
+      _.flatten(
+        this.roles.map((role) =>
+          role.permissions.map((permission) => ({
+            role: role.name,
+            resource: permission.resource,
+            action: permission.action,
+            attributes: "*",
+          }))
+        )
+      )
+    );
   }
 }

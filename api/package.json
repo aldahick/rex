@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/aldahick/rex.git"
   },
-  "author": "Alex Hicks <alex@alexhicks.net> (https://alexhicks.net)",
+  "author": "Alex Hicks <alex@alexhicks.net>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/aldahick/rex/issues"

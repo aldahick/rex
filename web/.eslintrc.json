@@ -1,5 +1,34 @@
 {
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "tsconfig.json",
+    "tsconfigRootDir": ".",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint/eslint-plugin",
+    "simple-import-sort",
+    "prettier",
+    "react"
+  ],
   "extends": [
-    "./node_modules/@aldahick/eslint-rules/react"
-  ]
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "root": true,
+  "env": {
+    "node": true,
+    "jest": true
+  },
+  "ignorePatterns": ["*.js", "src/types/graphql.ts", "vite.config.ts"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "simple-import-sort/imports": "warn",
+    "simple-import-sort/exports": "warn",
+    "prettier/prettier": "warn"
+  }
 }

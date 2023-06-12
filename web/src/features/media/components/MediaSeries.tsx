@@ -11,7 +11,10 @@ interface MediaSeriesProps {
   items: IMediaItem[];
 }
 
-export const MediaSeries: React.FC<MediaSeriesProps> = ({ selectedKey, items }) => {
+export const MediaSeries: React.FC<MediaSeriesProps> = ({
+  selectedKey,
+  items,
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const safeSetIndex = (value: number) => {
@@ -29,11 +32,7 @@ export const MediaSeries: React.FC<MediaSeriesProps> = ({ selectedKey, items }) 
           </Grid>
           <Grid item>
             <Typography>
-              {currentIndex + 1}
-              {" "}
-              /
-              {" "}
-              {items.length}
+              {currentIndex + 1} / {items.length}
             </Typography>
           </Grid>
           <Grid item>

@@ -16,7 +16,7 @@ import { SidebarItem } from "./SidebarItem";
 
 const DRAWER_WIDTH = 250;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   drawer: {
     [theme.breakpoints.up("sm")]: {
       width: DRAWER_WIDTH,
@@ -42,9 +42,9 @@ export const Sidebar: React.FC = observer(() => {
   const { authStore, sidebarStore } = useStores();
   const classes = useStyles();
   const pages = _.sortBy(
-    _.flatten(Object.values(features).map(f => f.pages ?? [])),
-    p => p.navbar?.title,
-    p => p.route
+    _.flatten(Object.values(features).map((f) => f.pages ?? [])),
+    (p) => p.navbar?.title,
+    (p) => p.route
   );
 
   return (
@@ -61,18 +61,20 @@ export const Sidebar: React.FC = observer(() => {
             {!authStore.isAuthenticated && (
               <SidebarItem title="Log In" url="/login" nested={false} />
             )}
-            {pages.filter(
-              ({ navbar, permissions }) => !!navbar && (
-                permissions?.every(p => authStore.isAuthorized(p)) ?? true
-              ),
-            ).map(page => (
-              <SidebarItem
-                key={page.route}
-                url={page.route}
-                title={page.navbar?.title ?? "UNKNOWN PAGE"}
-                nested={false}
-              />
-            ))}
+            {pages
+              .filter(
+                ({ navbar, permissions }) =>
+                  !!navbar &&
+                  (permissions?.every((p) => authStore.isAuthorized(p)) ?? true)
+              )
+              .map((page) => (
+                <SidebarItem
+                  key={page.route}
+                  url={page.route}
+                  title={page.navbar?.title ?? "UNKNOWN PAGE"}
+                  nested={false}
+                />
+              ))}
             {authStore.isAuthenticated && <LogoutButton />}
           </List>
         </div>

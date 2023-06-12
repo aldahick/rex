@@ -16,7 +16,7 @@ const useStyles = makeStyles({
     "& svg": {
       fill: "white",
     },
-    "color": "inherit",
+    color: "inherit",
   },
 });
 
@@ -29,14 +29,12 @@ export const ThemeSelect: React.FC = observer(() => {
       className={classes.select}
       label="Theme"
       value={settingsStore.get("theme")}
-      onChange={evt => settingsStore.set("theme", evt.target.value as Settings["theme"])}
+      onChange={(evt) =>
+        settingsStore.set("theme", evt.target.value as Settings["theme"])
+      }
     >
-      <MenuItem value="light">
-        Light
-      </MenuItem>
-      <MenuItem value="dark">
-        Dark
-      </MenuItem>
+      <MenuItem value="light">Light</MenuItem>
+      <MenuItem value="dark">Dark</MenuItem>
     </Select>
   );
 });

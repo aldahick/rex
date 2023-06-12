@@ -8,18 +8,20 @@ const DOT_SPEED = 5;
 const DOT_RADIUS = 16;
 const CANVAS_SIZE = {
   x: 800,
-  y: 600
+  y: 600,
 };
 const DOT_COUNT = 3;
 const START_ANGLES = [30, 45, 60, 120, 135, 150, 210, 225, 240, 300, 315, 330];
 
 export const CatPage: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const dots = useRef<(XYCoord & { theta: number })[]>(_.range(DOT_COUNT).map(() => ({
-    x: _.random(CANVAS_SIZE.x),
-    y: _.random(CANVAS_SIZE.y),
-    theta: START_ANGLES[_.random(START_ANGLES.length)]
-  })));
+  const dots = useRef<(XYCoord & { theta: number })[]>(
+    _.range(DOT_COUNT).map(() => ({
+      x: _.random(CANVAS_SIZE.x),
+      y: _.random(CANVAS_SIZE.y),
+      theta: START_ANGLES[_.random(START_ANGLES.length)],
+    }))
+  );
   const status = useStatus();
 
   const render = useCallback(() => {
@@ -49,18 +51,19 @@ export const CatPage: React.FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      dots.current = dots.current.map(dot => {
+      dots.current = dots.current.map((dot) => {
         const newDot = {
           x: dot.x + DOT_SPEED * Math.cos(dot.theta),
           y: dot.y + DOT_SPEED * Math.sin(dot.theta),
-          theta: dot.theta
+          theta: dot.theta,
         };
         const clamp = {
           x: _.clamp(newDot.x, DOT_RADIUS, CANVAS_SIZE.x - DOT_RADIUS),
-          y: _.clamp(newDot.y, DOT_RADIUS, CANVAS_SIZE.y - DOT_RADIUS)
+          y: _.clamp(newDot.y, DOT_RADIUS, CANVAS_SIZE.y - DOT_RADIUS),
         };
-        const thetaQuad1or3 = _.inRange(dot.theta, 0, Math.PI / 2) ||
-          _.inRange(dot.theta, Math.PI, 3 * Math.PI / 2);
+        const thetaQuad1or3 =
+          _.inRange(dot.theta, 0, Math.PI / 2) ||
+          _.inRange(dot.theta, Math.PI, (3 * Math.PI) / 2);
         if (clamp.x !== newDot.x) {
           newDot.x = clamp.x;
           newDot.theta += (Math.PI / 2) * (thetaQuad1or3 ? 1 : -1);

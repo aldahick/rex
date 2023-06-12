@@ -11,7 +11,7 @@ import { ThemeProvider } from "./ThemeProvider";
 
 const useStyles = makeStyles({
   content: {
-    width: "100%"
+    width: "100%",
   },
 });
 

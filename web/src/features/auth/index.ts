@@ -9,5 +9,5 @@ export const authFeature: IFeature = {
       route: "/login",
       component: LoginPage,
     },
-  ]
+  ],
 };

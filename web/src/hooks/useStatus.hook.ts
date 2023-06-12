@@ -1,4 +1,8 @@
-import { OptionsObject, ProviderContext as SnackbarContext, useSnackbar } from "notistack";
+import {
+  OptionsObject,
+  ProviderContext as SnackbarContext,
+  useSnackbar,
+} from "notistack";
 
 class Status {
   default = this.buildSetter("default");
@@ -10,16 +14,17 @@ class Status {
   success = this.buildSetter("success");
 
   error = (err: unknown) => {
-    this.snackbar.enqueueSnackbar(err instanceof Error ? err.message : err as string, {
-      variant: "error"
-    });
+    this.snackbar.enqueueSnackbar(
+      err instanceof Error ? err.message : (err as string),
+      {
+        variant: "error",
+      }
+    );
     return null;
   };
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
-  constructor(
-    private readonly snackbar: SnackbarContext
-  ) { }
+  constructor(private readonly snackbar: SnackbarContext) {}
 
   close() {
     this.snackbar.closeSnackbar();

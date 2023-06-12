@@ -1,4 +1,13 @@
-import { AppBar, Button, Grid, IconButton, Link, makeStyles, Toolbar, Typography } from "@material-ui/core";
+import {
+  AppBar,
+  Button,
+  Grid,
+  IconButton,
+  Link,
+  makeStyles,
+  Toolbar,
+  Typography,
+} from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import { observer } from "mobx-react";
 import React from "react";
@@ -27,11 +36,20 @@ export const Navbar: React.FC = observer(() => {
   return (
     <AppBar>
       <Toolbar>
-        <IconButton edge="start" color="inherit" onClick={() => sidebarStore.setOpen(true)}>
+        <IconButton
+          edge="start"
+          color="inherit"
+          onClick={() => sidebarStore.setOpen(true)}
+        >
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" color="inherit" className={classes.titleText}>
-          <Link component={RouterLink} to="/" color="inherit" className={classes.link}>
+          <Link
+            component={RouterLink}
+            to="/"
+            color="inherit"
+            className={classes.link}
+          >
             Alex Hicks
           </Link>
         </Typography>
@@ -43,7 +61,13 @@ export const Navbar: React.FC = observer(() => {
             {!authStore.isAuthenticated && (
               <Grid item>
                 <Button color="secondary" variant="outlined">
-                  <Link component={RouterLink} to="/login" color="inherit" className={classes.link} style={{ fontWeight: 600 }}>
+                  <Link
+                    component={RouterLink}
+                    to="/login"
+                    color="inherit"
+                    className={classes.link}
+                    style={{ fontWeight: 600 }}
+                  >
                     Log In
                   </Link>
                 </Button>

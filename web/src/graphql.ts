@@ -1,7 +1,13 @@
 export type Maybe<T> = T | undefined;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -14,111 +20,109 @@ export type Scalars = {
   Upload: File;
 };
 
-
-
 export type IMediaItem = {
-  __typename?: 'MediaItem';
-  key: Scalars['String'];
+  __typename?: "MediaItem";
+  key: Scalars["String"];
   type: IMediaItemType;
 };
 
 export enum IMediaItemType {
-  File = 'file',
-  Directory = 'directory',
-  Series = 'series'
+  File = "file",
+  Directory = "directory",
+  Series = "series",
 }
 
 export type ISteamPlayer = {
-  __typename?: 'SteamPlayer';
-  _id: Scalars['String'];
-  nickname: Scalars['String'];
-  avatarUrl: Scalars['String'];
-  profileUrl: Scalars['String'];
+  __typename?: "SteamPlayer";
+  _id: Scalars["String"];
+  nickname: Scalars["String"];
+  avatarUrl: Scalars["String"];
+  profileUrl: Scalars["String"];
   playingGame?: Maybe<ISteamGame>;
   ownedGames: Array<ISteamGame>;
 };
 
 export type ISteamGame = {
-  __typename?: 'SteamGame';
-  _id: Scalars['Int'];
-  name: Scalars['String'];
+  __typename?: "SteamGame";
+  _id: Scalars["Int"];
+  name: Scalars["String"];
 };
 
 export enum IAuthAction {
-  CreateAny = 'createAny',
-  CreateOwn = 'createOwn',
-  DeleteAny = 'deleteAny',
-  DeleteOwn = 'deleteOwn',
-  ReadAny = 'readAny',
-  ReadOwn = 'readOwn',
-  UpdateAny = 'updateAny',
-  UpdateOwn = 'updateOwn'
+  CreateAny = "createAny",
+  CreateOwn = "createOwn",
+  DeleteAny = "deleteAny",
+  DeleteOwn = "deleteOwn",
+  ReadAny = "readAny",
+  ReadOwn = "readOwn",
+  UpdateAny = "updateAny",
+  UpdateOwn = "updateOwn",
 }
 
 export enum IAuthClientType {
-  Mobile = 'MOBILE',
-  Web = 'WEB'
+  Mobile = "MOBILE",
+  Web = "WEB",
 }
 
 export type IAuthPermission = {
-  __typename?: 'AuthPermission';
-  resource: Scalars['String'];
+  __typename?: "AuthPermission";
+  resource: Scalars["String"];
   action: IAuthAction;
 };
 
 export type IAuthPermissionInput = {
-  resource: Scalars['String'];
+  resource: Scalars["String"];
   action: IAuthAction;
 };
 
 export type IAuthToken = {
-  __typename?: 'AuthToken';
-  token: Scalars['String'];
+  __typename?: "AuthToken";
+  token: Scalars["String"];
   user: IUser;
 };
 
 export type IRole = {
-  __typename?: 'Role';
-  _id: Scalars['String'];
-  name: Scalars['String'];
+  __typename?: "Role";
+  _id: Scalars["String"];
+  name: Scalars["String"];
   permissions: Array<IAuthPermission>;
 };
 
 export type INote = {
-  __typename?: 'Note';
-  _id: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  title: Scalars['String'];
-  body: Scalars['String'];
+  __typename?: "Note";
+  _id: Scalars["String"];
+  createdAt: Scalars["DateTime"];
+  title: Scalars["String"];
+  body: Scalars["String"];
 };
 
 export type IProgress = {
-  __typename?: 'Progress';
-  _id: Scalars['String'];
-  action: Scalars['String'];
-  createdAt: Scalars['DateTime'];
+  __typename?: "Progress";
+  _id: Scalars["String"];
+  action: Scalars["String"];
+  createdAt: Scalars["DateTime"];
   status: IProgressStatus;
   logs: Array<IProgressLog>;
 };
 
 export type IProgressLog = {
-  __typename?: 'ProgressLog';
-  createdAt: Scalars['DateTime'];
-  text: Scalars['String'];
+  __typename?: "ProgressLog";
+  createdAt: Scalars["DateTime"];
+  text: Scalars["String"];
 };
 
 export enum IProgressStatus {
-  Created = 'CREATED',
-  InProgress = 'IN_PROGRESS',
-  Complete = 'COMPLETE',
-  Errored = 'ERRORED'
+  Created = "CREATED",
+  InProgress = "IN_PROGRESS",
+  Complete = "COMPLETE",
+  Errored = "ERRORED",
 }
 
 export type IMutation = {
-  __typename?: 'Mutation';
-  addRoleToUser: Scalars['Boolean'];
+  __typename?: "Mutation";
+  addRoleToUser: Scalars["Boolean"];
   createUser: IUser;
-  setUserPassword: Scalars['Boolean'];
+  setUserPassword: Scalars["Boolean"];
   addMediaDownload: IProgress;
   fetchSteamGames: IProgress;
   createAuthTokenGoogle: IAuthToken;
@@ -127,96 +131,82 @@ export type IMutation = {
   /** requires auth */
   createAuthToken: IAuthToken;
   createRole: IRole;
-  deleteRole: Scalars['Boolean'];
-  updateRole: Scalars['Boolean'];
-  updateRolePermissions: Scalars['Boolean'];
+  deleteRole: Scalars["Boolean"];
+  updateRole: Scalars["Boolean"];
+  updateRolePermissions: Scalars["Boolean"];
   createNote: INote;
-  removeNote: Scalars['Boolean'];
-  updateNoteBody: Scalars['Boolean'];
+  removeNote: Scalars["Boolean"];
+  updateNoteBody: Scalars["Boolean"];
 };
-
 
 export type IMutationAddRoleToUserArgs = {
-  userId: Scalars['String'];
-  roleId: Scalars['String'];
+  userId: Scalars["String"];
+  roleId: Scalars["String"];
 };
-
 
 export type IMutationCreateUserArgs = {
-  email: Scalars['String'];
-  username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  email: Scalars["String"];
+  username?: Maybe<Scalars["String"]>;
+  password?: Maybe<Scalars["String"]>;
 };
-
 
 export type IMutationSetUserPasswordArgs = {
-  userId: Scalars['String'];
-  password: Scalars['String'];
+  userId: Scalars["String"];
+  password: Scalars["String"];
 };
-
 
 export type IMutationAddMediaDownloadArgs = {
-  url: Scalars['String'];
-  destinationKey: Scalars['String'];
+  url: Scalars["String"];
+  destinationKey: Scalars["String"];
 };
 
-
 export type IMutationCreateAuthTokenGoogleArgs = {
-  googleIdToken: Scalars['String'];
+  googleIdToken: Scalars["String"];
   clientType: IAuthClientType;
 };
 
-
 export type IMutationCreateAuthTokenLocalArgs = {
-  username: Scalars['String'];
-  password: Scalars['String'];
+  username: Scalars["String"];
+  password: Scalars["String"];
 };
-
 
 export type IMutationCreateAuthTokenArgs = {
-  userId: Scalars['String'];
+  userId: Scalars["String"];
 };
-
 
 export type IMutationCreateRoleArgs = {
-  name: Scalars['String'];
+  name: Scalars["String"];
 };
-
 
 export type IMutationDeleteRoleArgs = {
-  id: Scalars['String'];
+  id: Scalars["String"];
 };
-
 
 export type IMutationUpdateRoleArgs = {
-  id: Scalars['String'];
-  name: Scalars['String'];
+  id: Scalars["String"];
+  name: Scalars["String"];
 };
 
-
 export type IMutationUpdateRolePermissionsArgs = {
-  id: Scalars['String'];
+  id: Scalars["String"];
   permissions: Array<IAuthPermissionInput>;
 };
 
-
 export type IMutationCreateNoteArgs = {
-  title: Scalars['String'];
+  title: Scalars["String"];
 };
-
 
 export type IMutationRemoveNoteArgs = {
-  id: Scalars['String'];
+  id: Scalars["String"];
 };
 
-
 export type IMutationUpdateNoteBodyArgs = {
-  id: Scalars['String'];
-  body: Scalars['String'];
+  id: Scalars["String"];
+  body: Scalars["String"];
 };
 
 export type IQuery = {
-  __typename?: 'Query';
+  __typename?: "Query";
   user: IUser;
   users: Array<IUser>;
   mediaItems: Array<IMediaItem>;
@@ -229,53 +219,45 @@ export type IQuery = {
   progress: IProgress;
 };
 
-
 export type IQueryUserArgs = {
-  id?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars["String"]>;
 };
-
 
 export type IQueryMediaItemsArgs = {
-  dir: Scalars['String'];
+  dir: Scalars["String"];
 };
-
 
 export type IQuerySteamGamesArgs = {
-  page: Scalars['Int'];
-  search: Scalars['String'];
+  page: Scalars["Int"];
+  search: Scalars["String"];
 };
-
 
 export type IQuerySteamPlayerArgs = {
-  steamId64: Scalars['String'];
+  steamId64: Scalars["String"];
 };
-
 
 export type IQuerySteamPlayersArgs = {
-  steamIds64: Array<Scalars['String']>;
+  steamIds64: Array<Scalars["String"]>;
 };
-
 
 export type IQueryNoteArgs = {
-  id: Scalars['String'];
+  id: Scalars["String"];
 };
 
-
 export type IQueryProgressArgs = {
-  id: Scalars['String'];
+  id: Scalars["String"];
 };
 
 export type IUser = {
-  __typename?: 'User';
-  _id: Scalars['String'];
-  email: Scalars['String'];
-  username?: Maybe<Scalars['String']>;
+  __typename?: "User";
+  _id: Scalars["String"];
+  email: Scalars["String"];
+  username?: Maybe<Scalars["String"]>;
   roles?: Maybe<Array<IRole>>;
   permissions?: Maybe<Array<IAuthPermission>>;
 };
 
 export enum ICacheControlScope {
-  Public = 'PUBLIC',
-  Private = 'PRIVATE'
+  Public = "PUBLIC",
+  Private = "PRIVATE",
 }
-

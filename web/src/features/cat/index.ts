@@ -5,7 +5,7 @@ export const catFeature: IFeature = {
   pages: [
     {
       route: "/cat",
-      component: CatPage
-    }
-  ]
+      component: CatPage,
+    },
+  ],
 };

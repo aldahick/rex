@@ -19,7 +19,7 @@ export const LoginPage: React.FC = observer(() => {
   const handleLogin = ({ token, user }: IAuthToken) => {
     authStore.setToken({
       token,
-      roles: user.roles ?? []
+      roles: user.roles ?? [],
     });
     setRedirect(true);
   };

@@ -1,6 +1,11 @@
 import {
-  makeStyles, Table as MaterialTable, TableBody,
-  TableCell, TableHead, TableRow, Typography,
+  makeStyles,
+  Table as MaterialTable,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
 } from "@material-ui/core";
 import React from "react";
 
@@ -25,16 +30,12 @@ export const Table: React.FC<TableProps> = ({ columns, children }) => {
           {columns.map((column, i) => (
             // eslint-disable-next-line react/no-array-index-key
             <TableCell key={`${column}${i}`}>
-              <Typography className={classes.headCell}>
-                {column}
-              </Typography>
+              <Typography className={classes.headCell}>{column}</Typography>
             </TableCell>
           ))}
         </TableRow>
       </TableHead>
-      <TableBody>
-        {children}
-      </TableBody>
+      <TableBody>{children}</TableBody>
     </MaterialTable>
   );
 };

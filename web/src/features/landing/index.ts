@@ -5,7 +5,7 @@ export const landingFeature: IFeature = {
   pages: [
     {
       route: "/",
-      component: LandingPage
-    }
-  ]
+      component: LandingPage,
+    },
+  ],
 };

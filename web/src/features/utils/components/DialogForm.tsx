@@ -1,5 +1,13 @@
 import {
-  Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, TextField, Typography,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  TextField,
+  Typography,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import * as _ from "lodash";
@@ -18,22 +26,31 @@ interface FieldDefinition {
 
 interface DialogFormProps<FieldKey extends string> {
   fields: {
-    [key in FieldKey]: FieldDefinition
+    [key in FieldKey]: FieldDefinition;
   };
   title: string;
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-  onSubmit: (fields: {[key in FieldKey]: string}) => Promise<string | undefined | void>;
+  onSubmit: (fields: { [key in FieldKey]: string }) => Promise<
+    string | undefined | void
+  >;
 }
 
-export const DialogForm = <FieldKey extends string>({ fields, title, onSubmit }: DialogFormProps<FieldKey>): React.ReactElement => {
+export const DialogForm = <FieldKey extends string>({
+  fields,
+  title,
+  onSubmit,
+}: DialogFormProps<FieldKey>): React.ReactElement => {
   const [open, setOpen] = useState(false);
   const status = useStatus();
 
   const initialFieldValues = Object.fromEntries<string>(
-    Object.entries<FieldDefinition>(fields)
-      .map(([key, { initialValue }]) => [key, initialValue ?? ""]),
-  ) as unknown as {[key in FieldKey]: string};
-  const [fieldValues, setFieldValues] = useState<{[key in FieldKey]: string}>(initialFieldValues);
+    Object.entries<FieldDefinition>(fields).map(([key, { initialValue }]) => [
+      key,
+      initialValue ?? "",
+    ])
+  ) as unknown as { [key in FieldKey]: string };
+  const [fieldValues, setFieldValues] =
+    useState<{ [key in FieldKey]: string }>(initialFieldValues);
 
   const onFieldChange = (fieldKey: FieldKey, value: string) => {
     setFieldValues({
@@ -43,14 +60,17 @@ export const DialogForm = <FieldKey extends string>({ fields, title, onSubmit }:
   };
 
   const submit = () => {
-    const missingFields = (Object.entries(fields) as [FieldKey, FieldDefinition][])
-      .filter(([fieldKey]) => fieldValues[fieldKey].length === 0);
+    const missingFields = (
+      Object.entries(fields) as [FieldKey, FieldDefinition][]
+    ).filter(([fieldKey]) => fieldValues[fieldKey].length === 0);
     if (missingFields.length > 0) {
-      const labels = missingFields.map(([fieldKey, { label }]) => label ?? _.startCase(fieldKey));
+      const labels = missingFields.map(
+        ([fieldKey, { label }]) => label ?? _.startCase(fieldKey)
+      );
       return status.error(`Missing field values: ${labels.join(", ")}`);
     }
-    onSubmit(fieldValues as {[key in FieldKey]: string})
-      .then(successMessage => {
+    onSubmit(fieldValues as { [key in FieldKey]: string })
+      .then((successMessage) => {
         if (successMessage !== undefined) {
           status.success(successMessage);
         }
@@ -70,31 +90,34 @@ export const DialogForm = <FieldKey extends string>({ fields, title, onSubmit }:
       <AddButton onClick={() => setOpen(true)} />
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle disableTypography>
-          <Typography variant="h6">
-            {title}
-          </Typography>
+          <Typography variant="h6">{title}</Typography>
           <IconButton>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent>
           <Grid container direction="column" spacing={2}>
-            {(Object.entries(fields) as [FieldKey, FieldDefinition][])
-              .map(([fieldKey, { label, render }], i) => (
+            {(Object.entries(fields) as [FieldKey, FieldDefinition][]).map(
+              ([fieldKey, { label, render }], i) => (
                 <Grid item key={fieldKey}>
-                  {render
-                    ? render(fieldValues[fieldKey], (value: string) => onFieldChange(fieldKey, value))
-                    : (
-                      <TextField
-                        label={label ?? _.startCase(fieldKey)}
-                        autoFocus={i === 0}
-                        fullWidth
-                        onChange={evt => onFieldChange(fieldKey, evt.target.value)}
-                        onKeyDown={checkEnterKey}
-                      />
-                    )}
+                  {render ? (
+                    render(fieldValues[fieldKey], (value: string) =>
+                      onFieldChange(fieldKey, value)
+                    )
+                  ) : (
+                    <TextField
+                      label={label ?? _.startCase(fieldKey)}
+                      autoFocus={i === 0}
+                      fullWidth
+                      onChange={(evt) =>
+                        onFieldChange(fieldKey, evt.target.value)
+                      }
+                      onKeyDown={checkEnterKey}
+                    />
+                  )}
                 </Grid>
-              ))}
+              )
+            )}
           </Grid>
         </DialogContent>
         <DialogActions>

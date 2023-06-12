@@ -7,13 +7,15 @@ export const mediaFeature: IFeature = {
     {
       route: "/media",
       component: MediaPage,
-      permissions: [{
-        action: IAuthAction.ReadOwn,
-        resource: "mediaItem"
-      }],
+      permissions: [
+        {
+          action: IAuthAction.ReadOwn,
+          resource: "mediaItem",
+        },
+      ],
       navbar: {
         title: "Media",
       },
     },
-  ]
+  ],
 };

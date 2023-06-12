@@ -18,7 +18,9 @@ export class RootStore {
   }
 
   @computed
-  get allStores(): Omit<RootStore, "allStores"> & { rootStore: Omit<RootStore, "allStores"> } {
+  get allStores(): Omit<RootStore, "allStores"> & {
+    rootStore: Omit<RootStore, "allStores">;
+  } {
     return {
       rootStore: this,
       ...this,

@@ -8,16 +8,18 @@ import { IMutationRemoveNoteArgs } from "../../../graphql";
 import { useStatus } from "../../../hooks";
 
 const MUTATION_REMOVE_NOTE = gql`
-mutation Web_RemoveNote($id: String!) {
-  removeNote(id: $id)
-}
+  mutation Web_RemoveNote($id: String!) {
+    removeNote(id: $id)
+  }
 `;
 
 export const DeleteNoteButton: React.FC<{
   noteId: string;
   onSubmit: () => Promise<unknown>;
 }> = ({ noteId, onSubmit }) => {
-  const [removeNote] = useMutation<unknown, IMutationRemoveNoteArgs>(MUTATION_REMOVE_NOTE);
+  const [removeNote] = useMutation<unknown, IMutationRemoveNoteArgs>(
+    MUTATION_REMOVE_NOTE
+  );
   const status = useStatus();
 
   const submit = async () => {

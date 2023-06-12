@@ -8,10 +8,12 @@ export const notesFeature: IFeature = {
     {
       route: "/notes",
       component: NotesScene,
-      permissions: [{
-        action: IAuthAction.ReadOwn,
-        resource: "note"
-      }],
+      permissions: [
+        {
+          action: IAuthAction.ReadOwn,
+          resource: "note",
+        },
+      ],
       navbar: {
         title: "Notes",
       },
@@ -19,10 +21,12 @@ export const notesFeature: IFeature = {
     {
       route: "/notes/:noteId",
       component: NoteScene,
-      permissions: [{
-        action: IAuthAction.ReadOwn,
-        resource: "note"
-      }]
-    }
-  ]
+      permissions: [
+        {
+          action: IAuthAction.ReadOwn,
+          resource: "note",
+        },
+      ],
+    },
+  ],
 };

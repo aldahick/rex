@@ -1,5 +1,4 @@
-import { Typography } from "@material-ui/core";
-import axios from "axios";
+import { Typography } from "@mui/material";
 import React, { useState } from "react";
 
 import { useStatus } from "../../../hooks";
@@ -14,14 +13,11 @@ export const FetchUrl: React.FC<FetchUrlProps> = ({ children, url }) => {
   const status = useStatus();
 
   if (data === undefined) {
-    axios.get(url)
-      .then(r => setData(r.data))
+    fetch(url)
+      .then((r) => r.text())
+      .then((r) => setData(r))
       .catch(status.error);
-    return (
-      <Typography>
-        Loading...
-      </Typography>
-    );
+    return <Typography>Loading...</Typography>;
   }
   return children(data);
 };

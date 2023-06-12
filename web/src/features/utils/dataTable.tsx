@@ -6,16 +6,12 @@ import React from "react";
 export const createDTColumn = (
   name: string,
   label = _.startCase(name),
-  options: MUIDataTableColumn["options"] = {},
+  options: MUIDataTableColumn["options"] = {}
 ): MUIDataTableColumn => ({
   name,
   label,
   options: {
-    customBodyRender: value => (
-      <Typography>
-        {value}
-      </Typography>
-    ),
+    customBodyRender: (value) => <Typography>{value}</Typography>,
     ...options,
   },
 });

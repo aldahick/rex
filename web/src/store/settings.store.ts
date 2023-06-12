@@ -13,7 +13,10 @@ const DEFAULT_SETTINGS: Settings = {
 @singleton()
 export class SettingsStore {
   @observable
-  private settings: Settings = JSON.parse(localStorage.getItem(SETTINGS_KEY) ?? "null") as Settings | null ?? DEFAULT_SETTINGS;
+  private settings: Settings =
+    (JSON.parse(
+      localStorage.getItem(SETTINGS_KEY) ?? "null"
+    ) as Settings | null) ?? DEFAULT_SETTINGS;
 
   constructor() {
     makeObservable(this);

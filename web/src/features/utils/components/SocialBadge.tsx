@@ -8,9 +8,7 @@ export const SocialBadge: React.FC<{
   imageProps?: Partial<React.ImgHTMLAttributes<HTMLImageElement>>;
   textColor?: TypographyProps["color"];
   size?: number;
-}> = ({
-  label, imageUrl, url, imageProps, textColor, size
-}) => (
+}> = ({ label, imageUrl, url, imageProps, textColor, size }) => (
   <Link href={url}>
     <Grid container alignItems="center" direction="column">
       <Grid item>
@@ -18,11 +16,11 @@ export const SocialBadge: React.FC<{
       </Grid>
       {typeof label === "string" ? (
         <Grid item>
-          <Typography color={textColor ?? "inherit"}>
-            {label}
-          </Typography>
+          <Typography color={textColor ?? "inherit"}>{label}</Typography>
         </Grid>
-      ) : label}
+      ) : (
+        label
+      )}
     </Grid>
   </Link>
 );

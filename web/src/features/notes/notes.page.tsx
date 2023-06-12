@@ -1,7 +1,10 @@
 import { useQuery } from "@apollo/client";
 import {
   CircularProgress,
-  Grid, Link, TableCell, TableRow,
+  Grid,
+  Link,
+  TableCell,
+  TableRow,
 } from "@material-ui/core";
 import gql from "graphql-tag";
 import React from "react";
@@ -14,18 +17,21 @@ import { AddNoteForm } from "./components/AddNoteForm";
 import { DeleteNoteButton } from "./components/DeleteNoteButton";
 
 const QUERY_NOTES = gql`
-query Web_Notes {
-  notes {
-    _id
-    createdAt
-    title
+  query Web_Notes {
+    notes {
+      _id
+      createdAt
+      title
+    }
   }
-}
 `;
 
 export const NotesScene: React.FC = () => {
   const {
-    loading, data: { notes } = {}, refetch, error
+    loading,
+    data: { notes } = {},
+    refetch,
+    error,
   } = useQuery<{ notes: IQuery["notes"] }>(QUERY_NOTES);
   const status = useStatus();
 
@@ -43,16 +49,14 @@ export const NotesScene: React.FC = () => {
       </Grid>
       <Grid item xl={2} lg={3} md={4} sm={6}>
         <Table columns={["Title", "Created At"]}>
-          {notes.map(note => (
+          {notes.map((note) => (
             <TableRow key={note._id}>
               <TableCell>
                 <Link component={RouterLink} to={`/notes/${note._id}`}>
                   {note.title}
                 </Link>
               </TableCell>
-              <TableCell>
-                {new Date(note.createdAt).toLocaleString()}
-              </TableCell>
+              <TableCell>{new Date(note.createdAt).toLocaleString()}</TableCell>
               <TableCell>
                 <DeleteNoteButton noteId={note._id} onSubmit={refetch} />
               </TableCell>

@@ -1,5 +1,10 @@
 import {
-  Button, Grid, IconButton, TableCell, TableRow, TextField,
+  Button,
+  Grid,
+  IconButton,
+  TableCell,
+  TableRow,
+  TextField,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import * as _ from "lodash";
@@ -17,29 +22,35 @@ interface TableFormProps<Key extends string> {
   columns: {
     [key in Key]: TableFormColumn;
   };
-  rows: {[key in Key]: string}[];
-  onSubmit: (newRows: {[key in Key]: string}[]) => Promise<unknown>;
+  rows: { [key in Key]: string }[];
+  onSubmit: (newRows: { [key in Key]: string }[]) => Promise<unknown>;
 }
 
-export const TableForm = <Key extends string>({ columns, rows: originalRows, onSubmit }: TableFormProps<Key>): React.ReactElement => {
+export const TableForm = <Key extends string>({
+  columns,
+  rows: originalRows,
+  onSubmit,
+}: TableFormProps<Key>): React.ReactElement => {
   const keys = Object.keys(columns) as Key[];
 
   const status = useStatus();
-  const [rows, setRows] = useState<{[key in Key]: string}[]>(originalRows);
-  const [newRow, setNewRow] = useState<{[key in Key]?: string}>({});
+  const [rows, setRows] = useState<{ [key in Key]: string }[]>(originalRows);
+  const [newRow, setNewRow] = useState<{ [key in Key]?: string }>({});
 
-  const onValueChange = (index: number, key: Key) => (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const clonedRows = _.cloneDeep(rows);
-    clonedRows[index][key] = evt.target.value;
-    setRows(clonedRows);
-  };
+  const onValueChange =
+    (index: number, key: Key) => (evt: React.ChangeEvent<HTMLInputElement>) => {
+      const clonedRows = _.cloneDeep(rows);
+      clonedRows[index][key] = evt.target.value;
+      setRows(clonedRows);
+    };
 
-  const onNewValueChange = (key: Key) => (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setNewRow({
-      ...newRow,
-      [key]: evt.target.value,
-    });
-  };
+  const onNewValueChange =
+    (key: Key) => (evt: React.ChangeEvent<HTMLInputElement>) => {
+      setNewRow({
+        ...newRow,
+        [key]: evt.target.value,
+      });
+    };
 
   const onRemove = (index: number) => () => {
     setRows(rows.filter((r, i) => i !== index));
@@ -47,23 +58,27 @@ export const TableForm = <Key extends string>({ columns, rows: originalRows, onS
 
   const onAdd = () => {
     setRows(() => {
-      const missingColumns = Object.entries<TableFormColumn>(columns)
-        .filter(([key, { isOptional = false }]) => !isOptional && newRow[key as Key] !== undefined);
+      const missingColumns = Object.entries<TableFormColumn>(columns).filter(
+        ([key, { isOptional = false }]) =>
+          !isOptional && newRow[key as Key] !== undefined
+      );
       if (missingColumns.length > 0) {
-        status.error(`Missing required fields: ${
-          missingColumns.map(([key]) => key).join(", ")
-        }`);
+        status.error(
+          `Missing required fields: ${missingColumns
+            .map(([key]) => key)
+            .join(", ")}`
+        );
         return rows;
       }
       setNewRow({});
-      return rows.concat(newRow as {[key in Key]: string});
+      return rows.concat(newRow as { [key in Key]: string });
     });
   };
 
   const submit = async () => {
     try {
       const successMessage = await onSubmit(rows);
-      if (typeof (successMessage) === "string" && !!successMessage) {
+      if (typeof successMessage === "string" && !!successMessage) {
         status.success(successMessage);
       }
     } catch (err) {
@@ -83,7 +98,7 @@ export const TableForm = <Key extends string>({ columns, rows: originalRows, onS
         <Table columns={(keys as string[]).concat([""]).map(_.startCase)}>
           {rows.map((row, index) => (
             <TableRow key={JSON.stringify(row)}>
-              {keys.map(key => (
+              {keys.map((key) => (
                 <TableCell key={key}>
                   <TextField
                     value={row[key]}
@@ -101,7 +116,7 @@ export const TableForm = <Key extends string>({ columns, rows: originalRows, onS
             </TableRow>
           ))}
           <TableRow>
-            {keys.map(key => (
+            {keys.map((key) => (
               <TableCell key={key}>
                 <TextField
                   value={newRow[key] ?? ""}

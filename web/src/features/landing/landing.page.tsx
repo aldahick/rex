@@ -1,6 +1,4 @@
-import {
-  Grid, Typography, useTheme,
-} from "@material-ui/core";
+import { Grid, Typography, useTheme } from "@material-ui/core";
 import React from "react";
 
 import githubDarkLogoUrl from "../../images/logos/github-dark.png";
@@ -14,17 +12,17 @@ export const LandingPage: React.FC = () => {
   return (
     <Grid container direction="column" alignItems="center">
       <Grid item>
-        <Typography variant="h1">
-          👋
-        </Typography>
+        <Typography variant="h1">👋</Typography>
       </Grid>
       <Grid item style={{ marginTop: "1em" }}>
         <Grid container justify="center" spacing={4}>
           <Grid item>
             <SocialBadge
-              imageUrl={theme.palette.type === "dark"
-                ? githubDarkLogoUrl
-                : githubLightLogoUrl}
+              imageUrl={
+                theme.palette.type === "dark"
+                  ? githubDarkLogoUrl
+                  : githubLightLogoUrl
+              }
               url="https://github.com/aldahick"
               label="@aldahick"
               textColor="textPrimary"

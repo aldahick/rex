@@ -7,17 +7,19 @@ import { IMutationCreateNoteArgs } from "../../../graphql";
 import { useStatus } from "../../../hooks";
 
 const MUTATION_CREATE_NOTE = gql`
-mutation Web_CreateNote($title: String!) {
-  note: createNote(title: $title) {
-    _id
+  mutation Web_CreateNote($title: String!) {
+    note: createNote(title: $title) {
+      _id
+    }
   }
-}
 `;
 
 export const AddNoteForm: React.FC<{
   onSubmit: () => Promise<unknown>;
 }> = ({ onSubmit }) => {
-  const [createNote] = useMutation<unknown, IMutationCreateNoteArgs>(MUTATION_CREATE_NOTE);
+  const [createNote] = useMutation<unknown, IMutationCreateNoteArgs>(
+    MUTATION_CREATE_NOTE
+  );
   const [title, setTitle] = useState<string>("");
   const status = useStatus();
 
@@ -39,14 +41,12 @@ export const AddNoteForm: React.FC<{
       <Grid item>
         <TextField
           placeholder="Title"
-          onChange={evt => setTitle(evt.target.value)}
+          onChange={(evt) => setTitle(evt.target.value)}
           value={title}
         />
       </Grid>
       <Grid item>
-        <Button onClick={submit}>
-          Create Note
-        </Button>
+        <Button onClick={submit}>Create Note</Button>
       </Grid>
     </Grid>
   );
