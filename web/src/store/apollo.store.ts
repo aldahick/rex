@@ -5,12 +5,10 @@ import {
   NormalizedCacheObject,
 } from "@apollo/client";
 import { computed, makeObservable } from "mobx";
-import { singleton } from "tsyringe";
 
 import { ConfigService } from "../features/utils/config.service";
 import { AuthStore } from "./auth.store";
 
-@singleton()
 export class ApolloStore {
   constructor(
     private readonly authStore: AuthStore,

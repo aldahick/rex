@@ -23,7 +23,6 @@ class Status {
     return null;
   };
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   constructor(private readonly snackbar: SnackbarContext) {}
 
   close() {
@@ -32,7 +31,6 @@ class Status {
 
   private buildSetter(variant: OptionsObject["variant"]) {
     return (message: React.ReactNode): null => {
-      // eslint-disable-next-line react/no-this-in-sfc
       this.snackbar.enqueueSnackbar(message, { variant });
       return null;
     };

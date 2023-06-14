@@ -1,37 +1,39 @@
 import {
   createMuiTheme,
   CssBaseline,
-  MuiThemeProvider,
   responsiveFontSizes,
-} from "@material-ui/core";
-import { observer } from "mobx-react";
+  ThemeProvider as MuiThemeProvider,
+} from "@mui/material";
+import { observer } from "mobx-react-lite";
 import React from "react";
 
 import { useStores } from "../../hooks";
 
-export const ThemeProvider: React.FC = observer(({ children }) => {
-  const { settingsStore } = useStores();
+export const ThemeProvider: React.FC<React.PropsWithChildren> = observer(
+  ({ children }) => {
+    const { settingsStore } = useStores();
 
-  const theme = responsiveFontSizes(
-    createMuiTheme({
-      typography: {
-        fontFamily: "Open Sans",
-        caption: {
-          fontSize: "14px",
+    const theme = responsiveFontSizes(
+      createMuiTheme({
+        typography: {
+          fontFamily: "Open Sans",
+          caption: {
+            fontSize: "14px",
+          },
         },
-      },
-      palette: {
-        type: settingsStore.get("theme"),
-      },
-    })
-  );
+        palette: {
+          mode: settingsStore.get("theme"),
+        },
+      })
+    );
 
-  document.body.style.background = theme.palette.background.default;
+    document.body.style.background = theme.palette.background.default;
 
-  return (
-    <MuiThemeProvider theme={theme}>
-      <CssBaseline />
-      {children}
-    </MuiThemeProvider>
-  );
-});
+    return (
+      <MuiThemeProvider theme={theme}>
+        <CssBaseline />
+        {children}
+      </MuiThemeProvider>
+    );
+  }
+);

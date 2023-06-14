@@ -1,6 +1,6 @@
 import { ApolloProvider } from "@apollo/client";
-import { Grid, makeStyles, Toolbar } from "@material-ui/core";
-import { observer } from "mobx-react";
+import { Grid, Toolbar } from "@mui/material";
+import { observer } from "mobx-react-lite";
 import { SnackbarProvider } from "notistack";
 import React from "react";
 
@@ -9,30 +9,24 @@ import { Navbar } from "./Navbar";
 import { Sidebar } from "./Sidebar";
 import { ThemeProvider } from "./ThemeProvider";
 
-const useStyles = makeStyles({
-  content: {
-    width: "100%",
-  },
-});
-
-export const Layout: React.FC = observer(({ children }) => {
-  const { apolloStore } = useStores();
-  const classes = useStyles();
-
-  return (
-    <ApolloProvider client={apolloStore.client}>
-      <ThemeProvider>
-        <SnackbarProvider>
-          <Navbar />
-          <Sidebar />
-          <Grid container justify="center">
-            <Toolbar />
-            <Grid item className={classes.content}>
-              {children}
+export const Layout: React.FC<React.PropsWithChildren> = observer(
+  ({ children }) => {
+    const { apolloStore } = useStores();
+    return (
+      <ApolloProvider client={apolloStore.client}>
+        <ThemeProvider>
+          <SnackbarProvider>
+            <Navbar />
+            <Sidebar />
+            <Grid container justifyContent="center">
+              <Toolbar />
+              <Grid item width="100%">
+                {children}
+              </Grid>
             </Grid>
-          </Grid>
-        </SnackbarProvider>
-      </ThemeProvider>
-    </ApolloProvider>
-  );
-});
+          </SnackbarProvider>
+        </ThemeProvider>
+      </ApolloProvider>
+    );
+  }
+);

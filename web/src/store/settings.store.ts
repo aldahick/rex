@@ -1,5 +1,4 @@
 import { action, makeObservable, observable } from "mobx";
-import { singleton } from "tsyringe";
 
 export interface Settings {
   theme: "light" | "dark";
@@ -10,7 +9,6 @@ const DEFAULT_SETTINGS: Settings = {
   theme: "dark",
 };
 
-@singleton()
 export class SettingsStore {
   @observable
   private settings: Settings =

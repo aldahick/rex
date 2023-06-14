@@ -1,9 +1,7 @@
 import { action, makeObservable, observable } from "mobx";
-import { singleton } from "tsyringe";
 
 import { IPageDefinition } from "../IFeature";
 
-@singleton()
 export class SidebarStore {
   @observable isOpen = false;
 

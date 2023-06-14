@@ -15,5 +15,5 @@ RUN pnpm install --prod --frozen-lockfile
 
 COPY --from=builder dist dist
 COPY gql /gql
-ENV GRAPHQL_DIR=/gql
+ENV GRAPHQL_SCHEMA_DIRS=/gql
 CMD pnpm start

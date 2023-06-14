@@ -1,41 +1,18 @@
-import { useMutation } from "@apollo/client";
-import { Button, Grid, TextField } from "@material-ui/core";
-import gql from "graphql-tag";
+import { Button, Grid, TextField } from "@mui/material";
 import React, { useState } from "react";
 
 import {
-  IAuthToken,
-  IMutation,
-  IMutationCreateAuthTokenLocalArgs,
+  IStorableAuthTokenFragment,
+  useCreateAuthTokenLocalMutation,
 } from "../../../graphql";
 import { useStatus } from "../../../hooks";
 
-const MUTATION_CREATE_AUTH_TOKEN_LOCAL = gql`
-  mutation Web_CreateAuthTokenLocal($username: String!, $password: String!) {
-    authToken: createAuthTokenLocal(username: $username, password: $password) {
-      token
-      user {
-        roles {
-          name
-          permissions {
-            action
-            resource
-          }
-        }
-      }
-    }
-  }
-`;
-
 interface LocalAuthFormProps {
-  onSuccess: (authToken: IAuthToken) => void;
+  onSuccess: (authToken: IStorableAuthTokenFragment) => void;
 }
 
 export const LocalAuthForm: React.FC<LocalAuthFormProps> = ({ onSuccess }) => {
-  const [createAuthToken] = useMutation<
-    { authToken: IMutation["createAuthTokenLocal"] },
-    IMutationCreateAuthTokenLocalArgs
-  >(MUTATION_CREATE_AUTH_TOKEN_LOCAL);
+  const [createAuthToken] = useCreateAuthTokenLocalMutation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const status = useStatus();

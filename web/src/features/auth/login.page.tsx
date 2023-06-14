@@ -1,35 +1,34 @@
-import { Grid } from "@material-ui/core";
-import { observer } from "mobx-react";
+import { Grid } from "@mui/material";
+import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
-import { container } from "tsyringe";
+import { redirect } from "react-router";
 
-import { IAuthToken } from "../../graphql";
+import { config } from "../../config";
+import { IStorableAuthTokenFragment } from "../../graphql";
 import { useStores } from "../../hooks";
-import { ConfigService } from "../utils/config.service";
 import { GoogleLoginButton } from "./components/GoogleLoginButton";
 import { LocalAuthForm } from "./components/LocalAuthForm";
 
 export const LoginPage: React.FC = observer(() => {
   const { authStore } = useStores();
-  const [redirect, setRedirect] = useState(false);
-  const { googleClientId = "" } = container.resolve(ConfigService);
+  const [redirecting, setRedirecting] = useState(false);
+  const { googleClientId = "" } = config;
   const params = new URLSearchParams(window.location.search);
 
-  const handleLogin = ({ token, user }: IAuthToken) => {
+  const handleLogin = ({ token, user }: IStorableAuthTokenFragment) => {
     authStore.setToken({
       token,
       roles: user.roles ?? [],
     });
-    setRedirect(true);
+    setRedirecting(true);
   };
 
-  if (redirect || authStore.isAuthenticated) {
+  if (redirecting || authStore.isAuthenticated) {
     if (params.has("redirect")) {
       window.location.replace(params.get("redirect") ?? "/");
       return null;
     }
-    return <Redirect to="/" />;
+    return redirect("/");
   }
 
   return (

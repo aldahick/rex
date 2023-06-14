@@ -1,4 +1,4 @@
-import { ListItem, ListItemText } from "@material-ui/core";
+import { ListItem, ListItemText } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 import { useStores } from "../../../hooks";

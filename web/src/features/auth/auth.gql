@@ -1,0 +1,25 @@
+fragment StorableAuthToken on AuthToken {
+  token
+  user {
+    id
+    roles {
+      name
+      permissions
+    }
+  }
+}
+
+mutation CreateAuthTokenGoogle($googleIdToken: String!) {
+  authToken: createAuthTokenGoogle(
+    googleIdToken: $googleIdToken
+    clientType: WEB
+  ) {
+    ...StorableAuthToken
+  }
+}
+
+mutation CreateAuthTokenLocal($username: String!, $password: String!) {
+  authToken: createAuthTokenLocal(username: $username, password: $password) {
+    ...StorableAuthToken
+  }
+}

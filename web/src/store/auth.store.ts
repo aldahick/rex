@@ -1,17 +1,13 @@
-import { AccessControl } from "accesscontrol";
-import * as _ from "lodash";
 import { action, computed, makeObservable, observable } from "mobx";
-import { singleton } from "tsyringe";
 
 import { IAuthPermission, IRole } from "../graphql";
 
 const TOKEN_KEY = "rex.auth.token/v2";
 interface AuthTokenData {
   token: string;
-  roles: IRole[];
+  roles: Pick<IRole, "name" | "permissions">[];
 }
 
-@singleton()
 export class AuthStore {
   @observable private data?: AuthTokenData;
 
@@ -52,38 +48,10 @@ export class AuthStore {
 
   @computed
   get isAuthenticated(): boolean {
-    return this.data !== undefined && !!this.accessControl;
+    return !!this.data?.roles.length;
   }
 
   isAuthorized(permission: IAuthPermission): boolean {
-    if (!this.roles) {
-      return false;
-    }
-    return (
-      this.roles.some(
-        (r) =>
-          this.accessControl
-            ?.can(r.name)
-            [permission.action](permission.resource).granted
-      ) || false
-    );
-  }
-
-  private get accessControl() {
-    if (!this.roles) {
-      return;
-    }
-    return new AccessControl(
-      _.flatten(
-        this.roles.map((role) =>
-          role.permissions.map((permission) => ({
-            role: role.name,
-            resource: permission.resource,
-            action: permission.action,
-            attributes: "*",
-          }))
-        )
-      )
-    );
+    return this.roles?.some((r) => r.permissions.includes(permission)) ?? false;
   }
 }

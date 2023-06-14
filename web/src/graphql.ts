@@ -1,263 +1,374 @@
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | undefined;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type InputMaybe<T> = T | undefined;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  DateTime: Date;
-  /** The `Upload` scalar type represents a file upload. */
-  Upload: File;
+  ID: { input: string | number; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  DateTime: { input: Date; output: Date; }
+};
+
+export enum IAuthClientType {
+  Mobile = 'MOBILE',
+  Web = 'WEB'
+}
+
+export enum IAuthPermission {
+  ManageMediaAll = 'MANAGE_MEDIA_ALL',
+  ManageMediaSelf = 'MANAGE_MEDIA_SELF',
+  ManageNotesAll = 'MANAGE_NOTES_ALL',
+  ManageNotesSelf = 'MANAGE_NOTES_SELF',
+  ManageRoles = 'MANAGE_ROLES',
+  ManageSteamGames = 'MANAGE_STEAM_GAMES',
+  ManageUsers = 'MANAGE_USERS'
+}
+
+export type IAuthToken = {
+  __typename?: 'AuthToken';
+  token: Scalars['String']['output'];
+  user: IUser;
+  userId: Scalars['ID']['output'];
 };
 
 export type IMediaItem = {
-  __typename?: "MediaItem";
-  key: Scalars["String"];
+  __typename?: 'MediaItem';
+  key: Scalars['String']['output'];
   type: IMediaItemType;
 };
 
 export enum IMediaItemType {
-  File = "file",
-  Directory = "directory",
-  Series = "series",
+  Directory = 'directory',
+  File = 'file',
+  Series = 'series'
 }
 
-export type ISteamPlayer = {
-  __typename?: "SteamPlayer";
-  _id: Scalars["String"];
-  nickname: Scalars["String"];
-  avatarUrl: Scalars["String"];
-  profileUrl: Scalars["String"];
-  playingGame?: Maybe<ISteamGame>;
-  ownedGames: Array<ISteamGame>;
+export type IMutation = {
+  __typename?: 'Mutation';
+  addMediaDownload: IProgress;
+  addRoleToUser: Scalars['Boolean']['output'];
+  createAuthToken: IAuthToken;
+  createAuthTokenGoogle: IAuthToken;
+  createAuthTokenLocal: IAuthToken;
+  createMedia: Scalars['Boolean']['output'];
+  createNote: INote;
+  createRole: IRole;
+  createUser: IUser;
+  deleteRole: Scalars['Boolean']['output'];
+  fetchSteamGames: IProgress;
+  removeNote: Scalars['Boolean']['output'];
+  setUserPassword: Scalars['Boolean']['output'];
+  updateNoteBody: Scalars['Boolean']['output'];
+  updateRole: Scalars['Boolean']['output'];
+  updateRolePermissions: Scalars['Boolean']['output'];
 };
 
-export type ISteamGame = {
-  __typename?: "SteamGame";
-  _id: Scalars["Int"];
-  name: Scalars["String"];
+
+export type IMutationAddMediaDownloadArgs = {
+  destinationKey: Scalars['String']['input'];
+  url: Scalars['String']['input'];
 };
 
-export enum IAuthAction {
-  CreateAny = "createAny",
-  CreateOwn = "createOwn",
-  DeleteAny = "deleteAny",
-  DeleteOwn = "deleteOwn",
-  ReadAny = "readAny",
-  ReadOwn = "readOwn",
-  UpdateAny = "updateAny",
-  UpdateOwn = "updateOwn",
-}
 
-export enum IAuthClientType {
-  Mobile = "MOBILE",
-  Web = "WEB",
-}
-
-export type IAuthPermission = {
-  __typename?: "AuthPermission";
-  resource: Scalars["String"];
-  action: IAuthAction;
+export type IMutationAddRoleToUserArgs = {
+  roleId: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
 };
 
-export type IAuthPermissionInput = {
-  resource: Scalars["String"];
-  action: IAuthAction;
+
+export type IMutationCreateAuthTokenArgs = {
+  userId: Scalars['String']['input'];
 };
 
-export type IAuthToken = {
-  __typename?: "AuthToken";
-  token: Scalars["String"];
-  user: IUser;
+
+export type IMutationCreateAuthTokenGoogleArgs = {
+  clientType: IAuthClientType;
+  googleIdToken: Scalars['String']['input'];
 };
 
-export type IRole = {
-  __typename?: "Role";
-  _id: Scalars["String"];
-  name: Scalars["String"];
+
+export type IMutationCreateAuthTokenLocalArgs = {
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
+
+export type IMutationCreateMediaArgs = {
+  data: Scalars['String']['input'];
+  key: Scalars['String']['input'];
+};
+
+
+export type IMutationCreateNoteArgs = {
+  title: Scalars['String']['input'];
+};
+
+
+export type IMutationCreateRoleArgs = {
+  name: Scalars['String']['input'];
+};
+
+
+export type IMutationCreateUserArgs = {
+  email: Scalars['String']['input'];
+  password?: InputMaybe<Scalars['String']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type IMutationDeleteRoleArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type IMutationRemoveNoteArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type IMutationSetUserPasswordArgs = {
+  password: Scalars['String']['input'];
+  userId: Scalars['ID']['input'];
+};
+
+
+export type IMutationUpdateNoteBodyArgs = {
+  body: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+};
+
+
+export type IMutationUpdateRoleArgs = {
+  id: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+};
+
+
+export type IMutationUpdateRolePermissionsArgs = {
+  id: Scalars['ID']['input'];
   permissions: Array<IAuthPermission>;
 };
 
 export type INote = {
-  __typename?: "Note";
-  _id: Scalars["String"];
-  createdAt: Scalars["DateTime"];
-  title: Scalars["String"];
-  body: Scalars["String"];
+  __typename?: 'Note';
+  body: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  title: Scalars['String']['output'];
 };
 
 export type IProgress = {
-  __typename?: "Progress";
-  _id: Scalars["String"];
-  action: Scalars["String"];
-  createdAt: Scalars["DateTime"];
-  status: IProgressStatus;
+  __typename?: 'Progress';
+  action: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
   logs: Array<IProgressLog>;
+  status: IProgressStatus;
 };
 
 export type IProgressLog = {
-  __typename?: "ProgressLog";
-  createdAt: Scalars["DateTime"];
-  text: Scalars["String"];
+  __typename?: 'ProgressLog';
+  createdAt: Scalars['DateTime']['output'];
+  text: Scalars['String']['output'];
 };
 
 export enum IProgressStatus {
-  Created = "CREATED",
-  InProgress = "IN_PROGRESS",
-  Complete = "COMPLETE",
-  Errored = "ERRORED",
+  Complete = 'COMPLETE',
+  Created = 'CREATED',
+  Errored = 'ERRORED',
+  InProgress = 'IN_PROGRESS'
 }
 
-export type IMutation = {
-  __typename?: "Mutation";
-  addRoleToUser: Scalars["Boolean"];
-  createUser: IUser;
-  setUserPassword: Scalars["Boolean"];
-  addMediaDownload: IProgress;
-  fetchSteamGames: IProgress;
-  createAuthTokenGoogle: IAuthToken;
-  /** username can also be email */
-  createAuthTokenLocal: IAuthToken;
-  /** requires auth */
-  createAuthToken: IAuthToken;
-  createRole: IRole;
-  deleteRole: Scalars["Boolean"];
-  updateRole: Scalars["Boolean"];
-  updateRolePermissions: Scalars["Boolean"];
-  createNote: INote;
-  removeNote: Scalars["Boolean"];
-  updateNoteBody: Scalars["Boolean"];
-};
-
-export type IMutationAddRoleToUserArgs = {
-  userId: Scalars["String"];
-  roleId: Scalars["String"];
-};
-
-export type IMutationCreateUserArgs = {
-  email: Scalars["String"];
-  username?: Maybe<Scalars["String"]>;
-  password?: Maybe<Scalars["String"]>;
-};
-
-export type IMutationSetUserPasswordArgs = {
-  userId: Scalars["String"];
-  password: Scalars["String"];
-};
-
-export type IMutationAddMediaDownloadArgs = {
-  url: Scalars["String"];
-  destinationKey: Scalars["String"];
-};
-
-export type IMutationCreateAuthTokenGoogleArgs = {
-  googleIdToken: Scalars["String"];
-  clientType: IAuthClientType;
-};
-
-export type IMutationCreateAuthTokenLocalArgs = {
-  username: Scalars["String"];
-  password: Scalars["String"];
-};
-
-export type IMutationCreateAuthTokenArgs = {
-  userId: Scalars["String"];
-};
-
-export type IMutationCreateRoleArgs = {
-  name: Scalars["String"];
-};
-
-export type IMutationDeleteRoleArgs = {
-  id: Scalars["String"];
-};
-
-export type IMutationUpdateRoleArgs = {
-  id: Scalars["String"];
-  name: Scalars["String"];
-};
-
-export type IMutationUpdateRolePermissionsArgs = {
-  id: Scalars["String"];
-  permissions: Array<IAuthPermissionInput>;
-};
-
-export type IMutationCreateNoteArgs = {
-  title: Scalars["String"];
-};
-
-export type IMutationRemoveNoteArgs = {
-  id: Scalars["String"];
-};
-
-export type IMutationUpdateNoteBodyArgs = {
-  id: Scalars["String"];
-  body: Scalars["String"];
-};
-
 export type IQuery = {
-  __typename?: "Query";
-  user: IUser;
-  users: Array<IUser>;
+  __typename?: 'Query';
   mediaItems: Array<IMediaItem>;
-  steamGames: Array<ISteamGame>;
-  steamPlayer: ISteamPlayer;
-  steamPlayers: Array<ISteamPlayer>;
-  roles: Array<IRole>;
   note: INote;
   notes: Array<INote>;
   progress: IProgress;
+  progresses: Array<IProgress>;
+  roles: Array<IRole>;
+  steamGames: Array<ISteamGame>;
+  steamPlayer: ISteamPlayer;
+  steamPlayers: Array<ISteamPlayer>;
+  user: IUser;
+  users: Array<IUser>;
 };
 
-export type IQueryUserArgs = {
-  id?: Maybe<Scalars["String"]>;
-};
 
 export type IQueryMediaItemsArgs = {
-  dir: Scalars["String"];
+  dir: Scalars['String']['input'];
 };
 
-export type IQuerySteamGamesArgs = {
-  page: Scalars["Int"];
-  search: Scalars["String"];
-};
-
-export type IQuerySteamPlayerArgs = {
-  steamId64: Scalars["String"];
-};
-
-export type IQuerySteamPlayersArgs = {
-  steamIds64: Array<Scalars["String"]>;
-};
 
 export type IQueryNoteArgs = {
-  id: Scalars["String"];
+  id: Scalars['ID']['input'];
 };
 
+
 export type IQueryProgressArgs = {
-  id: Scalars["String"];
+  id: Scalars['ID']['input'];
+};
+
+
+export type IQueryProgressesArgs = {
+  ids: Array<Scalars['ID']['input']>;
+};
+
+
+export type IQuerySteamGamesArgs = {
+  page: Scalars['Int']['input'];
+  search: Scalars['String']['input'];
+};
+
+
+export type IQuerySteamPlayerArgs = {
+  steamId64: Scalars['String']['input'];
+};
+
+
+export type IQuerySteamPlayersArgs = {
+  steamIds64: Array<Scalars['String']['input']>;
+};
+
+
+export type IQueryUserArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type IRole = {
+  __typename?: 'Role';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  permissions: Array<IAuthPermission>;
+};
+
+export type ISteamGame = {
+  __typename?: 'SteamGame';
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type ISteamPlayer = {
+  __typename?: 'SteamPlayer';
+  avatarUrl: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  nickname: Scalars['String']['output'];
+  ownedGames: Array<ISteamGame>;
+  playingGame?: Maybe<ISteamGame>;
+  profileUrl: Scalars['String']['output'];
 };
 
 export type IUser = {
-  __typename?: "User";
-  _id: Scalars["String"];
-  email: Scalars["String"];
-  username?: Maybe<Scalars["String"]>;
-  roles?: Maybe<Array<IRole>>;
+  __typename?: 'User';
+  email: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   permissions?: Maybe<Array<IAuthPermission>>;
+  roles?: Maybe<Array<IRole>>;
+  username?: Maybe<Scalars['String']['output']>;
 };
 
-export enum ICacheControlScope {
-  Public = "PUBLIC",
-  Private = "PRIVATE",
+export type IStorableAuthTokenFragment = { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, roles?: Array<{ __typename?: 'Role', name: string, permissions: Array<IAuthPermission> }> | undefined } };
+
+export type ICreateAuthTokenGoogleMutationVariables = Exact<{
+  googleIdToken: Scalars['String']['input'];
+}>;
+
+
+export type ICreateAuthTokenGoogleMutation = { __typename?: 'Mutation', authToken: { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, roles?: Array<{ __typename?: 'Role', name: string, permissions: Array<IAuthPermission> }> | undefined } } };
+
+export type ICreateAuthTokenLocalMutationVariables = Exact<{
+  username: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+}>;
+
+
+export type ICreateAuthTokenLocalMutation = { __typename?: 'Mutation', authToken: { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, roles?: Array<{ __typename?: 'Role', name: string, permissions: Array<IAuthPermission> }> | undefined } } };
+
+export const StorableAuthTokenFragmentDoc = gql`
+    fragment StorableAuthToken on AuthToken {
+  token
+  user {
+    id
+    roles {
+      name
+      permissions
+    }
+  }
 }
+    `;
+export const CreateAuthTokenGoogleDocument = gql`
+    mutation CreateAuthTokenGoogle($googleIdToken: String!) {
+  authToken: createAuthTokenGoogle(googleIdToken: $googleIdToken, clientType: WEB) {
+    ...StorableAuthToken
+  }
+}
+    ${StorableAuthTokenFragmentDoc}`;
+export type ICreateAuthTokenGoogleMutationFn = Apollo.MutationFunction<ICreateAuthTokenGoogleMutation, ICreateAuthTokenGoogleMutationVariables>;
+
+/**
+ * __useCreateAuthTokenGoogleMutation__
+ *
+ * To run a mutation, you first call `useCreateAuthTokenGoogleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAuthTokenGoogleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAuthTokenGoogleMutation, { data, loading, error }] = useCreateAuthTokenGoogleMutation({
+ *   variables: {
+ *      googleIdToken: // value for 'googleIdToken'
+ *   },
+ * });
+ */
+export function useCreateAuthTokenGoogleMutation(baseOptions?: Apollo.MutationHookOptions<ICreateAuthTokenGoogleMutation, ICreateAuthTokenGoogleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ICreateAuthTokenGoogleMutation, ICreateAuthTokenGoogleMutationVariables>(CreateAuthTokenGoogleDocument, options);
+      }
+export type CreateAuthTokenGoogleMutationHookResult = ReturnType<typeof useCreateAuthTokenGoogleMutation>;
+export type CreateAuthTokenGoogleMutationResult = Apollo.MutationResult<ICreateAuthTokenGoogleMutation>;
+export type CreateAuthTokenGoogleMutationOptions = Apollo.BaseMutationOptions<ICreateAuthTokenGoogleMutation, ICreateAuthTokenGoogleMutationVariables>;
+export const CreateAuthTokenLocalDocument = gql`
+    mutation CreateAuthTokenLocal($username: String!, $password: String!) {
+  authToken: createAuthTokenLocal(username: $username, password: $password) {
+    ...StorableAuthToken
+  }
+}
+    ${StorableAuthTokenFragmentDoc}`;
+export type ICreateAuthTokenLocalMutationFn = Apollo.MutationFunction<ICreateAuthTokenLocalMutation, ICreateAuthTokenLocalMutationVariables>;
+
+/**
+ * __useCreateAuthTokenLocalMutation__
+ *
+ * To run a mutation, you first call `useCreateAuthTokenLocalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAuthTokenLocalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAuthTokenLocalMutation, { data, loading, error }] = useCreateAuthTokenLocalMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useCreateAuthTokenLocalMutation(baseOptions?: Apollo.MutationHookOptions<ICreateAuthTokenLocalMutation, ICreateAuthTokenLocalMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ICreateAuthTokenLocalMutation, ICreateAuthTokenLocalMutationVariables>(CreateAuthTokenLocalDocument, options);
+      }
+export type CreateAuthTokenLocalMutationHookResult = ReturnType<typeof useCreateAuthTokenLocalMutation>;
+export type CreateAuthTokenLocalMutationResult = Apollo.MutationResult<ICreateAuthTokenLocalMutation>;
+export type CreateAuthTokenLocalMutationOptions = Apollo.BaseMutationOptions<ICreateAuthTokenLocalMutation, ICreateAuthTokenLocalMutationVariables>;

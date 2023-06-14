@@ -1,75 +1,33 @@
-import { useMutation } from "@apollo/client";
-import { makeStyles, Typography } from "@material-ui/core";
-import gql from "graphql-tag";
+import {
+  CredentialResponse,
+  GoogleLogin,
+  GoogleOAuthProvider,
+} from "@react-oauth/google";
 import React, { useState } from "react";
-import GoogleLogin, {
-  GoogleLoginResponse,
-  GoogleLoginResponseOffline,
-} from "react-google-login";
 
 import {
-  IAuthToken,
-  IMutation,
-  IMutationCreateAuthTokenGoogleArgs,
+  IStorableAuthTokenFragment,
+  useCreateAuthTokenGoogleMutation,
 } from "../../../graphql";
 import { useStatus } from "../../../hooks";
 
-const useStyles = makeStyles((theme) => ({
-  loginButton: {
-    fontWeight: "bold",
-  },
-  loginLabel: {
-    fontWeight: 500,
-    color: theme.palette.grey[600],
-  },
-}));
-
-const MUTATION_CREATE_AUTH_TOKEN_GOOGLE = gql`
-  mutation Web_CreateAuthTokenGoogle($googleIdToken: String!) {
-    authToken: createAuthTokenGoogle(
-      googleIdToken: $googleIdToken
-      clientType: WEB
-    ) {
-      token
-      user {
-        roles {
-          name
-          permissions {
-            action
-            resource
-          }
-        }
-      }
-    }
-  }
-`;
-
 export const GoogleLoginButton: React.FC<{
   clientId: string;
-  onSuccess: (authToken: IAuthToken) => void;
+  onSuccess: (authToken: IStorableAuthTokenFragment) => void;
 }> = ({ clientId, onSuccess }) => {
-  const [createAuthToken] = useMutation<
-    {
-      authToken: IMutation["createAuthTokenGoogle"];
-    },
-    Omit<IMutationCreateAuthTokenGoogleArgs, "clientType">
-  >(MUTATION_CREATE_AUTH_TOKEN_GOOGLE);
-  const [isErrored, setIsErrored] = useState(false);
-  const classes = useStyles();
+  const [createAuthToken] = useCreateAuthTokenGoogleMutation();
+  const [errored, setErrored] = useState(false);
   const status = useStatus();
 
-  const onGoogleAuth = async (
-    response: GoogleLoginResponse | GoogleLoginResponseOffline
-  ): Promise<void> => {
-    if ("code" in response) {
-      // we don't support this
-      status.error("You appear to be offline.");
+  const handleSuccess = async (response: CredentialResponse): Promise<void> => {
+    if (!response.credential) {
+      status.error("No credential returned from Google OAuth");
       return;
     }
     try {
       const res = await createAuthToken({
         variables: {
-          googleIdToken: response.tokenObj.id_token,
+          googleIdToken: response.credential,
         },
       });
       if (res.data) {
@@ -82,28 +40,18 @@ export const GoogleLoginButton: React.FC<{
     }
   };
 
-  if (isErrored) {
+  const handleError = () => {
+    status.error("Failed to fetch OAuth token from Google. Not sure why!");
+    setErrored(true);
+  };
+
+  if (errored) {
     return <span />;
   }
 
   return (
-    <GoogleLogin
-      clientId={clientId}
-      onSuccess={onGoogleAuth}
-      className={classes.loginButton}
-      onFailure={(err: {
-        [key in "message" | "details" | "error"]: string | undefined;
-      }): void => {
-        const message =
-          err.message ??
-          err.details ??
-          err.error ??
-          "An unknown error occurred";
-        console.error("GoogleLogin error", { message });
-        setIsErrored(true);
-      }}
-    >
-      <Typography className={classes.loginLabel}>Log In</Typography>
-    </GoogleLogin>
+    <GoogleOAuthProvider clientId={clientId}>
+      <GoogleLogin onSuccess={handleSuccess} onError={handleError} />
+    </GoogleOAuthProvider>
   );
 };
