@@ -1,91 +1,98 @@
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import {
   IconButton,
   List,
-  makeStyles,
+  styled,
   SwipeableDrawer,
-} from "@material-ui/core";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import * as _ from "lodash";
-import { observer } from "mobx-react";
+  Theme,
+} from "@mui/material";
+import { observer } from "mobx-react-lite";
 import React from "react";
 
+import { IAuthPermission } from "../../graphql";
 import { useStores } from "../../hooks";
-import * as features from "..";
-import { LogoutButton } from "../auth/components/LogoutButton";
+import { LogoutButton } from "../auth/LogoutButton";
 import { SidebarItem } from "./SidebarItem";
 
 const DRAWER_WIDTH = 250;
 
-const useStyles = makeStyles((theme) => ({
-  drawer: {
-    [theme.breakpoints.up("sm")]: {
-      width: DRAWER_WIDTH,
-      flexShrink: 0,
-    },
-  },
-  fixedDrawer: {
+const Nav = styled("nav")((theme: Theme) => ({
+  [theme.breakpoints.up("sm")]: {
     width: DRAWER_WIDTH,
-  },
-  openButton: {
-    position: "fixed",
-    left: "0",
-    top: "0",
-  },
-  openButtonIcon: {
-    backgroundColor: "lightgray",
-    border: "1px solid lightgray",
-    borderRadius: "50%",
+    flexShrink: 0,
   },
 }));
 
+const InnerDrawer = styled("div")({
+  width: DRAWER_WIDTH,
+});
+
+const OpenButton = styled(IconButton)({
+  position: "fixed",
+  left: "0",
+  top: "0",
+});
+
+const OpenButtonIcon = styled(ChevronRightIcon)({
+  backgroundColor: "lightgray",
+  border: "1px solid lightgray",
+  borderRadius: "50%",
+});
+
+interface SidebarLink {
+  label: string;
+  route: string;
+  permissions?: IAuthPermission[];
+}
+
+const sidebarLinks: SidebarLink[] = [
+  {
+    label: "Cat Game",
+    route: "/cat",
+  },
+];
+
 export const Sidebar: React.FC = observer(() => {
   const { authStore, sidebarStore } = useStores();
-  const classes = useStyles();
-  const pages = _.sortBy(
-    _.flatten(Object.values(features).map((f) => f.pages ?? [])),
-    (p) => p.navbar?.title,
-    (p) => p.route
-  );
+
+  const handleOpen = () => sidebarStore.setOpen(true);
+  const handleClose = () => sidebarStore.setOpen(false);
 
   return (
-    <nav className={classes.drawer}>
+    <Nav>
       <SwipeableDrawer
         variant="temporary"
         anchor="left"
         open={sidebarStore.isOpen}
-        onClose={() => sidebarStore.setOpen(false)}
-        onOpen={() => sidebarStore.setOpen(true)}
+        onClose={handleClose}
+        onOpen={handleOpen}
       >
-        <div style={{ width: 250 }}>
+        <InnerDrawer>
           <List>
             {!authStore.isAuthenticated && (
               <SidebarItem title="Log In" url="/login" nested={false} />
             )}
-            {pages
+            {sidebarLinks
               .filter(
-                ({ navbar, permissions }) =>
-                  !!navbar &&
-                  (permissions?.every((p) => authStore.isAuthorized(p)) ?? true)
+                ({ permissions }) =>
+                  !permissions ||
+                  permissions.every((p) => authStore.isAuthorized(p))
               )
               .map((page) => (
                 <SidebarItem
                   key={page.route}
                   url={page.route}
-                  title={page.navbar?.title ?? "UNKNOWN PAGE"}
+                  title={page.label}
                   nested={false}
                 />
               ))}
             {authStore.isAuthenticated && <LogoutButton />}
           </List>
-        </div>
+        </InnerDrawer>
       </SwipeableDrawer>
-      <IconButton
-        size="medium"
-        className={classes.openButton}
-        onClick={() => sidebarStore.setOpen(true)}
-      >
-        <ChevronRightIcon className={classes.openButtonIcon} />
-      </IconButton>
-    </nav>
+      <OpenButton size="medium" onClick={handleOpen}>
+        <OpenButtonIcon />
+      </OpenButton>
+    </Nav>
   );
 });

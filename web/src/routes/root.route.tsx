@@ -1,12 +1,12 @@
 import { Grid, Typography, useTheme } from "@mui/material";
 import React from "react";
 
-import githubDarkLogoUrl from "../../images/logos/github-dark.png";
-import githubLightLogoUrl from "../../images/logos/github-light.png";
-import linkedInLogoUrl from "../../images/logos/linkedin.png";
-import { SocialBadge } from "../features/utils/components";
+import { SocialBadge } from "../features/utils/SocialBadge";
+import githubDarkLogoUrl from "../images/logos/github-dark.png";
+import githubLightLogoUrl from "../images/logos/github-light.png";
+import linkedInLogoUrl from "../images/logos/linkedin.png";
 
-export const Root: React.FC = () => {
+export const RootRoute: React.FC = () => {
   const theme = useTheme();
   return (
     <Grid container direction="column" alignItems="center">

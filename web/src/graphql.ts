@@ -276,14 +276,14 @@ export type IUser = {
   username?: Maybe<Scalars['String']['output']>;
 };
 
-export type IStorableAuthTokenFragment = { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, roles?: Array<{ __typename?: 'Role', name: string, permissions: Array<IAuthPermission> }> | undefined } };
+export type IStorableAuthTokenFragment = { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, roles?: Array<{ __typename?: 'Role', id: string, name: string, permissions: Array<IAuthPermission> }> | undefined } };
 
 export type ICreateAuthTokenGoogleMutationVariables = Exact<{
   googleIdToken: Scalars['String']['input'];
 }>;
 
 
-export type ICreateAuthTokenGoogleMutation = { __typename?: 'Mutation', authToken: { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, roles?: Array<{ __typename?: 'Role', name: string, permissions: Array<IAuthPermission> }> | undefined } } };
+export type ICreateAuthTokenGoogleMutation = { __typename?: 'Mutation', authToken: { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, roles?: Array<{ __typename?: 'Role', id: string, name: string, permissions: Array<IAuthPermission> }> | undefined } } };
 
 export type ICreateAuthTokenLocalMutationVariables = Exact<{
   username: Scalars['String']['input'];
@@ -291,7 +291,57 @@ export type ICreateAuthTokenLocalMutationVariables = Exact<{
 }>;
 
 
-export type ICreateAuthTokenLocalMutation = { __typename?: 'Mutation', authToken: { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, roles?: Array<{ __typename?: 'Role', name: string, permissions: Array<IAuthPermission> }> | undefined } } };
+export type ICreateAuthTokenLocalMutation = { __typename?: 'Mutation', authToken: { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, roles?: Array<{ __typename?: 'Role', id: string, name: string, permissions: Array<IAuthPermission> }> | undefined } } };
+
+export type IMediaItemsQueryVariables = Exact<{
+  dir: Scalars['String']['input'];
+}>;
+
+
+export type IMediaItemsQuery = { __typename?: 'Query', mediaItems: Array<{ __typename?: 'MediaItem', key: string, type: IMediaItemType }> };
+
+export type ICreateNoteMutationVariables = Exact<{
+  title: Scalars['String']['input'];
+}>;
+
+
+export type ICreateNoteMutation = { __typename?: 'Mutation', createNote: { __typename?: 'Note', id: string } };
+
+export type IRemoveNoteMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type IRemoveNoteMutation = { __typename?: 'Mutation', removeNote: boolean };
+
+export type IUpdateNoteBodyMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  body: Scalars['String']['input'];
+}>;
+
+
+export type IUpdateNoteBodyMutation = { __typename?: 'Mutation', updateNoteBody: boolean };
+
+export type IListNoteFragment = { __typename?: 'Note', id: string, createdAt: Date, title: string };
+
+export type INoteQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type INoteQuery = { __typename?: 'Query', note: { __typename?: 'Note', body: string, id: string, createdAt: Date, title: string } };
+
+export type INotesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type INotesQuery = { __typename?: 'Query', notes: Array<{ __typename?: 'Note', id: string, createdAt: Date, title: string }> };
+
+export type IProgressQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type IProgressQuery = { __typename?: 'Query', progress: { __typename?: 'Progress', id: string, action: string, createdAt: Date, status: IProgressStatus, logs: Array<{ __typename?: 'ProgressLog', createdAt: Date, text: string }> } };
 
 export const StorableAuthTokenFragmentDoc = gql`
     fragment StorableAuthToken on AuthToken {
@@ -299,10 +349,18 @@ export const StorableAuthTokenFragmentDoc = gql`
   user {
     id
     roles {
+      id
       name
       permissions
     }
   }
+}
+    `;
+export const ListNoteFragmentDoc = gql`
+    fragment ListNote on Note {
+  id
+  createdAt
+  title
 }
     `;
 export const CreateAuthTokenGoogleDocument = gql`
@@ -372,3 +430,247 @@ export function useCreateAuthTokenLocalMutation(baseOptions?: Apollo.MutationHoo
 export type CreateAuthTokenLocalMutationHookResult = ReturnType<typeof useCreateAuthTokenLocalMutation>;
 export type CreateAuthTokenLocalMutationResult = Apollo.MutationResult<ICreateAuthTokenLocalMutation>;
 export type CreateAuthTokenLocalMutationOptions = Apollo.BaseMutationOptions<ICreateAuthTokenLocalMutation, ICreateAuthTokenLocalMutationVariables>;
+export const MediaItemsDocument = gql`
+    query MediaItems($dir: String!) {
+  mediaItems(dir: $dir) {
+    key
+    type
+  }
+}
+    `;
+
+/**
+ * __useMediaItemsQuery__
+ *
+ * To run a query within a React component, call `useMediaItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMediaItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMediaItemsQuery({
+ *   variables: {
+ *      dir: // value for 'dir'
+ *   },
+ * });
+ */
+export function useMediaItemsQuery(baseOptions: Apollo.QueryHookOptions<IMediaItemsQuery, IMediaItemsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<IMediaItemsQuery, IMediaItemsQueryVariables>(MediaItemsDocument, options);
+      }
+export function useMediaItemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IMediaItemsQuery, IMediaItemsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<IMediaItemsQuery, IMediaItemsQueryVariables>(MediaItemsDocument, options);
+        }
+export type MediaItemsQueryHookResult = ReturnType<typeof useMediaItemsQuery>;
+export type MediaItemsLazyQueryHookResult = ReturnType<typeof useMediaItemsLazyQuery>;
+export type MediaItemsQueryResult = Apollo.QueryResult<IMediaItemsQuery, IMediaItemsQueryVariables>;
+export const CreateNoteDocument = gql`
+    mutation CreateNote($title: String!) {
+  createNote(title: $title) {
+    id
+  }
+}
+    `;
+export type ICreateNoteMutationFn = Apollo.MutationFunction<ICreateNoteMutation, ICreateNoteMutationVariables>;
+
+/**
+ * __useCreateNoteMutation__
+ *
+ * To run a mutation, you first call `useCreateNoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateNoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createNoteMutation, { data, loading, error }] = useCreateNoteMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useCreateNoteMutation(baseOptions?: Apollo.MutationHookOptions<ICreateNoteMutation, ICreateNoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ICreateNoteMutation, ICreateNoteMutationVariables>(CreateNoteDocument, options);
+      }
+export type CreateNoteMutationHookResult = ReturnType<typeof useCreateNoteMutation>;
+export type CreateNoteMutationResult = Apollo.MutationResult<ICreateNoteMutation>;
+export type CreateNoteMutationOptions = Apollo.BaseMutationOptions<ICreateNoteMutation, ICreateNoteMutationVariables>;
+export const RemoveNoteDocument = gql`
+    mutation RemoveNote($id: ID!) {
+  removeNote(id: $id)
+}
+    `;
+export type IRemoveNoteMutationFn = Apollo.MutationFunction<IRemoveNoteMutation, IRemoveNoteMutationVariables>;
+
+/**
+ * __useRemoveNoteMutation__
+ *
+ * To run a mutation, you first call `useRemoveNoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveNoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeNoteMutation, { data, loading, error }] = useRemoveNoteMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveNoteMutation(baseOptions?: Apollo.MutationHookOptions<IRemoveNoteMutation, IRemoveNoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<IRemoveNoteMutation, IRemoveNoteMutationVariables>(RemoveNoteDocument, options);
+      }
+export type RemoveNoteMutationHookResult = ReturnType<typeof useRemoveNoteMutation>;
+export type RemoveNoteMutationResult = Apollo.MutationResult<IRemoveNoteMutation>;
+export type RemoveNoteMutationOptions = Apollo.BaseMutationOptions<IRemoveNoteMutation, IRemoveNoteMutationVariables>;
+export const UpdateNoteBodyDocument = gql`
+    mutation UpdateNoteBody($id: ID!, $body: String!) {
+  updateNoteBody(id: $id, body: $body)
+}
+    `;
+export type IUpdateNoteBodyMutationFn = Apollo.MutationFunction<IUpdateNoteBodyMutation, IUpdateNoteBodyMutationVariables>;
+
+/**
+ * __useUpdateNoteBodyMutation__
+ *
+ * To run a mutation, you first call `useUpdateNoteBodyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateNoteBodyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateNoteBodyMutation, { data, loading, error }] = useUpdateNoteBodyMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      body: // value for 'body'
+ *   },
+ * });
+ */
+export function useUpdateNoteBodyMutation(baseOptions?: Apollo.MutationHookOptions<IUpdateNoteBodyMutation, IUpdateNoteBodyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<IUpdateNoteBodyMutation, IUpdateNoteBodyMutationVariables>(UpdateNoteBodyDocument, options);
+      }
+export type UpdateNoteBodyMutationHookResult = ReturnType<typeof useUpdateNoteBodyMutation>;
+export type UpdateNoteBodyMutationResult = Apollo.MutationResult<IUpdateNoteBodyMutation>;
+export type UpdateNoteBodyMutationOptions = Apollo.BaseMutationOptions<IUpdateNoteBodyMutation, IUpdateNoteBodyMutationVariables>;
+export const NoteDocument = gql`
+    query Note($id: ID!) {
+  note(id: $id) {
+    ...ListNote
+    body
+  }
+}
+    ${ListNoteFragmentDoc}`;
+
+/**
+ * __useNoteQuery__
+ *
+ * To run a query within a React component, call `useNoteQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNoteQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNoteQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useNoteQuery(baseOptions: Apollo.QueryHookOptions<INoteQuery, INoteQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<INoteQuery, INoteQueryVariables>(NoteDocument, options);
+      }
+export function useNoteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<INoteQuery, INoteQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<INoteQuery, INoteQueryVariables>(NoteDocument, options);
+        }
+export type NoteQueryHookResult = ReturnType<typeof useNoteQuery>;
+export type NoteLazyQueryHookResult = ReturnType<typeof useNoteLazyQuery>;
+export type NoteQueryResult = Apollo.QueryResult<INoteQuery, INoteQueryVariables>;
+export const NotesDocument = gql`
+    query Notes {
+  notes {
+    ...ListNote
+  }
+}
+    ${ListNoteFragmentDoc}`;
+
+/**
+ * __useNotesQuery__
+ *
+ * To run a query within a React component, call `useNotesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNotesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNotesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNotesQuery(baseOptions?: Apollo.QueryHookOptions<INotesQuery, INotesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<INotesQuery, INotesQueryVariables>(NotesDocument, options);
+      }
+export function useNotesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<INotesQuery, INotesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<INotesQuery, INotesQueryVariables>(NotesDocument, options);
+        }
+export type NotesQueryHookResult = ReturnType<typeof useNotesQuery>;
+export type NotesLazyQueryHookResult = ReturnType<typeof useNotesLazyQuery>;
+export type NotesQueryResult = Apollo.QueryResult<INotesQuery, INotesQueryVariables>;
+export const ProgressDocument = gql`
+    query Progress($id: ID!) {
+  progress(id: $id) {
+    id
+    action
+    createdAt
+    status
+    logs {
+      createdAt
+      text
+    }
+  }
+}
+    `;
+
+/**
+ * __useProgressQuery__
+ *
+ * To run a query within a React component, call `useProgressQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProgressQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProgressQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useProgressQuery(baseOptions: Apollo.QueryHookOptions<IProgressQuery, IProgressQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<IProgressQuery, IProgressQueryVariables>(ProgressDocument, options);
+      }
+export function useProgressLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IProgressQuery, IProgressQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<IProgressQuery, IProgressQueryVariables>(ProgressDocument, options);
+        }
+export type ProgressQueryHookResult = ReturnType<typeof useProgressQuery>;
+export type ProgressLazyQueryHookResult = ReturnType<typeof useProgressLazyQuery>;
+export type ProgressQueryResult = Apollo.QueryResult<IProgressQuery, IProgressQueryVariables>;

@@ -32,11 +32,12 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.15",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.4",
     "@react-oauth/google": "^0.11.0",
     "graphql": "^16.6.0",
-    "graphql-tag": "^2.12.6",
     "lodash": "^4.17.21",
     "mime": "^3.0.0",
     "mobx": "^6.9.0",

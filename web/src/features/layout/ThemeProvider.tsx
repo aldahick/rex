@@ -1,5 +1,5 @@
 import {
-  createMuiTheme,
+  createTheme,
   CssBaseline,
   responsiveFontSizes,
   ThemeProvider as MuiThemeProvider,
@@ -14,7 +14,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = observer(
     const { settingsStore } = useStores();
 
     const theme = responsiveFontSizes(
-      createMuiTheme({
+      createTheme({
         typography: {
           fontFamily: "Open Sans",
           caption: {

@@ -1,19 +1,13 @@
 import {
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
-  makeStyles,
-} from "@material-ui/core";
+  useTheme,
+} from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 
 import { useStores } from "../../hooks";
-
-const useStyles = makeStyles((theme) => ({
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
-}));
 
 export const SidebarItem: React.FC<{
   title: string | JSX.Element;
@@ -22,18 +16,22 @@ export const SidebarItem: React.FC<{
   nested: boolean;
 }> = ({ title, url, icon, nested }) => {
   const { sidebarStore } = useStores();
-  const classes = useStyles();
+  const theme = useTheme();
 
+  const handleClick = () => {
+    sidebarStore.setOpen(false);
+  };
+
+  const style = nested ? { paddingLeft: theme.spacing(4) } : {};
   return (
-    <ListItem
-      button
+    <ListItemButton
       component={Link}
       to={url}
-      className={nested ? classes.nested : undefined}
-      onClick={() => sidebarStore.setOpen(false)}
+      style={style}
+      onClick={handleClick}
     >
-      {icon && <ListItemIcon>{icon}</ListItemIcon>}
+      {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
       {typeof title === "string" ? <ListItemText primary={title} /> : title}
-    </ListItem>
+    </ListItemButton>
   );
 };

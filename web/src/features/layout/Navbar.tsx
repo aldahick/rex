@@ -1,37 +1,35 @@
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
   Button,
   Grid,
   IconButton,
   Link,
-  makeStyles,
+  styled,
   Toolbar,
   Typography,
-} from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
-import { observer } from "mobx-react";
+} from "@mui/material";
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import { useStores } from "../../hooks";
 import { ThemeSelect } from "./ThemeSelect";
 
-const useStyles = makeStyles({
-  titleText: {
-    fontWeight: 600,
-    marginLeft: "1em",
-    flexGrow: 1,
-  },
-  link: {
-    "&:hover": {
-      textDecoration: "none",
-    },
+const Title = styled(Typography)({
+  fontWeight: 600,
+  marginLeft: "1em",
+  flexGrow: 1,
+});
+
+const NoHoverLink = styled(Link)({
+  "&:hover": {
+    textDecoration: "none",
   },
 });
 
 export const Navbar: React.FC = observer(() => {
   const { authStore, sidebarStore } = useStores();
-  const classes = useStyles();
 
   return (
     <AppBar>
@@ -43,16 +41,11 @@ export const Navbar: React.FC = observer(() => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" color="inherit" className={classes.titleText}>
-          <Link
-            component={RouterLink}
-            to="/"
-            color="inherit"
-            className={classes.link}
-          >
+        <Title variant="h6" color="inherit">
+          <NoHoverLink component={RouterLink} to="/" color="inherit">
             Alex Hicks
-          </Link>
-        </Typography>
+          </NoHoverLink>
+        </Title>
         <Grid item>
           <Grid container spacing={1} alignItems="center">
             <Grid item>
@@ -61,15 +54,14 @@ export const Navbar: React.FC = observer(() => {
             {!authStore.isAuthenticated && (
               <Grid item>
                 <Button color="secondary" variant="outlined">
-                  <Link
+                  <NoHoverLink
                     component={RouterLink}
                     to="/login"
                     color="inherit"
-                    className={classes.link}
                     style={{ fontWeight: 600 }}
                   >
                     Log In
-                  </Link>
+                  </NoHoverLink>
                 </Button>
               </Grid>
             )}

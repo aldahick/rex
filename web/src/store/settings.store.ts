@@ -1,32 +1,33 @@
-import { action, makeObservable, observable } from "mobx";
+import { makeAutoObservable } from "mobx";
 
+export enum ThemeSetting {
+  Light = "light",
+  Dark = "dark",
+}
 export interface Settings {
-  theme: "light" | "dark";
+  theme: ThemeSetting;
 }
 
 const SETTINGS_KEY = "rex.settings";
 const DEFAULT_SETTINGS: Settings = {
-  theme: "dark",
+  theme: ThemeSetting.Dark,
 };
 
 export class SettingsStore {
-  @observable
   private settings: Settings =
     (JSON.parse(
       localStorage.getItem(SETTINGS_KEY) ?? "null"
     ) as Settings | null) ?? DEFAULT_SETTINGS;
 
   constructor() {
-    makeObservable(this);
+    makeAutoObservable(this);
   }
 
-  @action.bound
   setAll(settings: Settings): void {
     this.settings = settings;
     this.save();
   }
 
-  @action.bound
   set<Key extends keyof Settings>(key: Key, value: Settings[Key]): void {
     this.settings[key] = value;
     this.save();

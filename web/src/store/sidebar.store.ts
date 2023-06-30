@@ -1,17 +1,12 @@
-import { action, makeObservable, observable } from "mobx";
-
-import { IPageDefinition } from "../IFeature";
+import { makeAutoObservable } from "mobx";
 
 export class SidebarStore {
-  @observable isOpen = false;
-
-  @observable pages: IPageDefinition[] = [];
+  isOpen = false;
 
   constructor() {
-    makeObservable(this);
+    makeAutoObservable(this);
   }
 
-  @action.bound
   setOpen(isOpen: boolean): void {
     this.isOpen = isOpen;
   }

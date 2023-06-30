@@ -1,0 +1,6 @@
+query MediaItems($dir: String!) {
+  mediaItems(dir: $dir) {
+    key
+    type
+  }
+}

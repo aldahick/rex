@@ -3,6 +3,7 @@ fragment StorableAuthToken on AuthToken {
   user {
     id
     roles {
+      id
       name
       permissions
     }

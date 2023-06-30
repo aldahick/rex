@@ -1,6 +1,6 @@
 const required = (key: string): string => {
   const value =
-    process.env[`VITE_${key}`] ??
+    import.meta.env[`VITE_${key}`] ??
     document.body.getAttribute(`env-${key.split("_").join("-").toLowerCase()}`);
   if (!value) {
     throw new Error(`Missing required config variable ${key}`);

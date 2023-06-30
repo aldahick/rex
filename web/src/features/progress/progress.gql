@@ -1,0 +1,12 @@
+query Progress($id: ID!) {
+  progress(id: $id) {
+    id
+    action
+    createdAt
+    status
+    logs {
+      createdAt
+      text
+    }
+  }
+}

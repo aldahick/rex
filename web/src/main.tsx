@@ -1,22 +1,49 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { RouterProvider } from "react-router";
+import { RouteObject, RouterProvider } from "react-router";
 import { createBrowserRouter } from "react-router-dom";
 
 import { App } from "./App";
-import { Root } from "./routes/root.route";
+import { config } from "./config";
+import { CatRoute } from "./routes/cat.route";
+import { LoginRoute } from "./routes/login.route";
+import { MediaRoute } from "./routes/media.route";
+import { NoteRoute } from "./routes/note.route";
+import { NotesRoute } from "./routes/notes.route";
+import { RootRoute } from "./routes/root.route";
 
 const container = document.getElementById("root");
 if (!container) {
   throw new Error("Missing root element");
 }
-const router = createBrowserRouter([
+const routes: RouteObject[] = [
   {
     path: "/",
-    element: <Root />,
+    element: <RootRoute />,
     errorElement: <p>Error</p>,
   },
-]);
+  {
+    path: "/login",
+    element: <LoginRoute />,
+  },
+  {
+    path: "/cat",
+    element: <CatRoute />,
+  },
+  {
+    path: "/media",
+    element: <MediaRoute />,
+  },
+  {
+    path: "/notes/:id",
+    element: <NoteRoute />,
+  },
+  {
+    path: "/notes",
+    element: <NotesRoute />,
+  },
+];
+const router = createBrowserRouter(routes, { basename: config.basePath });
 createRoot(container).render(
   <React.StrictMode>
     <App>
