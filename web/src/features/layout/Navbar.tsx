@@ -22,12 +22,6 @@ const Title = styled(Typography)({
   flexGrow: 1,
 });
 
-const NoHoverLink = styled(Link)({
-  "&:hover": {
-    textDecoration: "none",
-  },
-});
-
 export const Navbar: React.FC = observer(() => {
   const { authStore, sidebarStore } = useStores();
 
@@ -42,9 +36,13 @@ export const Navbar: React.FC = observer(() => {
           <MenuIcon />
         </IconButton>
         <Title variant="h6" color="inherit">
-          <NoHoverLink component={RouterLink} to="/" color="inherit">
+          <Link
+            component={RouterLink}
+            to="/"
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
             Alex Hicks
-          </NoHoverLink>
+          </Link>
         </Title>
         <Grid item>
           <Grid container spacing={1} alignItems="center">
@@ -54,14 +52,17 @@ export const Navbar: React.FC = observer(() => {
             {!authStore.isAuthenticated && (
               <Grid item>
                 <Button color="secondary" variant="outlined">
-                  <NoHoverLink
+                  <Link
                     component={RouterLink}
                     to="/login"
-                    color="inherit"
-                    style={{ fontWeight: 600 }}
+                    style={{
+                      fontWeight: 600,
+                      color: "inherit",
+                      textDecoration: "none",
+                    }}
                   >
                     Log In
-                  </NoHoverLink>
+                  </Link>
                 </Button>
               </Grid>
             )}

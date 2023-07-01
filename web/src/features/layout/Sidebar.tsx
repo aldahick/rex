@@ -1,11 +1,5 @@
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import {
-  IconButton,
-  List,
-  styled,
-  SwipeableDrawer,
-  Theme,
-} from "@mui/material";
+import { IconButton, List, styled, SwipeableDrawer } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import React from "react";
 
@@ -16,7 +10,7 @@ import { SidebarItem } from "./SidebarItem";
 
 const DRAWER_WIDTH = 250;
 
-const Nav = styled("nav")((theme: Theme) => ({
+const Nav = styled("nav")(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
     width: DRAWER_WIDTH,
     flexShrink: 0,
