@@ -53,7 +53,7 @@ export class UserResolver {
     if (!(await context.isAuthorized(IAuthPermission.ManageUsers))) {
       throw new Error("Forbidden");
     }
-    const users = await this.userManager.fetchMany();
+    const users = await this.userManager.fetchAll();
     return users.map((u) => this.makeGql(u));
   }
 

@@ -33,7 +33,7 @@ export const MediaContentView: React.FC<MediaContentViewProps> = observer(
       key: selectedKey,
       token: authStore.token ?? "",
     });
-    const contentUrl = config.apiUrl + "/v1/media/content?" + params.toString();
+    const contentUrl = config.apiUrl + "v1/media/content?" + params.toString();
 
     switch (mimeType) {
       case "audio/mp4":

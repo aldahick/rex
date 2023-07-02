@@ -3,7 +3,7 @@ import "@emotion/react";
 
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { RouteObject, RouterProvider } from "react-router";
+import { Outlet, RouteObject, RouterProvider } from "react-router";
 import { createBrowserRouter } from "react-router-dom";
 
 import { config } from "./config";
@@ -16,48 +16,52 @@ import { NoteRoute } from "./routes/note.route";
 import { NotesRoute } from "./routes/notes.route";
 import { RootRoute } from "./routes/root.route";
 
-const container = document.getElementById("root");
-if (!container) {
-  throw new Error("Missing root element");
-}
 const routes: RouteObject[] = [
   {
-    path: "/",
     element: (
       <StoreProvider>
-        <Layout />
+        <Layout>
+          <Outlet />
+        </Layout>
       </StoreProvider>
     ),
     // TODO improve display
     errorElement: <p>Error</p>,
+    path: "/",
     children: [
       {
-        path: "",
+        index: true,
+        // path: "/",
         element: <RootRoute />,
       },
       {
-        path: "login",
+        path: "/login",
         element: <LoginRoute />,
       },
       {
-        path: "cat",
+        path: "/cat",
         element: <CatRoute />,
       },
       {
-        path: "media",
+        path: "/media",
         element: <MediaRoute />,
       },
       {
-        path: "notes/:id",
+        path: "/notes/:id",
         element: <NoteRoute />,
       },
       {
-        path: "notes",
+        path: "/notes",
         element: <NotesRoute />,
       },
     ],
   },
 ];
+
+const container = document.getElementById("root");
+if (!container) {
+  throw new Error("Missing root element");
+}
 const router = createBrowserRouter(routes, { basename: config.basePath });
 createRoot(container).render(
   <React.StrictMode>

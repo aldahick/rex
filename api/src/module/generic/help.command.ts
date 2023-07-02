@@ -8,7 +8,7 @@ import {
 @discordCommand()
 export class HelpCommand implements DiscordCommand {
   command = "help";
-  helpText = "Don't read this";
+  helpText = "Don't read this one?";
 
   constructor(
     private readonly config: Config,

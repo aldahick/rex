@@ -1,3 +1,6 @@
+/*
+This is the entrypoint for `pnpm db`, so it assumes very little and should not be imported by actual API code.
+*/
 import "reflect-metadata";
 
 import { container } from "@athenajs/core";

@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -36,17 +36,17 @@ dependencies:
     specifier: ^3.0.0
     version: 3.0.0
   orchid-orm:
-    specifier: ^1.10.5
-    version: 1.10.5(typescript@5.1.3)
+    specifier: ^1.13.2
+    version: 1.13.2(typescript@5.1.3)
   pg:
-    specifier: ^8.11.0
-    version: 8.11.0
+    specifier: ^8.11.1
+    version: 8.11.1
   pluralize:
     specifier: ^8.0.0
     version: 8.0.0
   pqb:
-    specifier: ^0.12.4
-    version: 0.12.4
+    specifier: ^0.15.2
+    version: 0.15.2
   reflect-metadata:
     specifier: ^0.1.13
     version: 0.1.13
@@ -104,8 +104,8 @@ devDependencies:
     specifier: ^2.8.8
     version: 2.8.8
   rake-db:
-    specifier: ^2.8.44
-    version: 2.8.44
+    specifier: ^2.10.2
+    version: 2.10.2
   ts-node:
     specifier: ^10.9.1
     version: 10.9.1(@types/node@20.2.5)(typescript@5.1.3)
@@ -4954,18 +4954,18 @@ packages:
       wcwidth: 1.0.1
     dev: true
 
-  /orchid-core@0.4.14:
-    resolution: {integrity: sha512-hs3j2oGlSXCpWcSCP99fHWNi8HjoO0RYsGPOtyjSFn38gHzo84UK/BAeTeAJsaAVHqlLdWNvayK3uMKHSYUZpA==}
+  /orchid-core@0.7.1:
+    resolution: {integrity: sha512-oJZ5VblgIzbWYMAMRyFQcyksO5VTQYZPwrNjvALhHdaFYChbt2mkiBJFPTC/jcb+br4nxndN0NyDMdP30kUCzg==}
 
-  /orchid-orm@1.10.5(typescript@5.1.3):
-    resolution: {integrity: sha512-+ATMVQozgqkaAWLyj0+mgZBdEZ8gIy2xxCRAJuG775G7Q7EJMqss6wp5ErFgR6JQt5pCf9z4uO3zaOhMx8paYg==}
+  /orchid-orm@1.13.2(typescript@5.1.3):
+    resolution: {integrity: sha512-NbF3Ui7WKBluRXtftrMeDKFV01+7qobEEljThdHullK16iLC8LHjJp1lLBanUB7lJtHW/EN03oDaDQs2g3tC6A==}
     hasBin: true
     peerDependencies:
       typescript: '*'
     dependencies:
       inflection: 2.0.1
-      orchid-core: 0.4.14
-      pqb: 0.12.4
+      orchid-core: 0.7.1
+      pqb: 0.15.2
       prompts: 2.4.2
       typescript: 5.1.3
     transitivePeerDependencies:
@@ -5136,13 +5136,13 @@ packages:
     engines: {node: '>=14.16'}
     dev: false
 
-  /pg-cloudflare@1.1.0:
-    resolution: {integrity: sha512-tGM8/s6frwuAIyRcJ6nWcIvd3+3NmUKIs6OjviIm1HPPFEt5MzQDOTBQyhPWg/m0kCl95M6gA1JaIXtS8KovOA==}
+  /pg-cloudflare@1.1.1:
+    resolution: {integrity: sha512-xWPagP/4B6BgFO+EKz3JONXv3YDgvkbVrGw2mTo3D6tVDQRh1e7cqVGvyR3BE+eQgAvx1XhW/iEASj4/jCWl3Q==}
     requiresBuild: true
     optional: true
 
-  /pg-connection-string@2.6.0:
-    resolution: {integrity: sha512-x14ibktcwlHKoHxx9X3uTVW9zIGR41ZB6QNhHb21OPNdCCO3NaRnpJuwKIQSR4u+Yqjx4HCvy7Hh7VSy1U4dGg==}
+  /pg-connection-string@2.6.1:
+    resolution: {integrity: sha512-w6ZzNu6oMmIzEAYVw+RLK0+nqHPt8K3ZnknKi+g48Ak2pr3dtljJW3o+D/n2zzCG07Zoe9VOX3aiKpj+BN0pjg==}
 
   /pg-int8@1.0.1:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
@@ -5153,12 +5153,12 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /pg-pool@3.6.0(pg@8.11.0):
-    resolution: {integrity: sha512-clFRf2ksqd+F497kWFyM21tMjeikn60oGDmqMT8UBrynEwVEX/5R5xd2sdvdo1cZCFlguORNpVuqxIj+aK4cfQ==}
+  /pg-pool@3.6.1(pg@8.11.1):
+    resolution: {integrity: sha512-jizsIzhkIitxCGfPRzJn1ZdcosIt3pz9Sh3V01fm1vZnbnCMgmGl5wvGGdNN2EL9Rmb0EcFoCkixH4Pu+sP9Og==}
     peerDependencies:
       pg: '>=8.0'
     dependencies:
-      pg: 8.11.0
+      pg: 8.11.1
 
   /pg-protocol@1.6.0:
     resolution: {integrity: sha512-M+PDm637OY5WM307051+bsDia5Xej6d9IR4GwJse1qA1DIhiKlksvrneZOYQq42OM+spubpcNYEo2FcKQrDk+Q==}
@@ -5186,8 +5186,8 @@ packages:
       postgres-range: 1.1.3
     dev: true
 
-  /pg@8.11.0:
-    resolution: {integrity: sha512-meLUVPn2TWgJyLmy7el3fQQVwft4gU5NGyvV0XbD41iU9Jbg8lCH4zexhIkihDzVHJStlt6r088G6/fWeNjhXA==}
+  /pg@8.11.1:
+    resolution: {integrity: sha512-utdq2obft07MxaDg0zBJI+l/M3mBRfIpEN3iSemsz0G5F2/VXx+XzqF4oxrbIZXQxt2AZzIUzyVg/YM6xOP/WQ==}
     engines: {node: '>= 8.0.0'}
     peerDependencies:
       pg-native: '>=3.0.1'
@@ -5197,13 +5197,13 @@ packages:
     dependencies:
       buffer-writer: 2.0.0
       packet-reader: 1.0.0
-      pg-connection-string: 2.6.0
-      pg-pool: 3.6.0(pg@8.11.0)
+      pg-connection-string: 2.6.1
+      pg-pool: 3.6.1(pg@8.11.1)
       pg-protocol: 1.6.0
       pg-types: 2.2.0
       pgpass: 1.0.5
     optionalDependencies:
-      pg-cloudflare: 1.1.0
+      pg-cloudflare: 1.1.1
 
   /pgpass@1.0.5:
     resolution: {integrity: sha512-FdW9r/jQZhSeohs1Z3sI1yxFQNFvMcnmfuj4WBMUTxOrAyLMaTcE1aAMBiTlbMNaXvBCQuVi0R7hd8udDSP7ug==}
@@ -5296,11 +5296,11 @@ packages:
     resolution: {integrity: sha512-VdlZoocy5lCP0c/t66xAfclglEapXPCIVhqqJRncYpvbCgImF0w67aPKfbqUMr72tO2k5q0TdTZwCLjPTI6C9g==}
     dev: true
 
-  /pqb@0.12.4:
-    resolution: {integrity: sha512-BWzrHBpWbNaUKUgZYGyKuX/L5GF8HsYZeXzcYV9itKbGignSjFEjSQXVa/Eyme7W4VhvvqDbf6XPR4ja5Bs6zQ==}
+  /pqb@0.15.2:
+    resolution: {integrity: sha512-f0ItSUZ72bQxBB0kchJpOSVhxojQkmN2buwz1CiFKIjhaHBGtLYGplzQzbBTsvep+Tk/byDAAAfcr8fsjjIQ/g==}
     dependencies:
-      orchid-core: 0.4.14
-      pg: 8.11.0
+      orchid-core: 0.7.1
+      pg: 8.11.1
     transitivePeerDependencies:
       - pg-native
 
@@ -5414,11 +5414,11 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /rake-db@2.8.44:
-    resolution: {integrity: sha512-3Iy1AF0T5FLySmCLP2aVgf4hUnKENAAEQ570/4bBN+26jo7gse1gTobRHbqHdp8tGaR3c3IMV4hT27Y94xR8Dw==}
+  /rake-db@2.10.2:
+    resolution: {integrity: sha512-j6DHKmSEYeoTQHBfQ3ex3ITnbXmi93+bpx6izj6IFsha/8DK926Wy/TrAkZ217B8wqe295duo47E+2NGvyZONA==}
     dependencies:
-      orchid-core: 0.4.14
-      pqb: 0.12.4
+      orchid-core: 0.7.1
+      pqb: 0.15.2
       prompts: 2.4.2
     transitivePeerDependencies:
       - pg-native

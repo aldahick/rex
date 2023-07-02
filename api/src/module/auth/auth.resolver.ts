@@ -1,4 +1,4 @@
-import { resolveMutation, resolver } from "@athenajs/core";
+import { resolveField, resolveMutation, resolver } from "@athenajs/core";
 
 import { Config } from "../../config.js";
 import {
@@ -12,7 +12,7 @@ import {
 } from "../../graphql.js";
 import { DatabaseService } from "../../service/database.service.js";
 import { GoogleAuthService } from "../../service/googleAuth.service.js";
-import { UserManager } from "../user/index.js";
+import { UserManager, UserResolver } from "../user/index.js";
 import { AuthContext } from "./auth.context.js";
 import { AuthManager } from "./auth.manager.js";
 
@@ -31,7 +31,8 @@ export class AuthResolver {
     private readonly config: Config,
     private readonly db: DatabaseService,
     private readonly googleAuthService: GoogleAuthService,
-    private readonly userManager: UserManager
+    private readonly userManager: UserManager,
+    private readonly userResolver: UserResolver
   ) {}
 
   @resolveMutation()
@@ -88,6 +89,19 @@ export class AuthResolver {
     } else {
       throw new Error(`User ${userId} not found`);
     }
+  }
+
+  @resolveField("AuthToken.user", true)
+  async user(tokens: IAuthToken[]): Promise<IAuthToken["user"][]> {
+    const userIds = tokens.map((t) => t.userId);
+    const users = await this.userManager.fetchMany(userIds);
+    return userIds.map((id) => {
+      const user = users.get(id);
+      if (!user) {
+        throw new Error(`User ID "${id}" not found in database`);
+      }
+      return this.userResolver.makeGql(user);
+    });
   }
 
   private getAuthToken(userId: string): IAuthToken {

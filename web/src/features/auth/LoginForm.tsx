@@ -28,17 +28,14 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
       <Grid item style={{ marginBottom: "1em" }}>
         <LocalAuthForm onSuccess={handleSuccess} />
       </Grid>
-      <Grid container spacing={1}>
-        <Grid item sm={6} />
-        <Grid item sm={6}>
-          {googleClientId ? (
-            <GoogleLoginButton
-              clientId={googleClientId}
-              onSuccess={handleSuccess}
-            />
-          ) : null}
-        </Grid>
-      </Grid>
+      <div style={{ textAlign: "center" }}>
+        {googleClientId ? (
+          <GoogleLoginButton
+            clientId={googleClientId}
+            onSuccess={handleSuccess}
+          />
+        ) : null}
+      </div>
     </Grid>
   );
 };

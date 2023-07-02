@@ -36,6 +36,7 @@ change(async (db) => {
     id: t.uuid().primaryKey(),
     email: t.varchar().unique(),
     username: t.varchar().nullable(),
+    passwordHash: t.varchar().nullable(),
   }));
   await db.createTable("user_roles", (t) => ({
     userId: t

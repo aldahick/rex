@@ -17,8 +17,9 @@ export class UserManager {
     return (await this.db.users.where({ id }).count()) === 1;
   }
 
-  async fetchId(email: string): Promise<string> {
-    return (await this.db.users.findBy({ email }).select("id")).id;
+  async fetchId(email: string): Promise<string | undefined> {
+    const users = await this.db.users.where({ email }).select("id");
+    return users[0]?.id;
   }
 
   async fetchEmail(id: string): Promise<string> {
@@ -44,7 +45,12 @@ export class UserManager {
     return user;
   }
 
-  async fetchMany(): Promise<UserModel[]> {
+  async fetchMany(ids: string[]): Promise<Map<string, UserModel>> {
+    const users = await this.db.users.whereIn({ id: ids }).selectAll();
+    return new Map(users.map((user) => [user.id, user]));
+  }
+
+  async fetchAll(): Promise<UserModel[]> {
     return this.db.users.where().selectAll();
   }
 

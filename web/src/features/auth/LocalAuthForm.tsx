@@ -27,8 +27,8 @@ export const LocalAuthForm: React.FC<LocalAuthFormProps> = ({ onSuccess }) => {
       });
       if (res.data) {
         onSuccess(res.data.authToken);
-      } else {
-        throw new Error("No token returned from API");
+      } else if (res.errors) {
+        throw res.errors[0];
       }
     } catch (err) {
       status.error(err);

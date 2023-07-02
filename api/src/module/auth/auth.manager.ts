@@ -1,9 +1,8 @@
 import { injectable } from "@athenajs/core";
 import * as bcrypt from "bcrypt";
-import * as jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 import { Config } from "../../config.js";
-import { UserModel } from "../../model/index.js";
 
 @injectable()
 export class AuthManager {
@@ -19,10 +18,6 @@ export class AuthManager {
 
   hashPassword(input: string): Promise<string> {
     return bcrypt.hash(input, 16);
-  }
-
-  makeToken(user: Pick<UserModel, "id">): string {
-    return jwt.sign({ sub: user.id }, this.config.http.jwtKey);
   }
 
   getTokenUserId(token: string): string | undefined {

@@ -19,7 +19,7 @@ import { ThemeProvider } from "./ThemeProvider";
 const makeClient = (token: string | undefined) =>
   new ApolloClient({
     link: createHttpLink({
-      uri: `${config.apiUrl}/graphql`,
+      uri: `${config.apiUrl}graphql`,
       headers: {
         authorization: token !== undefined ? `Bearer ${token}` : "",
       },

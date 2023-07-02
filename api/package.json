@@ -33,10 +33,10 @@
     "graphql": "^16.6.0",
     "jsonwebtoken": "^9.0.0",
     "mime": "^3.0.0",
-    "orchid-orm": "^1.10.5",
-    "pg": "^8.11.0",
+    "orchid-orm": "^1.13.2",
+    "pg": "^8.11.1",
     "pluralize": "^8.0.0",
-    "pqb": "^0.12.4",
+    "pqb": "^0.15.2",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
@@ -57,7 +57,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "prettier": "^2.8.8",
-    "rake-db": "^2.8.44",
+    "rake-db": "^2.10.2",
     "ts-node": "^10.9.1",
     "tsc-watch": "^6.0.4",
     "typescript": "^5.1.3"
