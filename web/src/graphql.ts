@@ -30,7 +30,8 @@ export enum IAuthPermission {
   ManageNotesSelf = 'MANAGE_NOTES_SELF',
   ManageRoles = 'MANAGE_ROLES',
   ManageSteamGames = 'MANAGE_STEAM_GAMES',
-  ManageUsers = 'MANAGE_USERS'
+  ManageUsers = 'MANAGE_USERS',
+  Transcriptions = 'TRANSCRIPTIONS'
 }
 
 export type IAuthToken = {
@@ -40,6 +41,11 @@ export type IAuthToken = {
   userId: Scalars['ID']['output'];
 };
 
+export type IConfig = {
+  __typename?: 'Config';
+  createAnonymousUsers: Scalars['Boolean']['output'];
+};
+
 export type IMediaItem = {
   __typename?: 'MediaItem';
   key: Scalars['String']['output'];
@@ -47,9 +53,9 @@ export type IMediaItem = {
 };
 
 export enum IMediaItemType {
-  Directory = 'directory',
-  File = 'file',
-  Series = 'series'
+  Directory = 'DIRECTORY',
+  File = 'FILE',
+  Series = 'SERIES'
 }
 
 export type IMutation = {
@@ -60,6 +66,7 @@ export type IMutation = {
   createAuthTokenGoogle: IAuthToken;
   createAuthTokenLocal: IAuthToken;
   createMedia: Scalars['Boolean']['output'];
+  createMediaUpload: Scalars['String']['output'];
   createNote: INote;
   createRole: IRole;
   createUser: IUser;
@@ -67,6 +74,7 @@ export type IMutation = {
   fetchSteamGames: IProgress;
   removeNote: Scalars['Boolean']['output'];
   setUserPassword: Scalars['Boolean']['output'];
+  startTranscription: ITranscription;
   updateNoteBody: Scalars['Boolean']['output'];
   updateRole: Scalars['Boolean']['output'];
   updateRolePermissions: Scalars['Boolean']['output'];
@@ -108,6 +116,11 @@ export type IMutationCreateMediaArgs = {
 };
 
 
+export type IMutationCreateMediaUploadArgs = {
+  key: Scalars['String']['input'];
+};
+
+
 export type IMutationCreateNoteArgs = {
   title: Scalars['String']['input'];
 };
@@ -138,6 +151,11 @@ export type IMutationRemoveNoteArgs = {
 export type IMutationSetUserPasswordArgs = {
   password: Scalars['String']['input'];
   userId: Scalars['ID']['input'];
+};
+
+
+export type IMutationStartTranscriptionArgs = {
+  mediaKey: Scalars['String']['input'];
 };
 
 
@@ -190,6 +208,7 @@ export enum IProgressStatus {
 
 export type IQuery = {
   __typename?: 'Query';
+  config: IConfig;
   mediaItems: Array<IMediaItem>;
   note: INote;
   notes: Array<INote>;
@@ -199,6 +218,7 @@ export type IQuery = {
   steamGames: Array<ISteamGame>;
   steamPlayer: ISteamPlayer;
   steamPlayers: Array<ISteamPlayer>;
+  transcriptions: Array<ITranscription>;
   user: IUser;
   users: Array<IUser>;
 };
@@ -267,6 +287,21 @@ export type ISteamPlayer = {
   profileUrl: Scalars['String']['output'];
 };
 
+export type ITranscription = {
+  __typename?: 'Transcription';
+  filename: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  pdf?: Maybe<IMediaItem>;
+  status: ITranscriptionStatus;
+};
+
+export enum ITranscriptionStatus {
+  Complete = 'COMPLETE',
+  Created = 'CREATED',
+  Errored = 'ERRORED',
+  Started = 'STARTED'
+}
+
 export type IUser = {
   __typename?: 'User';
   email: Scalars['String']['output'];
@@ -292,6 +327,20 @@ export type ICreateAuthTokenLocalMutationVariables = Exact<{
 
 
 export type ICreateAuthTokenLocalMutation = { __typename?: 'Mutation', authToken: { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, roles?: Array<{ __typename?: 'Role', id: string, name: string, permissions: Array<IAuthPermission> }> | undefined } } };
+
+export type IConfigQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type IConfigQuery = { __typename?: 'Query', config: { __typename?: 'Config', createAnonymousUsers: boolean } };
+
+export type ICreateUserMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+}>;
+
+
+export type ICreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string } };
 
 export type IMediaItemsQueryVariables = Exact<{
   dir: Scalars['String']['input'];
@@ -430,6 +479,75 @@ export function useCreateAuthTokenLocalMutation(baseOptions?: Apollo.MutationHoo
 export type CreateAuthTokenLocalMutationHookResult = ReturnType<typeof useCreateAuthTokenLocalMutation>;
 export type CreateAuthTokenLocalMutationResult = Apollo.MutationResult<ICreateAuthTokenLocalMutation>;
 export type CreateAuthTokenLocalMutationOptions = Apollo.BaseMutationOptions<ICreateAuthTokenLocalMutation, ICreateAuthTokenLocalMutationVariables>;
+export const ConfigDocument = gql`
+    query Config {
+  config {
+    createAnonymousUsers
+  }
+}
+    `;
+
+/**
+ * __useConfigQuery__
+ *
+ * To run a query within a React component, call `useConfigQuery` and pass it any options that fit your needs.
+ * When your component renders, `useConfigQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useConfigQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useConfigQuery(baseOptions?: Apollo.QueryHookOptions<IConfigQuery, IConfigQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<IConfigQuery, IConfigQueryVariables>(ConfigDocument, options);
+      }
+export function useConfigLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IConfigQuery, IConfigQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<IConfigQuery, IConfigQueryVariables>(ConfigDocument, options);
+        }
+export type ConfigQueryHookResult = ReturnType<typeof useConfigQuery>;
+export type ConfigLazyQueryHookResult = ReturnType<typeof useConfigLazyQuery>;
+export type ConfigQueryResult = Apollo.QueryResult<IConfigQuery, IConfigQueryVariables>;
+export const CreateUserDocument = gql`
+    mutation CreateUser($email: String!, $username: String!, $password: String!) {
+  createUser(email: $email, username: $username, password: $password) {
+    id
+  }
+}
+    `;
+export type ICreateUserMutationFn = Apollo.MutationFunction<ICreateUserMutation, ICreateUserMutationVariables>;
+
+/**
+ * __useCreateUserMutation__
+ *
+ * To run a mutation, you first call `useCreateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserMutation, { data, loading, error }] = useCreateUserMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      username: // value for 'username'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<ICreateUserMutation, ICreateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ICreateUserMutation, ICreateUserMutationVariables>(CreateUserDocument, options);
+      }
+export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
+export type CreateUserMutationResult = Apollo.MutationResult<ICreateUserMutation>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<ICreateUserMutation, ICreateUserMutationVariables>;
 export const MediaItemsDocument = gql`
     query MediaItems($dir: String!) {
   mediaItems(dir: $dir) {

@@ -25,6 +25,7 @@ const Title = styled(Typography)({
 export const Navbar: React.FC = observer(() => {
   const { authStore, sidebarStore } = useStores();
   const location = useLocation();
+  console.log(authStore);
 
   return (
     <AppBar>
@@ -40,7 +41,8 @@ export const Navbar: React.FC = observer(() => {
           <Link
             component={RouterLink}
             to="/"
-            style={{ color: "inherit", textDecoration: "none" }}
+            color="inherit"
+            style={{ textDecoration: "none" }}
           >
             Alex Hicks
           </Link>

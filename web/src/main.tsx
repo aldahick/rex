@@ -14,6 +14,7 @@ import { LoginRoute } from "./routes/login.route";
 import { MediaRoute } from "./routes/media.route";
 import { NoteRoute } from "./routes/note.route";
 import { NotesRoute } from "./routes/notes.route";
+import { RegisterRoute } from "./routes/register.route";
 import { RootRoute } from "./routes/root.route";
 
 const routes: RouteObject[] = [
@@ -37,6 +38,10 @@ const routes: RouteObject[] = [
       {
         path: "/login",
         element: <LoginRoute />,
+      },
+      {
+        path: "/register",
+        element: <RegisterRoute />,
       },
       {
         path: "/cat",

@@ -53,7 +53,7 @@ export const GoogleLoginButton: React.FC<{
   return (
     <Grid container justifyContent="center">
       <Grid item>
-        <div style={{ minWidth: "220px" }} />
+        <div style={{ minWidth: "200px" }} />
         <GoogleOAuthProvider clientId={clientId}>
           <GoogleLogin
             size="large"

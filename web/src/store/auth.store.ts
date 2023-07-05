@@ -42,7 +42,7 @@ export class AuthStore {
   }
 
   get isAuthenticated(): boolean {
-    return !!this.data?.roles.length;
+    return !!this.data?.token;
   }
 
   isAuthorized(permission: IAuthPermission): boolean {

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 
 import {
   IStorableAuthTokenFragment,
+  useConfigQuery,
   useCreateAuthTokenLocalMutation,
 } from "../../graphql";
 import { useStatus } from "../../hooks";
@@ -19,6 +20,7 @@ interface LocalAuthFormProps {
 
 export const LocalAuthForm: React.FC<LocalAuthFormProps> = ({ onSuccess }) => {
   const navigate = useNavigate();
+  const config = useConfigQuery();
   const [createAuthToken] = useCreateAuthTokenLocalMutation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -57,6 +59,8 @@ export const LocalAuthForm: React.FC<LocalAuthFormProps> = ({ onSuccess }) => {
     }
   };
 
+  const canRegister = config.data?.config.createAnonymousUsers;
+
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} md={10}>
@@ -81,14 +85,17 @@ export const LocalAuthForm: React.FC<LocalAuthFormProps> = ({ onSuccess }) => {
       </Grid>
       <Grid item xs={12} md={10} style={{ marginTop: "1em" }}>
         <Grid container justifyContent="space-between">
-          <LongButton
-            onClick={handleRegister}
-            color="secondary"
-            variant="contained"
-            size="large"
-          >
-            Sign Up
-          </LongButton>
+          {canRegister !== false ? (
+            <LongButton
+              onClick={handleRegister}
+              color="secondary"
+              variant="contained"
+              size="large"
+              disabled={!canRegister}
+            >
+              Sign Up
+            </LongButton>
+          ) : null}
           <LongButton
             onClick={handleSubmit}
             color="primary"

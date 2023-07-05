@@ -80,7 +80,9 @@ export const Sidebar: React.FC = observer(() => {
                   nested={false}
                 />
               ))}
-            {authStore.isAuthenticated && <LogoutButton />}
+            {authStore.isAuthenticated && (
+              <LogoutButton onLogout={handleClose} />
+            )}
           </List>
         </InnerDrawer>
       </SwipeableDrawer>
