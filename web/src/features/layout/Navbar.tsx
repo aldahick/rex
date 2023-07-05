@@ -1,7 +1,6 @@
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
-  Button,
   Grid,
   IconButton,
   Link,
@@ -11,9 +10,10 @@ import {
 } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 
 import { useStores } from "../../hooks";
+import { LoginButton } from "../auth/LoginButton";
 import { ThemeSelect } from "./ThemeSelect";
 
 const Title = styled(Typography)({
@@ -24,6 +24,7 @@ const Title = styled(Typography)({
 
 export const Navbar: React.FC = observer(() => {
   const { authStore, sidebarStore } = useStores();
+  const location = useLocation();
 
   return (
     <AppBar>
@@ -47,23 +48,11 @@ export const Navbar: React.FC = observer(() => {
         <Grid item>
           <Grid container spacing={1} alignItems="center">
             <Grid item>
-              <ThemeSelect />
+              <ThemeSelect type="button" />
             </Grid>
-            {!authStore.isAuthenticated && (
+            {!authStore.isAuthenticated && location.pathname !== "/login" && (
               <Grid item>
-                <Button color="secondary" variant="outlined">
-                  <Link
-                    component={RouterLink}
-                    to="/login"
-                    style={{
-                      fontWeight: 600,
-                      color: "inherit",
-                      textDecoration: "none",
-                    }}
-                  >
-                    Log In
-                  </Link>
-                </Button>
+                <LoginButton />
               </Grid>
             )}
           </Grid>

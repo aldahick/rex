@@ -1,8 +1,10 @@
 const required = (key: string): string => {
+  const envKey = `VITE_${key}`;
+  const attribute = `env-${key.split("_").join("-").toLowerCase()}`;
   const value =
-    import.meta.env[`VITE_${key}`] ??
-    document.body.getAttribute(`env-${key.split("_").join("-").toLowerCase()}`);
+    import.meta.env[envKey] ?? document.body.getAttribute(attribute);
   if (!value) {
+    document.body.removeAttribute(attribute);
     throw new Error(`Missing required config variable ${key}`);
   }
   return value;

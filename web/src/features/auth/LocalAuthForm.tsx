@@ -1,5 +1,6 @@
-import { Button, Grid, TextField } from "@mui/material";
+import { Button, Grid, styled, TextField } from "@mui/material";
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 
 import {
   IStorableAuthTokenFragment,
@@ -7,17 +8,23 @@ import {
 } from "../../graphql";
 import { useStatus } from "../../hooks";
 
+const LongButton = styled(Button)({
+  paddingLeft: "32px",
+  paddingRight: "32px",
+});
+
 interface LocalAuthFormProps {
   onSuccess: (authToken: IStorableAuthTokenFragment) => void;
 }
 
 export const LocalAuthForm: React.FC<LocalAuthFormProps> = ({ onSuccess }) => {
+  const navigate = useNavigate();
   const [createAuthToken] = useCreateAuthTokenLocalMutation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const status = useStatus();
 
-  const onSubmit = async () => {
+  const handleSubmit = async () => {
     if (!username || !password) {
       return;
     }
@@ -35,37 +42,62 @@ export const LocalAuthForm: React.FC<LocalAuthFormProps> = ({ onSuccess }) => {
     }
   };
 
-  const checkEnterKey = (evt: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleRegister = () => {
+    let url = "/register";
+    if (username) {
+      url += `?username=${username}`;
+    }
+    navigate(url);
+  };
+
+  const handleKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
     if (evt.key.toLowerCase() === "enter") {
       // should never catch
-      onSubmit().catch(console.log);
+      handleSubmit().catch(console.log);
     }
   };
 
   return (
-    <Grid container direction="column" alignItems="center">
-      <Grid item>
+    <Grid container justifyContent="center">
+      <Grid item xs={12} md={10}>
         <TextField
           label="Username"
           value={username}
           onChange={(evt) => setUsername(evt.target.value)}
-          onKeyDown={checkEnterKey}
+          onKeyDown={handleKeyDown}
           autoFocus
+          fullWidth
         />
       </Grid>
-      <Grid item>
+      <Grid item xs={12} md={10}>
         <TextField
           label="Password"
           type="password"
           value={password}
           onChange={(evt) => setPassword(evt.target.value)}
-          onKeyDown={checkEnterKey}
+          onKeyDown={handleKeyDown}
+          fullWidth
         />
       </Grid>
-      <Grid item style={{ marginTop: "1em" }}>
-        <Button onClick={onSubmit} color="primary" variant="contained">
-          Submit
-        </Button>
+      <Grid item xs={12} md={10} style={{ marginTop: "1em" }}>
+        <Grid container justifyContent="space-between">
+          <LongButton
+            onClick={handleRegister}
+            color="secondary"
+            variant="contained"
+            size="large"
+          >
+            Sign Up
+          </LongButton>
+          <LongButton
+            onClick={handleSubmit}
+            color="primary"
+            variant="contained"
+            size="large"
+          >
+            Log In
+          </LongButton>
+        </Grid>
       </Grid>
     </Grid>
   );

@@ -53,7 +53,7 @@ export const Layout: React.FC<React.PropsWithChildren> = observer(
             <Sidebar />
             <Grid container justifyContent="center">
               <Toolbar />
-              <Grid item width="100%">
+              <Grid item width="100%" style={{ marginTop: "2em" }}>
                 {children}
               </Grid>
             </Grid>

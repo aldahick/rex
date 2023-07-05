@@ -1,3 +1,4 @@
+import { Grid } from "@mui/material";
 import {
   CredentialResponse,
   GoogleLogin,
@@ -50,12 +51,18 @@ export const GoogleLoginButton: React.FC<{
   }
 
   return (
-    <GoogleOAuthProvider clientId={clientId}>
-      <GoogleLogin
-        context="signin"
-        onSuccess={handleSuccess}
-        onError={handleError}
-      />
-    </GoogleOAuthProvider>
+    <Grid container justifyContent="center">
+      <Grid item>
+        <div style={{ minWidth: "220px" }} />
+        <GoogleOAuthProvider clientId={clientId}>
+          <GoogleLogin
+            size="large"
+            context="signin"
+            onSuccess={handleSuccess}
+            onError={handleError}
+          />
+        </GoogleOAuthProvider>
+      </Grid>
+    </Grid>
   );
 };

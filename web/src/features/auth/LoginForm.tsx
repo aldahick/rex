@@ -4,6 +4,7 @@ import React from "react";
 import { config } from "../../config";
 import { IStorableAuthTokenFragment } from "../../graphql";
 import { useStores } from "../../hooks";
+import { DividerText } from "../utils/DividerText";
 import { GoogleLoginButton } from "./GoogleLoginButton";
 import { LocalAuthForm } from "./LocalAuthForm";
 
@@ -24,18 +25,21 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
   };
 
   return (
-    <Grid container direction="column" alignItems="center">
-      <Grid item style={{ marginBottom: "1em" }}>
-        <LocalAuthForm onSuccess={handleSuccess} />
+    <Grid container>
+      <Grid item xs={12}>
+        <Grid container justifyContent="center">
+          <Grid item xs={12} sm={8} md={6} lg={4}>
+            <LocalAuthForm onSuccess={handleSuccess} />
+            <DividerText>OR</DividerText>
+            {googleClientId ? (
+              <GoogleLoginButton
+                clientId={googleClientId}
+                onSuccess={handleSuccess}
+              />
+            ) : null}
+          </Grid>
+        </Grid>
       </Grid>
-      <div style={{ textAlign: "center" }}>
-        {googleClientId ? (
-          <GoogleLoginButton
-            clientId={googleClientId}
-            onSuccess={handleSuccess}
-          />
-        ) : null}
-      </div>
     </Grid>
   );
 };

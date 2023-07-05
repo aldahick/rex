@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite";
 import React from "react";
 import { useNavigate } from "react-router";
 
@@ -12,8 +11,6 @@ export const LoginRoute: React.FC = () => {
     const url = params.get("redirect") ?? "/";
     navigate(url);
   };
-
-  console.log("login route");
 
   return <LoginForm onSuccess={handleSuccess} />;
 };
