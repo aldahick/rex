@@ -8,7 +8,6 @@ jobs:
     uses: ./.github/workflows/publish-image.yml
     with:
       directory: web
-      imageName: aldahick/rex-web
+      imageName: ghcr.io/aldahick/rex-web
     secrets:
-      dockerUsername: ${{ secrets.DOCKER_USERNAME }}
-      dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
+      githubToken: ${{ secrets.GITHUB_TOKEN }}

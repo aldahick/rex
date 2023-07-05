@@ -13,19 +13,18 @@ on:
         required: true
         type: string
     secrets:
-      dockerUsername:
-        required: true
-      dockerPassword:
+      githubToken:
         required: true
 jobs:
   publish-package:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: docker/login-action@v2.1.0
+      - uses: docker/login-action@v2.2.0
         with:
-          username: ${{ secrets.dockerUsername }}
-          password: ${{ secrets.dockerPassword }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.githubToken }}
       - id: meta
         uses: docker/metadata-action@v4.1.1
         with:

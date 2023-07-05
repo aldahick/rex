@@ -15,6 +15,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const handleCreate = (username: string) => {
     navigate(`/login?username=${username}`);
   };
+
   return (
     <Grid container>
       <Grid item xs={12}>
