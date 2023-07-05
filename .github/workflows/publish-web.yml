@@ -3,6 +3,7 @@ on:
   push:
     tags:
       - web-v**
+      - v*
 jobs:
   publish-web:
     uses: ./.github/workflows/publish-image.yml

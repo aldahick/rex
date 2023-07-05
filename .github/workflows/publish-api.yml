@@ -3,6 +3,7 @@ on:
   push:
     tags:
       - api-v*
+      - v*
 jobs:
   publish-api:
     uses: ./.github/workflows/publish-image.yml
