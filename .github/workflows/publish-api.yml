@@ -7,6 +7,7 @@ jobs:
   publish-api:
     uses: ./.github/workflows/publish-image.yml
     with:
+      copySchema: true
       directory: api
       imageName: ghcr.io/aldahick/rex-api
     secrets:
