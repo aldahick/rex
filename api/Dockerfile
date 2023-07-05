@@ -10,6 +10,7 @@ RUN pnpm build
 
 FROM node:18-alpine AS server
 
+RUN npm i -g pnpm
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --prod --frozen-lockfile
 

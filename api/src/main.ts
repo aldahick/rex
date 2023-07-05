@@ -2,6 +2,7 @@ import "reflect-metadata";
 import "./module/auth/index.js";
 import "./module/generic/index.js";
 import "./module/media/index.js";
+import "./module/mzk/index.js";
 import "./module/note/index.js";
 import "./module/progress/index.js";
 import "./module/role/index.js";

@@ -1,7 +1,7 @@
 import { injectable } from "@athenajs/core";
 import * as google from "googleapis";
 
-import { Config } from "../config.js";
+import { RexConfig } from "../config.js";
 
 export interface GoogleTokenPayload {
   domain: string;
@@ -11,7 +11,7 @@ export interface GoogleTokenPayload {
 
 @injectable()
 export class GoogleAuthService {
-  constructor(private readonly config: Config) {}
+  constructor(private readonly config: RexConfig) {}
 
   // TODO check
   async getIdTokenPayload(

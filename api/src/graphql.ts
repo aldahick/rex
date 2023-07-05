@@ -27,7 +27,8 @@ export enum IAuthPermission {
   ManageNotesSelf = 'MANAGE_NOTES_SELF',
   ManageRoles = 'MANAGE_ROLES',
   ManageSteamGames = 'MANAGE_STEAM_GAMES',
-  ManageUsers = 'MANAGE_USERS'
+  ManageUsers = 'MANAGE_USERS',
+  Transcriptions = 'TRANSCRIPTIONS'
 }
 
 export type IAuthToken = {
@@ -44,9 +45,9 @@ export type IMediaItem = {
 };
 
 export enum IMediaItemType {
-  Directory = 'directory',
-  File = 'file',
-  Series = 'series'
+  Directory = 'DIRECTORY',
+  File = 'FILE',
+  Series = 'SERIES'
 }
 
 export type IMutation = {
@@ -57,6 +58,7 @@ export type IMutation = {
   createAuthTokenGoogle: IAuthToken;
   createAuthTokenLocal: IAuthToken;
   createMedia: Scalars['Boolean']['output'];
+  createMediaUpload: Scalars['String']['output'];
   createNote: INote;
   createRole: IRole;
   createUser: IUser;
@@ -64,6 +66,7 @@ export type IMutation = {
   fetchSteamGames: IProgress;
   removeNote: Scalars['Boolean']['output'];
   setUserPassword: Scalars['Boolean']['output'];
+  startTranscription: ITranscription;
   updateNoteBody: Scalars['Boolean']['output'];
   updateRole: Scalars['Boolean']['output'];
   updateRolePermissions: Scalars['Boolean']['output'];
@@ -105,6 +108,11 @@ export type IMutationCreateMediaArgs = {
 };
 
 
+export type IMutationCreateMediaUploadArgs = {
+  key: Scalars['String']['input'];
+};
+
+
 export type IMutationCreateNoteArgs = {
   title: Scalars['String']['input'];
 };
@@ -135,6 +143,11 @@ export type IMutationRemoveNoteArgs = {
 export type IMutationSetUserPasswordArgs = {
   password: Scalars['String']['input'];
   userId: Scalars['ID']['input'];
+};
+
+
+export type IMutationStartTranscriptionArgs = {
+  mediaKey: Scalars['String']['input'];
 };
 
 
@@ -196,6 +209,7 @@ export type IQuery = {
   steamGames: Array<ISteamGame>;
   steamPlayer: ISteamPlayer;
   steamPlayers: Array<ISteamPlayer>;
+  transcriptions: Array<ITranscription>;
   user: IUser;
   users: Array<IUser>;
 };
@@ -263,6 +277,21 @@ export type ISteamPlayer = {
   playingGame?: Maybe<ISteamGame>;
   profileUrl: Scalars['String']['output'];
 };
+
+export type ITranscription = {
+  __typename?: 'Transcription';
+  filename: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  pdf?: Maybe<IMediaItem>;
+  status: ITranscriptionStatus;
+};
+
+export enum ITranscriptionStatus {
+  Complete = 'COMPLETE',
+  Created = 'CREATED',
+  Errored = 'ERRORED',
+  Started = 'STARTED'
+}
 
 export type IUser = {
   __typename?: 'User';

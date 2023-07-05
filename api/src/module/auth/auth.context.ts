@@ -9,7 +9,7 @@ import { IAuthPermission } from "../../graphql.js";
 import { UserManager } from "../user/user.manager.js";
 import { AuthManager } from "./auth.manager.js";
 
-export class AuthContext {
+export class RexContext {
   private permissions?: Set<IAuthPermission>;
 
   constructor(
@@ -37,13 +37,13 @@ export class AuthContextGenerator implements ContextGenerator {
     private readonly userManager: UserManager
   ) {}
 
-  async generateContext({ headers }: ContextRequest): Promise<AuthContext> {
+  async generateContext({ headers }: ContextRequest): Promise<RexContext> {
     const token = this.getToken(headers);
     if (!token) {
-      return new AuthContext(this.userManager);
+      return new RexContext(this.userManager);
     }
     const userId = this.authManager.getTokenUserId(token);
-    return new AuthContext(this.userManager, token, userId);
+    return new RexContext(this.userManager, token, userId);
   }
 
   private getToken(headers: IncomingHttpHeaders): string | undefined {

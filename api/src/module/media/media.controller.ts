@@ -1,9 +1,15 @@
-import { controller, get, HttpRequest, HttpResponse } from "@athenajs/core";
+import {
+  controller,
+  get,
+  HttpRequest,
+  HttpResponse,
+  post,
+} from "@athenajs/core";
 import mime from "mime";
 
 import { IAuthPermission } from "../../graphql.js";
 import { UserModel } from "../../model/index.js";
-import { AuthContext } from "../auth/index.js";
+import { RexContext } from "../auth/index.js";
 import { UserManager } from "../user/index.js";
 import { MediaManager } from "./media.manager.js";
 
@@ -17,30 +23,26 @@ export class MediaController {
   ) {}
 
   @get("/v1/media/content")
-  async handle(
+  async getContent(
     req: HttpRequest,
     res: HttpResponse,
-    context: AuthContext
+    context: RexContext
   ): Promise<void> {
-    if (!(await context.isAuthorized(IAuthPermission.ManageMediaSelf))) {
+    const userId = await this.can(context);
+    if (!userId) {
       throw new Error("Forbidden");
     }
-    // const { req, res, context } = payload;
     const { key } = req.query as Record<string, string>;
     if (typeof key !== "string") {
       throw new Error("Missing required query parameter `key`");
     }
 
-    if (!context.userId) {
-      throw new Error("Requires user token");
-    }
-    const user = { email: await this.userManager.fetchEmail(context.userId) };
-    const isFile = await this.mediaManager.exists(user, key);
-    if (!isFile) {
+    const user = { email: await this.userManager.fetchEmail(userId) };
+    if (!(await this.mediaManager.isFile(user, key))) {
       throw new Error(`Media "${key}" not found`);
     }
 
-    const { start, end } = await this.sendHeaders(req, res, user, key);
+    const { start, end } = await this.sendContentHeaders(req, res, user, key);
     const stream = this.mediaManager.createReadStream(user, key, {
       start,
       end,
@@ -48,7 +50,29 @@ export class MediaController {
     res.send(stream);
   }
 
-  private async sendHeaders(
+  @post("/v1/media/content")
+  async uploadContent(
+    req: HttpRequest,
+    res: HttpResponse,
+    context: RexContext
+  ): Promise<{ ok: boolean }> {
+    const userId = await this.can(context);
+    if (!userId) {
+      throw new Error("Forbidden");
+    }
+    const { key } = req.query as Record<string, string>;
+    if (typeof key !== "string") {
+      throw new Error("Missing required query parameter `key`");
+    }
+
+    const user = { email: await this.userManager.fetchEmail(userId) };
+    const data = req.body as Buffer;
+    console.log(data);
+    await this.mediaManager.create({ user, key, data });
+    return { ok: true };
+  }
+
+  private async sendContentHeaders(
     req: HttpRequest,
     res: HttpResponse,
     user: Pick<UserModel, "email">,
@@ -79,5 +103,15 @@ export class MediaController {
       "Content-Type": mimeType,
     });
     return { start, end };
+  }
+
+  /**
+   * @returns user ID if authorized
+   */
+  async can(context: RexContext): Promise<string | undefined> {
+    return context.userId &&
+      (await context.isAuthorized(IAuthPermission.ManageMediaSelf))
+      ? context.userId
+      : undefined;
   }
 }

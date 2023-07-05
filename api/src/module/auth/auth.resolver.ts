@@ -1,6 +1,6 @@
 import { resolveField, resolveMutation, resolver } from "@athenajs/core";
 
-import { Config } from "../../config.js";
+import { RexConfig } from "../../config.js";
 import {
   IAuthClientType,
   IAuthPermission,
@@ -13,12 +13,12 @@ import {
 import { DatabaseService } from "../../service/database.service.js";
 import { GoogleAuthService } from "../../service/googleAuth.service.js";
 import { UserManager, UserResolver } from "../user/index.js";
-import { AuthContext } from "./auth.context.js";
+import { RexContext } from "./auth.context.js";
 import { AuthManager } from "./auth.manager.js";
 
 const clientIdsByType: Record<
   IAuthClientType,
-  keyof Config["googleAuth"]["clientIds"]
+  keyof RexConfig["googleAuth"]["clientIds"]
 > = {
   [IAuthClientType.Mobile]: "mobile",
   [IAuthClientType.Web]: "web",
@@ -28,7 +28,7 @@ const clientIdsByType: Record<
 export class AuthResolver {
   constructor(
     private readonly authManager: AuthManager,
-    private readonly config: Config,
+    private readonly config: RexConfig,
     private readonly db: DatabaseService,
     private readonly googleAuthService: GoogleAuthService,
     private readonly userManager: UserManager,
@@ -79,7 +79,7 @@ export class AuthResolver {
   async createAuthToken(
     root: never,
     { userId }: IMutationCreateAuthTokenArgs,
-    context: AuthContext
+    context: RexContext
   ): Promise<IMutation["createAuthToken"]> {
     if (!(await context.isAuthorized(IAuthPermission.ManageUsers))) {
       throw new Error("Forbidden");

@@ -11,7 +11,7 @@ import {
   IRole,
 } from "../../graphql.js";
 import { RoleModel } from "../../model/index.js";
-import { AuthContext } from "../auth/index.js";
+import { RexContext } from "../auth/index.js";
 import { RoleManager } from "./role.manager.js";
 
 @resolver()
@@ -22,7 +22,7 @@ export class RoleResolver {
   async roles(
     root: never,
     args: never,
-    context: AuthContext
+    context: RexContext
   ): Promise<IQuery["roles"]> {
     if (!context.userId) {
       throw new Error("Forbidden");
@@ -35,7 +35,7 @@ export class RoleResolver {
   async createRole(
     root: unknown,
     { name }: IMutationCreateRoleArgs,
-    context: AuthContext
+    context: RexContext
   ): Promise<IMutation["createRole"]> {
     if (!(await context.isAuthorized(IAuthPermission.ManageRoles))) {
       throw new Error("Forbidden");
@@ -48,7 +48,7 @@ export class RoleResolver {
   async deleteRole(
     root: unknown,
     { id }: IMutationDeleteRoleArgs,
-    context: AuthContext
+    context: RexContext
   ): Promise<IMutation["deleteRole"]> {
     if (!(await context.isAuthorized(IAuthPermission.ManageRoles))) {
       throw new Error("Forbidden");

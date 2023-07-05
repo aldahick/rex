@@ -1,4 +1,4 @@
-import { Config } from "../../config.js";
+import { RexConfig } from "../../config.js";
 import {
   DiscordCommand,
   discordCommand,
@@ -11,7 +11,7 @@ export class HelpCommand implements DiscordCommand {
   helpText = "Don't read this one?";
 
   constructor(
-    private readonly config: Config,
+    private readonly config: RexConfig,
     private readonly discordService: DiscordService
   ) {}
 

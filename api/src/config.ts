@@ -1,7 +1,9 @@
 import { BaseConfig, config } from "@athenajs/core";
 
 @config()
-export class Config extends BaseConfig {
+export class RexConfig extends BaseConfig {
+  readonly dockerSocketPath = this.optional("DOCKER_SOCKET_PATH");
+
   readonly discord = {
     commandPrefix: this.optional("DISCORD_COMMAND_PREFIX") ?? "~",
     token: this.optional("DISCORD_TOKEN"),
@@ -19,9 +21,17 @@ export class Config extends BaseConfig {
   readonly http = {
     jwtKey: this.required("HTTP_JWT_KEY"),
     port: Number(this.required("HTTP_PORT")),
+    url: this.required("HTTP_URL"),
   };
 
   readonly mediaDir = this.optional("MEDIA_DIR");
+
+  readonly mzk = {
+    runner: {
+      image: this.required("MZK_RUNNER_IMAGE"),
+      platform: this.required("MZK_RUNNER_PLATFORM"),
+    },
+  };
 
   readonly redisUrl = this.optional("REDIS_URL");
 

@@ -7,7 +7,7 @@ import {
   IQueryProgressesArgs,
 } from "../../graphql.js";
 import { ProgressModel } from "../../model/index.js";
-import { AuthContext } from "../auth/index.js";
+import { RexContext } from "../auth/index.js";
 import { ProgressManager } from "./progress.manager.js";
 
 @resolver()
@@ -18,7 +18,7 @@ export class ProgressResolver {
   async progress(
     root: unknown,
     { id }: IQueryProgressArgs,
-    context: AuthContext
+    context: RexContext
   ): Promise<IQuery["progress"]> {
     if (!context.userId) {
       throw new Error("Forbidden");

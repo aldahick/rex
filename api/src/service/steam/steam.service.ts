@@ -2,7 +2,7 @@ import { injectable } from "@athenajs/core";
 import axios from "axios";
 import { resolve as resolveUrl } from "url";
 
-import { Config } from "../../config.js";
+import { RexConfig } from "../../config.js";
 import { GetOwnedGames } from "./dto/GetOwnedGames.js";
 import { GetPlayerSummaries } from "./dto/GetPlayerSummaries.js";
 import { ResolveVanityUrl } from "./dto/ResolveVanityUrl.js";
@@ -12,7 +12,7 @@ const BASE_URL = "https://api.steampowered.com";
 
 @injectable()
 export class SteamService {
-  constructor(private readonly config: Config) {}
+  constructor(private readonly config: RexConfig) {}
 
   async getAllGames(): Promise<{ id: number; name: string }[]> {
     const url = resolveUrl(BASE_URL, "/ISteamApps/GetAppList/v2/");

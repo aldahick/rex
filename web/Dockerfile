@@ -1,7 +1,6 @@
 FROM node:18-alpine AS builder
 
-# TODO remove once pnpm@latest works again
-RUN npm i -g pnpm@8.6.0
+RUN npm i -g pnpm
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 

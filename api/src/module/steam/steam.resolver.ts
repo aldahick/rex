@@ -11,7 +11,7 @@ import {
 } from "../../graphql.js";
 import { SteamGameModel } from "../../model/index.js";
 import { SteamPlayer } from "../../service/steam/index.js";
-import { AuthContext } from "../auth/index.js";
+import { RexContext } from "../auth/index.js";
 import { ProgressManager, ProgressResolver } from "../progress/index.js";
 import { SteamGameManager } from "./steamGame.manager.js";
 import { SteamPlayerManager } from "./steamPlayer.manager.js";
@@ -31,7 +31,7 @@ export class SteamResolver {
   async fetchSteamGames(
     root: never,
     args: never,
-    context: AuthContext
+    context: RexContext
   ): Promise<IMutation["fetchSteamGames"]> {
     if (!(await context.isAuthorized(IAuthPermission.ManageSteamGames))) {
       throw new Error("Forbidden");

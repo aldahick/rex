@@ -8,10 +8,10 @@ import { resolve as resolvePath } from "path";
 import { rakeDb } from "rake-db";
 import { pathToFileURL } from "url";
 
-import { Config } from "../config.js";
+import { RexConfig } from "../config.js";
 import { BaseTable } from "../model/base.table.js";
 
-const config = container.resolve(Config);
+const config = container.resolve(RexConfig);
 export const change = rakeDb(
   {
     databaseURL: config.postgresUrl,

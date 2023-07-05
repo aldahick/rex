@@ -2,11 +2,11 @@ import { injectable } from "@athenajs/core";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-import { Config } from "../../config.js";
+import { RexConfig } from "../../config.js";
 
 @injectable()
 export class AuthManager {
-  constructor(private config: Config) {}
+  constructor(private config: RexConfig) {}
 
   signToken(userId: string): string {
     return jwt.sign({ sub: userId }, this.config.http.jwtKey);

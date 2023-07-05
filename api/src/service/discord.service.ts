@@ -2,7 +2,7 @@ import { injectable, Logger, makeRegistryDecorator } from "@athenajs/core";
 import { injectAll } from "@athenajs/core/dist/container.js";
 import { Client, GatewayIntentBits, Message } from "discord.js";
 
-import { Config } from "../config.js";
+import { RexConfig } from "../config.js";
 
 const commandToken = Symbol("DiscordCommand");
 
@@ -34,7 +34,7 @@ export class DiscordService {
   readonly commands = new Map<string, DiscordCommand>();
 
   constructor(
-    private readonly config: Config,
+    private readonly config: RexConfig,
     private readonly logger: Logger,
     @injectAll(commandToken) commands: DiscordCommand[]
   ) {

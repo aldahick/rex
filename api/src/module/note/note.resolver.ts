@@ -11,7 +11,7 @@ import {
   IQueryNoteArgs,
 } from "../../graphql.js";
 import { UserNoteModel } from "../../model/userNote.model.js";
-import { AuthContext } from "../auth/index.js";
+import { RexContext } from "../auth/index.js";
 import { NoteManager } from "./note.manager.js";
 
 @resolver()
@@ -22,7 +22,7 @@ export class NoteResolver {
   async note(
     root: never,
     { id }: IQueryNoteArgs,
-    context: AuthContext
+    context: RexContext
   ): Promise<IQuery["note"]> {
     if (
       !context.userId ||
@@ -41,7 +41,7 @@ export class NoteResolver {
   async notes(
     root: never,
     args: never,
-    context: AuthContext
+    context: RexContext
   ): Promise<IQuery["notes"]> {
     if (
       !context.userId ||
@@ -59,7 +59,7 @@ export class NoteResolver {
   async updateNoteBody(
     root: never,
     { id, body }: IMutationUpdateNoteBodyArgs,
-    context: AuthContext
+    context: RexContext
   ): Promise<IMutation["updateNoteBody"]> {
     if (
       !context.userId ||
@@ -75,7 +75,7 @@ export class NoteResolver {
   async createNote(
     root: never,
     { title }: IMutationCreateNoteArgs,
-    context: AuthContext
+    context: RexContext
   ): Promise<IMutation["createNote"]> {
     if (
       !context.userId ||
@@ -91,7 +91,7 @@ export class NoteResolver {
   async removeNote(
     root: unknown,
     { id }: IMutationRemoveNoteArgs,
-    context: AuthContext
+    context: RexContext
   ): Promise<IMutation["removeNote"]> {
     if (
       !context.userId ||

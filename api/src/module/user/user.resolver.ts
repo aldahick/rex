@@ -16,7 +16,7 @@ import {
   IUser,
 } from "../../graphql.js";
 import { UserModel } from "../../model/index.js";
-import { AuthContext } from "../auth/index.js";
+import { RexContext } from "../auth/index.js";
 import { RoleManager, RoleResolver } from "../role/index.js";
 import { UserManager } from "./user.manager.js";
 
@@ -32,7 +32,7 @@ export class UserResolver {
   async user(
     root: never,
     { id }: IQueryUserArgs,
-    context: AuthContext
+    context: RexContext
   ): Promise<IQuery["user"]> {
     let userId = context.userId;
     if (!userId) {
@@ -48,7 +48,7 @@ export class UserResolver {
   async users(
     root: never,
     args: never,
-    context: AuthContext
+    context: RexContext
   ): Promise<IQuery["users"]> {
     if (!(await context.isAuthorized(IAuthPermission.ManageUsers))) {
       throw new Error("Forbidden");
@@ -61,7 +61,7 @@ export class UserResolver {
   async addRoleToUser(
     root: never,
     { userId, roleId }: IMutationAddRoleToUserArgs,
-    context: AuthContext
+    context: RexContext
   ): Promise<IMutation["addRoleToUser"]> {
     if (
       !(await context.isAuthorized(IAuthPermission.ManageUsers)) ||
@@ -77,7 +77,7 @@ export class UserResolver {
   async createUser(
     root: never,
     { email, username, password }: IMutationCreateUserArgs,
-    context: AuthContext
+    context: RexContext
   ): Promise<IMutation["createUser"]> {
     if (!(await context.isAuthorized(IAuthPermission.ManageUsers))) {
       throw new Error("Forbidden");
@@ -90,7 +90,7 @@ export class UserResolver {
   async setUserPassword(
     root: unknown,
     { userId, password }: IMutationSetUserPasswordArgs,
-    context: AuthContext
+    context: RexContext
   ): Promise<IMutation["setUserPassword"]> {
     let id = context.userId;
     if (userId && (await context.isAuthorized(IAuthPermission.ManageUsers))) {

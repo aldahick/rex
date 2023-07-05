@@ -4,7 +4,7 @@ import { createReadStream, createWriteStream, promises as fs } from "fs";
 import path from "path";
 import { Readable } from "stream";
 
-import { Config } from "../../config.js";
+import { RexConfig } from "../../config.js";
 import { IMediaItem, IMediaItemType, IProgressStatus } from "../../graphql.js";
 import { UserModel } from "../../model/index.js";
 import { ProgressManager } from "../progress/index.js";
@@ -12,7 +12,7 @@ import { ProgressManager } from "../progress/index.js";
 @injectable()
 export class MediaManager {
   constructor(
-    private readonly config: Config,
+    private readonly config: RexConfig,
     private readonly logger: Logger,
     private readonly progressManager: ProgressManager
   ) {}
@@ -83,7 +83,7 @@ export class MediaManager {
   }: {
     user: Pick<UserModel, "email">;
     key: string;
-    data: string;
+    data: string | Buffer;
   }): Promise<void> {
     const filename = this.toFilename(user, key);
     await fs.mkdir(path.dirname(filename), { recursive: true });
