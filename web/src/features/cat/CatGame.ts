@@ -54,7 +54,6 @@ export class CatGame {
   }
 
   stop() {
-    console.log("clearing interval", this.interval);
     clearInterval(this.interval);
   }
 

@@ -7,10 +7,13 @@ export const LoginRoute: React.FC = () => {
   const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
 
+  const initialUsername = params.get("username") ?? undefined;
   const handleSuccess = () => {
-    const url = params.get("redirect") ?? "/";
-    navigate(url);
+    const redirectTo = params.get("redirect") ?? "/";
+    navigate(redirectTo);
   };
 
-  return <LoginForm onSuccess={handleSuccess} />;
+  return (
+    <LoginForm initialUsername={initialUsername} onSuccess={handleSuccess} />
+  );
 };

@@ -3,25 +3,31 @@ import React from "react";
 
 import { config } from "../../config";
 import { IStorableAuthTokenFragment } from "../../graphql";
-import { useStores } from "../../hooks";
+import { useStatus, useStores } from "../../hooks";
 import { DividerText } from "../utils/DividerText";
 import { GoogleLoginButton } from "./GoogleLoginButton";
 import { LocalAuthForm } from "./LocalAuthForm";
 
 export interface LoginFormProps {
   onSuccess: () => void;
+  initialUsername?: string;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
+export const LoginForm: React.FC<LoginFormProps> = ({
+  onSuccess,
+  initialUsername,
+}) => {
   const { authStore } = useStores();
   const { googleClientId } = config;
+  const status = useStatus();
 
   const handleSuccess = ({
     token,
-    user: { roles = [] },
+    user: { username, roles = [] },
   }: IStorableAuthTokenFragment) => {
     authStore.setToken({ token, roles });
     onSuccess();
+    status.success(`Successfully logged in as ${username}!`);
   };
 
   return (
@@ -29,7 +35,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
       <Grid item xs={12}>
         <Grid container justifyContent="center">
           <Grid item xs={12} sm={8} md={6} lg={4}>
-            <LocalAuthForm onSuccess={handleSuccess} />
+            <LocalAuthForm
+              initialUsername={initialUsername}
+              onSuccess={handleSuccess}
+            />
             <DividerText>OR</DividerText>
             {googleClientId ? (
               <GoogleLoginButton

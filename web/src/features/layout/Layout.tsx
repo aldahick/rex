@@ -37,7 +37,6 @@ export const Layout: React.FC<React.PropsWithChildren> = observer(
     const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
 
     useEffect(() => {
-      console.log("changing apollo client", authStore.token);
       setClient(makeClient(authStore.token));
     }, [authStore.token]);
 

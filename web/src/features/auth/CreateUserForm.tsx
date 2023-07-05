@@ -9,10 +9,12 @@ const emailRegex = /^[^@]+@[^\.]+\..*$/;
 
 export interface CreateUserFormProps {
   initialUsername?: string;
+  onCreate: (username: string) => void;
 }
 
 export const CreateUserForm: React.FC<CreateUserFormProps> = ({
   initialUsername,
+  onCreate,
 }) => {
   const [createUser] = useCreateUserMutation();
   const [email, setEmail] = useState("");
@@ -47,6 +49,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
     status.success(
       "Successfully signed up! Please check your email to verify your account and log in."
     );
+    onCreate(username);
   };
 
   return (

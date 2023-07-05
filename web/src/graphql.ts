@@ -311,14 +311,14 @@ export type IUser = {
   username?: Maybe<Scalars['String']['output']>;
 };
 
-export type IStorableAuthTokenFragment = { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, roles?: Array<{ __typename?: 'Role', id: string, name: string, permissions: Array<IAuthPermission> }> | undefined } };
+export type IStorableAuthTokenFragment = { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, username?: string | undefined, roles?: Array<{ __typename?: 'Role', id: string, name: string, permissions: Array<IAuthPermission> }> | undefined } };
 
 export type ICreateAuthTokenGoogleMutationVariables = Exact<{
   googleIdToken: Scalars['String']['input'];
 }>;
 
 
-export type ICreateAuthTokenGoogleMutation = { __typename?: 'Mutation', authToken: { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, roles?: Array<{ __typename?: 'Role', id: string, name: string, permissions: Array<IAuthPermission> }> | undefined } } };
+export type ICreateAuthTokenGoogleMutation = { __typename?: 'Mutation', authToken: { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, username?: string | undefined, roles?: Array<{ __typename?: 'Role', id: string, name: string, permissions: Array<IAuthPermission> }> | undefined } } };
 
 export type ICreateAuthTokenLocalMutationVariables = Exact<{
   username: Scalars['String']['input'];
@@ -326,7 +326,7 @@ export type ICreateAuthTokenLocalMutationVariables = Exact<{
 }>;
 
 
-export type ICreateAuthTokenLocalMutation = { __typename?: 'Mutation', authToken: { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, roles?: Array<{ __typename?: 'Role', id: string, name: string, permissions: Array<IAuthPermission> }> | undefined } } };
+export type ICreateAuthTokenLocalMutation = { __typename?: 'Mutation', authToken: { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, username?: string | undefined, roles?: Array<{ __typename?: 'Role', id: string, name: string, permissions: Array<IAuthPermission> }> | undefined } } };
 
 export type IConfigQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -397,6 +397,7 @@ export const StorableAuthTokenFragmentDoc = gql`
   token
   user {
     id
+    username
     roles {
       id
       name

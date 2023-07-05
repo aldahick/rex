@@ -16,13 +16,17 @@ const LongButton = styled(Button)({
 
 interface LocalAuthFormProps {
   onSuccess: (authToken: IStorableAuthTokenFragment) => void;
+  initialUsername?: string;
 }
 
-export const LocalAuthForm: React.FC<LocalAuthFormProps> = ({ onSuccess }) => {
+export const LocalAuthForm: React.FC<LocalAuthFormProps> = ({
+  onSuccess,
+  initialUsername,
+}) => {
   const navigate = useNavigate();
   const config = useConfigQuery();
   const [createAuthToken] = useCreateAuthTokenLocalMutation();
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(initialUsername ?? "");
   const [password, setPassword] = useState("");
   const status = useStatus();
 
@@ -55,7 +59,7 @@ export const LocalAuthForm: React.FC<LocalAuthFormProps> = ({ onSuccess }) => {
   const handleKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
     if (evt.key.toLowerCase() === "enter") {
       // should never catch
-      handleSubmit().catch(console.log);
+      handleSubmit().catch(console.error);
     }
   };
 

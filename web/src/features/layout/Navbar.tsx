@@ -25,7 +25,6 @@ const Title = styled(Typography)({
 export const Navbar: React.FC = observer(() => {
   const { authStore, sidebarStore } = useStores();
   const location = useLocation();
-  console.log(authStore);
 
   return (
     <AppBar>
