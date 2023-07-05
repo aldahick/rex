@@ -14,5 +14,4 @@ function bump_version() {
 bump_version api
 bump_version web
 
-echo "Committing new git tag: $version"
 git add package.json
