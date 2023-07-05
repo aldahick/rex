@@ -5,6 +5,7 @@ import {
   resolver,
 } from "@athenajs/core";
 
+import { RexConfig } from "../../config.js";
 import {
   IAuthPermission,
   IMutation,
@@ -23,6 +24,7 @@ import { UserManager } from "./user.manager.js";
 @resolver()
 export class UserResolver {
   constructor(
+    private readonly config: RexConfig,
     private readonly roleManager: RoleManager,
     private readonly roleResolver: RoleResolver,
     private readonly userManager: UserManager
@@ -79,7 +81,10 @@ export class UserResolver {
     { email, username, password }: IMutationCreateUserArgs,
     context: RexContext
   ): Promise<IMutation["createUser"]> {
-    if (!(await context.isAuthorized(IAuthPermission.ManageUsers))) {
+    if (
+      !this.config.userRegistration &&
+      !(await context.isAuthorized(IAuthPermission.ManageUsers))
+    ) {
       throw new Error("Forbidden");
     }
     const user = await this.userManager.create({ email, username, password });

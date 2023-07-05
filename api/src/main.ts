@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import "./module/auth/index.js";
+import "./module/config/index.js";
 import "./module/generic/index.js";
 import "./module/media/index.js";
 import "./module/mzk/index.js";

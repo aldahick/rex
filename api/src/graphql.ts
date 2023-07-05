@@ -38,6 +38,11 @@ export type IAuthToken = {
   userId: Scalars['ID']['output'];
 };
 
+export type IConfig = {
+  __typename?: 'Config';
+  createAnonymousUsers: Scalars['Boolean']['output'];
+};
+
 export type IMediaItem = {
   __typename?: 'MediaItem';
   key: Scalars['String']['output'];
@@ -200,6 +205,7 @@ export enum IProgressStatus {
 
 export type IQuery = {
   __typename?: 'Query';
+  config: IConfig;
   mediaItems: Array<IMediaItem>;
   note: INote;
   notes: Array<INote>;

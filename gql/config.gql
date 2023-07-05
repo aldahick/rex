@@ -1,0 +1,8 @@
+extend type Query {
+  config: Config!
+}
+
+type Config {
+  # whether unauthenticated users can register a user account or not
+  createAnonymousUsers: Boolean!
+}
