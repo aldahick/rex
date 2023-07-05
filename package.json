@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "postversion": "bash scripts/postversion.sh"
+  },
+  "version": "0.1.1"
+}
