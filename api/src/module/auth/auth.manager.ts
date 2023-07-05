@@ -17,7 +17,7 @@ export class AuthManager {
   }
 
   hashPassword(input: string): Promise<string> {
-    return bcrypt.hash(input, 16);
+    return bcrypt.hash(input, 12);
   }
 
   getTokenUserId(token: string): string | undefined {
