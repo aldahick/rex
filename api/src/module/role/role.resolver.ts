@@ -1,4 +1,9 @@
-import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
+import {
+  resolveField,
+  resolveMutation,
+  resolveQuery,
+  resolver,
+} from "@athenajs/core";
 
 import {
   IAuthPermission,
@@ -78,7 +83,7 @@ export class RoleResolver {
   makeGql(role: RoleModel): IRole {
     return {
       ...role,
-      permissions: role.permissions.map((p) => IAuthPermission[p as never]),
+      permissions: role.permissions as IAuthPermission[],
     };
   }
 }

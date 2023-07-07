@@ -67,9 +67,12 @@ export class MzkResolver {
 
   /** @returns user ID if authorized to do transcription things */
   async can(context: RexContext): Promise<string | undefined> {
-    return context.userId &&
+    const can =
+      context.userId &&
       (await context.isAuthorized(IAuthPermission.Transcriptions))
-      ? context.userId
-      : undefined;
+        ? context.userId
+        : undefined;
+    console.log({ can, context });
+    return can;
   }
 }

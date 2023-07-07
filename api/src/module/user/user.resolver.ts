@@ -122,14 +122,13 @@ export class UserResolver {
     const userRoles = await this.userManager.fetchRolesByUsers(
       users.map((u) => u.id)
     );
-    return users.map(
+    const permissions = users.map(
       (u) =>
         userRoles
           .get(u.id)
-          ?.flatMap((r) =>
-            r.permissions.map((p) => IAuthPermission[p as never])
-          ) ?? []
+          ?.flatMap((r) => r.permissions as IAuthPermission[]) ?? []
     );
+    return permissions;
   }
 
   makeGql(user: UserModel): IUser {

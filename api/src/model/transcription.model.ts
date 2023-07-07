@@ -7,7 +7,7 @@ export class TranscriptionTable extends BaseTable {
   table = "transcriptions";
   columns = this.setColumns((t) => ({
     id: t.uuid().primaryKey(),
-    userId: t.uuid(),
+    userId: t.uuid().foreignKey(() => UserTable, "id"),
     createdAt: t.timestamp().default("current_timestamp"),
     // no file ending, used to download same filename as uploaded
     filename: t.varchar(),

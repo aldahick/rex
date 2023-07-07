@@ -31,10 +31,8 @@ export class UserManager {
       .where({ userId })
       .join("role")
       .select("role.permissions");
-    const permissions = roles
-      .flatMap((r) => r.permissions)
-      .map((p) => IAuthPermission[p as keyof typeof IAuthPermission]);
-    return new Set(permissions);
+    const permissions = roles.flatMap((r) => r.permissions);
+    return new Set(permissions as IAuthPermission[]);
   }
 
   async fetch(id: string): Promise<UserModel> {
