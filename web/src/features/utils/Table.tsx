@@ -7,15 +7,14 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { PropsWithChildren } from "react";
 
 const BoldCell = styled(Typography)({
   fontWeight: "bold",
 });
 
-interface TableProps {
+interface TableProps extends PropsWithChildren {
   columns: string[];
-  children: React.ReactNode;
 }
 
 export const Table: React.FC<TableProps> = ({ columns, children }) => {
@@ -23,9 +22,8 @@ export const Table: React.FC<TableProps> = ({ columns, children }) => {
     <MaterialTable>
       <TableHead>
         <TableRow>
-          {columns.map((column, i) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <TableCell key={`${column}${i}`}>
+          {columns.map((column) => (
+            <TableCell key={column}>
               <BoldCell>{column}</BoldCell>
             </TableCell>
           ))}

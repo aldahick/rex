@@ -3,10 +3,10 @@ import { IconButton, List, styled, SwipeableDrawer } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import React from "react";
 
-import { IAuthPermission } from "../../graphql";
 import { useStores } from "../../hooks";
 import { LogoutButton } from "../auth/LogoutButton";
 import { SidebarItem } from "./SidebarItem";
+import { sidebarLinks } from "./SidebarLinks";
 
 const DRAWER_WIDTH = 250;
 
@@ -32,19 +32,6 @@ const OpenButtonIcon = styled(ChevronRightIcon)({
   border: "1px solid lightgray",
   borderRadius: "50%",
 });
-
-interface SidebarLink {
-  label: string;
-  route: string;
-  permissions?: IAuthPermission[];
-}
-
-const sidebarLinks: SidebarLink[] = [
-  {
-    label: "Cat Game",
-    route: "/cat",
-  },
-];
 
 export const Sidebar: React.FC = observer(() => {
   const { authStore, sidebarStore } = useStores();

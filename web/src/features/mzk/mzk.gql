@@ -1,0 +1,10 @@
+query Transcriptions {
+  transcriptions {
+    id
+    status
+    filename
+    pdf {
+      key
+    }
+  }
+}

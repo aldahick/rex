@@ -10,8 +10,10 @@ import { config } from "./config";
 import { Layout } from "./features/layout/Layout";
 import { StoreProvider } from "./hooks";
 import { CatRoute } from "./routes/cat.route";
+import { ErrorRoute } from "./routes/error.route";
 import { LoginRoute } from "./routes/login.route";
 import { MediaRoute } from "./routes/media.route";
+import { MzkRoute } from "./routes/mzk.route";
 import { NoteRoute } from "./routes/note.route";
 import { NotesRoute } from "./routes/notes.route";
 import { RegisterRoute } from "./routes/register.route";
@@ -27,7 +29,7 @@ const routes: RouteObject[] = [
       </StoreProvider>
     ),
     // TODO improve display
-    errorElement: <p>Error</p>,
+    errorElement: <ErrorRoute />,
     path: "/",
     children: [
       {
@@ -50,6 +52,10 @@ const routes: RouteObject[] = [
       {
         path: "/media",
         element: <MediaRoute />,
+      },
+      {
+        path: "/mzk",
+        element: <MzkRoute />,
       },
       {
         path: "/notes/:id",

@@ -349,6 +349,11 @@ export type IMediaItemsQueryVariables = Exact<{
 
 export type IMediaItemsQuery = { __typename?: 'Query', mediaItems: Array<{ __typename?: 'MediaItem', key: string, type: IMediaItemType }> };
 
+export type ITranscriptionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ITranscriptionsQuery = { __typename?: 'Query', transcriptions: Array<{ __typename?: 'Transcription', id: string, status: ITranscriptionStatus, filename: string, pdf?: { __typename?: 'MediaItem', key: string } | undefined }> };
+
 export type ICreateNoteMutationVariables = Exact<{
   title: Scalars['String']['input'];
 }>;
@@ -585,6 +590,45 @@ export function useMediaItemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type MediaItemsQueryHookResult = ReturnType<typeof useMediaItemsQuery>;
 export type MediaItemsLazyQueryHookResult = ReturnType<typeof useMediaItemsLazyQuery>;
 export type MediaItemsQueryResult = Apollo.QueryResult<IMediaItemsQuery, IMediaItemsQueryVariables>;
+export const TranscriptionsDocument = gql`
+    query Transcriptions {
+  transcriptions {
+    id
+    status
+    filename
+    pdf {
+      key
+    }
+  }
+}
+    `;
+
+/**
+ * __useTranscriptionsQuery__
+ *
+ * To run a query within a React component, call `useTranscriptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTranscriptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTranscriptionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTranscriptionsQuery(baseOptions?: Apollo.QueryHookOptions<ITranscriptionsQuery, ITranscriptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ITranscriptionsQuery, ITranscriptionsQueryVariables>(TranscriptionsDocument, options);
+      }
+export function useTranscriptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ITranscriptionsQuery, ITranscriptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ITranscriptionsQuery, ITranscriptionsQueryVariables>(TranscriptionsDocument, options);
+        }
+export type TranscriptionsQueryHookResult = ReturnType<typeof useTranscriptionsQuery>;
+export type TranscriptionsLazyQueryHookResult = ReturnType<typeof useTranscriptionsLazyQuery>;
+export type TranscriptionsQueryResult = Apollo.QueryResult<ITranscriptionsQuery, ITranscriptionsQueryVariables>;
 export const CreateNoteDocument = gql`
     mutation CreateNote($title: String!) {
   createNote(title: $title) {
