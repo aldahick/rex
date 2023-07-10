@@ -18,7 +18,7 @@ export const MediaBrowser: React.FC = () => {
     },
   });
 
-  const lastSelected = selectedItems.slice(-1)[0] as IMediaItem | undefined;
+  const lastSelected = selectedItems[selectedItems.length - 1];
   const selectedType = lastSelected?.type ?? IMediaItemType.Directory;
   const selectedKey = () => selectedItems.map((i) => i.key).join("/");
 

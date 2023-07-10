@@ -14,21 +14,23 @@ const BoldCell = styled(Typography)({
 });
 
 interface TableProps extends PropsWithChildren {
-  columns: string[];
+  columns: string[] | false;
 }
 
 export const Table: React.FC<TableProps> = ({ columns, children }) => {
   return (
     <MaterialTable>
-      <TableHead>
-        <TableRow>
-          {columns.map((column) => (
-            <TableCell key={column}>
-              <BoldCell>{column}</BoldCell>
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
+      {columns ? (
+        <TableHead>
+          <TableRow>
+            {columns.map((column) => (
+              <TableCell key={column}>
+                <BoldCell>{column}</BoldCell>
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+      ) : null}
       <TableBody>{children}</TableBody>
     </MaterialTable>
   );
