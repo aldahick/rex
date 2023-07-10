@@ -19,6 +19,7 @@ export class RexConfig extends BaseConfig {
   };
 
   readonly http = {
+    host: this.optional("HTTP_HOST") || undefined,
     jwtKey: this.required("HTTP_JWT_KEY"),
     port: Number(this.required("HTTP_PORT")),
     url: this.required("HTTP_URL"),
