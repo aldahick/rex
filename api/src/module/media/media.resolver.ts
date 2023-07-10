@@ -2,6 +2,7 @@ import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
 
 import { RexConfig } from "../../config.js";
 import {
+  IAuthPermission,
   IMutation,
   IMutationAddMediaDownloadArgs,
   IMutationCreateMediaArgs,
@@ -72,6 +73,7 @@ export class MediaResolver {
     { key }: IMutationCreateMediaUploadArgs,
     context: RexContext
   ): Promise<IMutation["createMediaUpload"]> {
+    // enforce auth
     await this.fetchUser(context);
     key = encodeURIComponent(key);
     return `${this.config.http.url}/v1/media/content?key=${key}`;
@@ -80,7 +82,10 @@ export class MediaResolver {
   private async fetchUser(
     context: RexContext
   ): Promise<Pick<UserModel, "id" | "email">> {
-    if (!context.userId) {
+    if (
+      !context.userId ||
+      !(await context.isAuthorized(IAuthPermission.Media))
+    ) {
       throw new Error("Forbidden");
     }
     return {

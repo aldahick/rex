@@ -40,7 +40,7 @@ export class UserResolver {
     if (!userId) {
       throw new Error("Forbidden");
     }
-    if (id && (await context.isAuthorized(IAuthPermission.ManageUsers))) {
+    if (id && (await context.isAuthorized(IAuthPermission.AdminUsers))) {
       userId = id;
     }
     return this.makeGql(await this.userManager.fetch(userId));
@@ -52,7 +52,7 @@ export class UserResolver {
     args: never,
     context: RexContext
   ): Promise<IQuery["users"]> {
-    if (!(await context.isAuthorized(IAuthPermission.ManageUsers))) {
+    if (!(await context.isAuthorized(IAuthPermission.AdminUsers))) {
       throw new Error("Forbidden");
     }
     const users = await this.userManager.fetchAll();
@@ -66,8 +66,8 @@ export class UserResolver {
     context: RexContext
   ): Promise<IMutation["addRoleToUser"]> {
     if (
-      !(await context.isAuthorized(IAuthPermission.ManageUsers)) ||
-      !(await context.isAuthorized(IAuthPermission.ManageRoles))
+      !(await context.isAuthorized(IAuthPermission.AdminUsers)) ||
+      !(await context.isAuthorized(IAuthPermission.AdminRoles))
     ) {
       throw new Error("Forbidden");
     }
@@ -83,7 +83,7 @@ export class UserResolver {
   ): Promise<IMutation["createUser"]> {
     if (
       !this.config.userRegistration &&
-      !(await context.isAuthorized(IAuthPermission.ManageUsers))
+      !(await context.isAuthorized(IAuthPermission.AdminUsers))
     ) {
       throw new Error("Forbidden");
     }
@@ -98,7 +98,7 @@ export class UserResolver {
     context: RexContext
   ): Promise<IMutation["setUserPassword"]> {
     let id = context.userId;
-    if (userId && (await context.isAuthorized(IAuthPermission.ManageUsers))) {
+    if (userId && (await context.isAuthorized(IAuthPermission.AdminUsers))) {
       id = userId;
     } else if (!id) {
       throw new Error("Forbidden");

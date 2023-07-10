@@ -33,7 +33,7 @@ export class SteamResolver {
     args: never,
     context: RexContext
   ): Promise<IMutation["fetchSteamGames"]> {
-    if (!(await context.isAuthorized(IAuthPermission.ManageSteamGames))) {
+    if (!(await context.isAuthorized(IAuthPermission.AdminSteam))) {
       throw new Error("Forbidden");
     }
     const progress = await this.progressManager.create("fetchSteamGames");

@@ -1,9 +1,4 @@
-import {
-  resolveField,
-  resolveMutation,
-  resolveQuery,
-  resolver,
-} from "@athenajs/core";
+import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
 
 import {
   IAuthPermission,
@@ -42,7 +37,7 @@ export class RoleResolver {
     { name }: IMutationCreateRoleArgs,
     context: RexContext
   ): Promise<IMutation["createRole"]> {
-    if (!(await context.isAuthorized(IAuthPermission.ManageRoles))) {
+    if (!(await context.isAuthorized(IAuthPermission.AdminRoles))) {
       throw new Error("Forbidden");
     }
     const role = await this.roleManager.create(name);
@@ -55,7 +50,7 @@ export class RoleResolver {
     { id }: IMutationDeleteRoleArgs,
     context: RexContext
   ): Promise<IMutation["deleteRole"]> {
-    if (!(await context.isAuthorized(IAuthPermission.ManageRoles))) {
+    if (!(await context.isAuthorized(IAuthPermission.AdminRoles))) {
       throw new Error("Forbidden");
     }
     await this.roleManager.delete(id);
@@ -65,8 +60,12 @@ export class RoleResolver {
   @resolveMutation()
   async updateRole(
     root: unknown,
-    { id, name }: IMutationUpdateRoleArgs
+    { id, name }: IMutationUpdateRoleArgs,
+    context: RexContext
   ): Promise<IMutation["updateRole"]> {
+    if (!(await context.isAuthorized(IAuthPermission.AdminRoles))) {
+      throw new Error("Forbidden");
+    }
     await this.roleManager.update(id, { name });
     return true;
   }
@@ -74,8 +73,12 @@ export class RoleResolver {
   @resolveMutation()
   async updateRolePermissions(
     root: unknown,
-    { id, permissions }: IMutationUpdateRolePermissionsArgs
+    { id, permissions }: IMutationUpdateRolePermissionsArgs,
+    context: RexContext
   ): Promise<IMutation["updateRolePermissions"]> {
+    if (!(await context.isAuthorized(IAuthPermission.AdminRoles))) {
+      throw new Error("Forbidden");
+    }
     await this.roleManager.updatePermissions(id, permissions);
     return true;
   }

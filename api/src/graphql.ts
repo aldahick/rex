@@ -21,13 +21,13 @@ export enum IAuthClientType {
 }
 
 export enum IAuthPermission {
-  ManageMediaAll = 'MANAGE_MEDIA_ALL',
-  ManageMediaSelf = 'MANAGE_MEDIA_SELF',
-  ManageNotesAll = 'MANAGE_NOTES_ALL',
-  ManageNotesSelf = 'MANAGE_NOTES_SELF',
-  ManageRoles = 'MANAGE_ROLES',
-  ManageSteamGames = 'MANAGE_STEAM_GAMES',
-  ManageUsers = 'MANAGE_USERS',
+  AdminMedia = 'ADMIN_MEDIA',
+  AdminNotes = 'ADMIN_NOTES',
+  AdminRoles = 'ADMIN_ROLES',
+  AdminSteam = 'ADMIN_STEAM',
+  AdminUsers = 'ADMIN_USERS',
+  Media = 'MEDIA',
+  Notes = 'NOTES',
   Transcriptions = 'TRANSCRIPTIONS'
 }
 

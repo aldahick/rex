@@ -81,7 +81,7 @@ export class AuthResolver {
     { userId }: IMutationCreateAuthTokenArgs,
     context: RexContext
   ): Promise<IMutation["createAuthToken"]> {
-    if (!(await context.isAuthorized(IAuthPermission.ManageUsers))) {
+    if (!(await context.isAuthorized(IAuthPermission.AdminUsers))) {
       throw new Error("Forbidden");
     }
     if (await this.userManager.exists(userId)) {

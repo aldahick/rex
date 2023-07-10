@@ -28,13 +28,13 @@ export class MediaController {
     res: HttpResponse,
     context: RexContext
   ): Promise<void> {
-    const userId = await this.can(context);
-    if (!userId) {
-      throw new Error("Forbidden");
-    }
     const { key } = req.query as Record<string, string>;
     if (typeof key !== "string") {
       throw new Error("Missing required query parameter `key`");
+    }
+    const userId = await this.can(context);
+    if (!userId) {
+      throw new Error("Forbidden");
     }
 
     const user = { email: await this.userManager.fetchEmail(userId) };
@@ -56,13 +56,13 @@ export class MediaController {
     res: HttpResponse,
     context: RexContext
   ): Promise<{ ok: boolean }> {
-    const userId = await this.can(context);
-    if (!userId) {
-      throw new Error("Forbidden");
-    }
     const { key } = req.query as Record<string, string>;
     if (typeof key !== "string") {
       throw new Error("Missing required query parameter `key`");
+    }
+    const userId = await this.can(context);
+    if (!userId) {
+      throw new Error("Forbidden");
     }
 
     const user = { email: await this.userManager.fetchEmail(userId) };
@@ -108,9 +108,11 @@ export class MediaController {
   /**
    * @returns user ID if authorized
    */
-  async can(context: RexContext): Promise<string | undefined> {
-    return context.userId &&
-      (await context.isAuthorized(IAuthPermission.ManageMediaSelf))
+  async can(
+    context: RexContext,
+    permission = IAuthPermission.Media
+  ): Promise<string | undefined> {
+    return context.userId && (await context.isAuthorized(permission))
       ? context.userId
       : undefined;
   }
