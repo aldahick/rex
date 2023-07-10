@@ -16,4 +16,14 @@ export const sidebarLinks: SidebarLink[] = [
     route: "/mzk",
     permissions: [IAuthPermission.Transcriptions],
   },
+  {
+    label: "Browse Media",
+    route: "/media",
+    permissions: [IAuthPermission.Media],
+  },
+  {
+    label: "Edit Notes",
+    route: "/notes",
+    permissions: [IAuthPermission.Notes],
+  },
 ];
