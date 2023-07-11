@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "generate": "bash scripts/generate.sh",
     "version": "bash scripts/version.sh"
   },
   "version": "0.1.5"

@@ -9,8 +9,20 @@ This is a monorepo for [my personal site](https://alexhicks.net), Rex, which inc
 
 ## 🎼 [/mzk](https://alexhicks.net/mzk)
 
-Transcribe monotonic recordings into sheet music using the [Omnizart] project! I wrote a [paper](./docs/automatic-music-transcription-at-scale.pdf) and a [reference implementation](https://github.com/aldahick/mzk) for a cloud computing course at IUPUI, and subsequently reimplemented it as a production-ready feature in Rex. The Docker-based executor, connecting Omnizart to Rex's media API, is [written](./docker/mzk) in Python. It's vastly overengineered for its expected use case, but that's what this project is all about, or something.
+Transcribe monotonic recordings into sheet music using the [Omnizart] project! I wrote a [paper](./docs/automatic-music-transcription-at-scale.pdf) and a [reference implementation](https://github.com/aldahick/mzk) for a cloud computing course at IUPUI, and subsequently reimplemented it as a production-ready feature in Rex. The Docker-based executor, connecting Omnizart to Rex's media API, is [written](./docker/mzk) in Python. It's vastly overengineered for its expected use case, but that's what this project is all about, or something. (In that spirit, it's not yet released for public access; I'm still porting it from the original mzk project, and improving security and monitoring features.)
 
 ## 🐈 [/cat](https://alexhicks.net/cat)
 
 Entertain your cat! [This project](./web/src/features/cat/) is precisely as complex as it needs to be, which is hardly at all. Cats are not very difficult to distract.
+
+## Development
+
+See the README files in [`api`](./api/README.md) and [`web`](./web/README.md) for package-specific documentation.
+
+### Changing GraphQL schema
+
+To generate new TypeScript types based on changes to the [GraphQL schema](./gql/), do `pnpm generate`. You can run this in either package directory, or the root (which runs it for both `api` and `web`).
+
+## Deployment
+
+To tag a new version, use `pnpm version` in the repository root. This will update all three `package.json` files (`/`, `/api/`, and `/web/`) and create a Git tag for the new version. To publish the new version's Docker images to [GHCR](https://github.com/aldahick?tab=packages&tab=packages&q=rex), do `git push && git push --tags` and follow the [job status](https://github.com/aldahick/rex/actions?query=publish).
