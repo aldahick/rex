@@ -37,7 +37,10 @@ export const CatSettingsForm: React.FC<CatSettingsProps> = observer(
     const handleNumberChange =
       (field: "count" | "speed" | "radius" | "frameRate") =>
       (evt: ChangeEvent<HTMLInputElement>) => {
-        onChange({ ...value, [field]: Number(evt.target.value) });
+        const newValue = Number(evt.target.value);
+        if (!isNaN(newValue)) {
+          onChange({ ...value, [field]: newValue });
+        }
       };
 
     return (

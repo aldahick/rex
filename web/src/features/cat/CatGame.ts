@@ -80,7 +80,7 @@ export class CatGame {
     if (diff > 0) {
       range(diff).forEach(() => this.dots.push(this.randomDot()));
     } else if (diff < 0) {
-      this.dots.splice(-diff + 1, -diff);
+      this.dots.splice(count, -diff);
     }
   }
 
