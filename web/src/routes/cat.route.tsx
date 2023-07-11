@@ -1,18 +1,22 @@
-import React from "react";
-import { useSearchParams } from "react-router-dom";
+import React, { useState } from "react";
 
-import { CatCanvas, CatCanvasProps } from "../features/cat/CatCanvas";
+import { CatCanvas } from "../features/cat/CatCanvas";
+import { CatSettings } from "../features/cat/CatSettings";
+import { CatSettingsForm, getCatColors } from "../features/cat/CatSettingsForm";
 
 export const CatRoute: React.FC = () => {
-  const [params] = useSearchParams();
+  const [settings, setSettings] = useState<CatSettings>({
+    ...getCatColors(),
+    speed: 5,
+    radius: 16,
+    count: 3,
+    frameRate: 60,
+  });
 
-  const props: CatCanvasProps = {};
-  for (const key of params.keys()) {
-    const value = Number(params.get(key));
-    if (!isNaN(value)) {
-      props[key as keyof CatCanvasProps] = value;
-    }
-  }
-
-  return <CatCanvas {...props} />;
+  return (
+    <div>
+      <CatSettingsForm value={settings} onChange={setSettings} />
+      <CatCanvas settings={settings} />
+    </div>
+  );
 };

@@ -10,16 +10,17 @@ export interface Settings {
 
 const SETTINGS_KEY = "rex.settings";
 const DEFAULT_SETTINGS: Settings = {
-  theme: ThemeSetting.Dark,
+  theme: ThemeSetting.Light,
 };
 
 export class SettingsStore {
-  private settings: Settings =
-    (JSON.parse(
-      localStorage.getItem(SETTINGS_KEY) ?? "null"
-    ) as Settings | null) ?? DEFAULT_SETTINGS;
+  private settings: Settings;
 
   constructor() {
+    this.settings =
+      (JSON.parse(
+        localStorage.getItem(SETTINGS_KEY) ?? "null"
+      ) as Settings | null) ?? DEFAULT_SETTINGS;
     makeAutoObservable(this);
   }
 
