@@ -58,7 +58,6 @@ export const MediaContentView: React.FC<MediaContentViewProps> = observer(
           <FetchUrl url={contentUrl}>
             {(text) =>
               mimeType === "text/html" ? (
-                // eslint-disable-next-line react/no-danger,@typescript-eslint/naming-convention
                 <Typography dangerouslySetInnerHTML={{ __html: text }} />
               ) : (
                 <WrappedText>{text}</WrappedText>

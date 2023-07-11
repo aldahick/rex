@@ -87,6 +87,8 @@ export class CatGame {
   /** runs every frame to change dot positions based on velocity and walls */
   update() {
     const { speed, radius } = this.settings;
+    const maxX = this.canvas.width - radius;
+    const maxY = this.canvas.height - radius;
     for (const dot of this.dots) {
       dot.x += speed * Math.cos(dot.theta);
       dot.y += speed * Math.sin(dot.theta);
@@ -95,8 +97,8 @@ export class CatGame {
         (dot.theta >= 0 && dot.theta < Math.PI / 2) ||
         (dot.theta >= Math.PI && dot.theta <= (3 / 2) * Math.PI);
       const clamped = {
-        x: clamp(dot.x, radius, this.canvas.width - radius),
-        y: clamp(dot.y, radius, this.canvas.height - radius),
+        x: clamp(dot.x, radius, maxX),
+        y: clamp(dot.y, radius, maxY),
       };
       if (clamped.x !== dot.x) {
         dot.x = clamped.x;
