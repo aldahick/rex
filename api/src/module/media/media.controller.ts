@@ -67,7 +67,6 @@ export class MediaController {
 
     const user = { email: await this.userManager.fetchEmail(userId) };
     const data = req.body as Buffer;
-    console.log(data);
     await this.mediaManager.create({ user, key, data });
     return { ok: true };
   }

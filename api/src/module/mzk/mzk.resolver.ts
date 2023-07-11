@@ -72,7 +72,6 @@ export class MzkResolver {
       (await context.isAuthorized(IAuthPermission.Transcriptions))
         ? context.userId
         : undefined;
-    console.log({ can, context });
     return can;
   }
 }
