@@ -13,7 +13,7 @@ export const TranscriptionTable: React.FC = () => {
 
   if (transcriptionsRes.error) {
     return status.error(
-      transcriptionsRes.error ?? "Failed to load your transcriptions"
+      transcriptionsRes.error ?? "Failed to load your transcriptions",
     );
   }
 

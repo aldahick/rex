@@ -14,7 +14,7 @@ export class MediaManager {
   constructor(
     private readonly config: RexConfig,
     private readonly logger: Logger,
-    private readonly progressManager: ProgressManager
+    private readonly progressManager: ProgressManager,
   ) {}
 
   async download({
@@ -64,14 +64,14 @@ export class MediaManager {
         .addLogs(
           progressId,
           `Finished downloading ${url} to ${destinationKey}`,
-          IProgressStatus.Complete
+          IProgressStatus.Complete,
         )
         .catch(onLogError);
     });
     await this.progressManager.addLogs(
       progressId,
       "Started download",
-      IProgressStatus.InProgress
+      IProgressStatus.InProgress,
     );
     stream.resume();
   }
@@ -92,7 +92,7 @@ export class MediaManager {
 
   async list(
     user: Pick<UserModel, "id" | "email">,
-    dir: string
+    dir: string,
   ): Promise<IMediaItem[]> {
     const baseDir = this.toFilename(user, dir);
     let files: string[];
@@ -120,7 +120,7 @@ export class MediaManager {
           key,
           type,
         };
-      })
+      }),
     );
   }
 
@@ -132,7 +132,7 @@ export class MediaManager {
   createReadStream(
     user: Pick<UserModel, "email">,
     key: string,
-    { start, end }: { start: number; end?: number }
+    { start, end }: { start: number; end?: number },
   ): Readable {
     return createReadStream(this.toFilename(user, key), { start, end });
   }
@@ -163,7 +163,7 @@ export class MediaManager {
     return path.resolve(
       mediaDir,
       user.email,
-      key.replace(/^\//, "").replace(/\.\./g, "")
+      key.replace(/^\//, "").replace(/\.\./g, ""),
     );
   }
 }

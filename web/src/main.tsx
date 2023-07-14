@@ -77,5 +77,5 @@ const router = createBrowserRouter(routes, { basename: config.basePath });
 createRoot(container).render(
   <React.StrictMode>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

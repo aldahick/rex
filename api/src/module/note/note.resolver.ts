@@ -22,7 +22,7 @@ export class NoteResolver {
   async note(
     root: never,
     { id }: IQueryNoteArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IQuery["note"]> {
     const userId = await this.fetchUserId(context);
     const note = await this.noteManager.fetch(id, userId);
@@ -36,7 +36,7 @@ export class NoteResolver {
   async notes(
     root: never,
     args: never,
-    context: RexContext
+    context: RexContext,
   ): Promise<IQuery["notes"]> {
     const userId = await this.fetchUserId(context);
     const notes = await this.noteManager.fetchMany(userId);
@@ -49,7 +49,7 @@ export class NoteResolver {
   async updateNoteBody(
     root: never,
     { id, body }: IMutationUpdateNoteBodyArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["updateNoteBody"]> {
     const userId = await this.fetchUserId(context);
     await this.noteManager.updateBody(id, userId, body);
@@ -60,7 +60,7 @@ export class NoteResolver {
   async createNote(
     root: never,
     { title }: IMutationCreateNoteArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["createNote"]> {
     const userId = await this.fetchUserId(context);
     const note = await this.noteManager.create(userId, title);
@@ -71,7 +71,7 @@ export class NoteResolver {
   async removeNote(
     root: unknown,
     { id }: IMutationRemoveNoteArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["removeNote"]> {
     const userId = await this.fetchUserId(context);
     await this.noteManager.remove(id, userId);

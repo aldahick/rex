@@ -32,7 +32,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
     }
     if (!password1 || !password2 || password1 !== password2) {
       return status.warn(
-        "Enter the same, non-empty password in both fields, please."
+        "Enter the same, non-empty password in both fields, please.",
       );
     }
     try {
@@ -47,7 +47,7 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
       return status.error(err);
     }
     status.success(
-      "Successfully signed up! Please check your email to verify your account and log in."
+      "Successfully signed up! Please check your email to verify your account and log in.",
     );
     onCreate(username);
   };

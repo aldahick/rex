@@ -44,7 +44,7 @@ export class DatabaseService implements DbTables {
         databaseURL: config.postgresUrl,
         log: false,
       },
-      tables
+      tables,
     );
 
     this.progress = this.orm.progress;

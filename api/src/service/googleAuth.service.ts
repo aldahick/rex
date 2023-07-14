@@ -16,7 +16,7 @@ export class GoogleAuthService {
   // TODO check
   async getIdTokenPayload(
     idToken: string,
-    clientId: string | undefined
+    clientId: string | undefined,
   ): Promise<GoogleTokenPayload | undefined> {
     if (clientId === undefined) {
       throw new Error("Missing Google client ID");

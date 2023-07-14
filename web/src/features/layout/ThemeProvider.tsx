@@ -24,7 +24,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = observer(
         palette: {
           mode: settingsStore.get("theme"),
         },
-      })
+      }),
     );
 
     document.body.style.background = theme.palette.background.default;
@@ -35,5 +35,5 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = observer(
         {children}
       </MuiThemeProvider>
     );
-  }
+  },
 );

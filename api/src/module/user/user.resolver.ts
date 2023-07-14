@@ -27,14 +27,14 @@ export class UserResolver {
     private readonly config: RexConfig,
     private readonly roleManager: RoleManager,
     private readonly roleResolver: RoleResolver,
-    private readonly userManager: UserManager
+    private readonly userManager: UserManager,
   ) {}
 
   @resolveQuery()
   async user(
     root: never,
     { id }: IQueryUserArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IQuery["user"]> {
     let userId = context.userId;
     if (!userId) {
@@ -50,7 +50,7 @@ export class UserResolver {
   async users(
     root: never,
     args: never,
-    context: RexContext
+    context: RexContext,
   ): Promise<IQuery["users"]> {
     if (!(await context.isAuthorized(IAuthPermission.AdminUsers))) {
       throw new Error("Forbidden");
@@ -63,7 +63,7 @@ export class UserResolver {
   async addRoleToUser(
     root: never,
     { userId, roleId }: IMutationAddRoleToUserArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["addRoleToUser"]> {
     if (
       !(await context.isAuthorized(IAuthPermission.AdminUsers)) ||
@@ -79,7 +79,7 @@ export class UserResolver {
   async createUser(
     root: never,
     { email, username, password }: IMutationCreateUserArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["createUser"]> {
     if (
       !this.config.userRegistration &&
@@ -95,7 +95,7 @@ export class UserResolver {
   async setUserPassword(
     root: unknown,
     { userId, password }: IMutationSetUserPasswordArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["setUserPassword"]> {
     let id = context.userId;
     if (userId && (await context.isAuthorized(IAuthPermission.AdminUsers))) {
@@ -110,23 +110,24 @@ export class UserResolver {
   @resolveField("User.roles", true)
   async roles(users: IUser[]): Promise<IUser["roles"][]> {
     const userRoles = await this.userManager.fetchRolesByUsers(
-      users.map((u) => u.id)
+      users.map((u) => u.id),
     );
     return users.map(
-      (u) => userRoles.get(u.id)?.map((r) => this.roleResolver.makeGql(r)) ?? []
+      (u) =>
+        userRoles.get(u.id)?.map((r) => this.roleResolver.makeGql(r)) ?? [],
     );
   }
 
   @resolveField("User.permissions", true)
   async permissions(users: IUser[]): Promise<IUser["permissions"][]> {
     const userRoles = await this.userManager.fetchRolesByUsers(
-      users.map((u) => u.id)
+      users.map((u) => u.id),
     );
     const permissions = users.map(
       (u) =>
         userRoles
           .get(u.id)
-          ?.flatMap((r) => r.permissions as IAuthPermission[]) ?? []
+          ?.flatMap((r) => r.permissions as IAuthPermission[]) ?? [],
     );
     return permissions;
   }

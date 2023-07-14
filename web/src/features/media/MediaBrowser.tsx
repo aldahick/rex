@@ -32,7 +32,7 @@ const EMPTY_ROOT: FileTreeEntry = {
 export const MediaBrowser: React.FC = () => {
   // no preceding "/"
   const [dir, setDir] = useState("");
-  const [root, setRoot] = useState<FileTreeEntry>(cloneDeep(EMPTY_ROOT));
+  const [root] = useState<FileTreeEntry>(cloneDeep(EMPTY_ROOT));
   const [fetchMediaItems] = useMediaItemsLazyQuery();
   const status = useStatus();
 

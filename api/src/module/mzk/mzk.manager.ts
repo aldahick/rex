@@ -13,7 +13,7 @@ export class MzkManager {
     private readonly authManager: AuthManager,
     private readonly config: RexConfig,
     private readonly db: DatabaseService,
-    private readonly docker: DockerService
+    private readonly docker: DockerService,
   ) {}
 
   async fetchMany(userId: string): Promise<TranscriptionModel[]> {
@@ -27,7 +27,7 @@ export class MzkManager {
   async create(
     userId: string,
     inputKey: string,
-    filename: string
+    filename: string,
   ): Promise<TranscriptionModel> {
     return this.db.transcriptions.create({
       userId,

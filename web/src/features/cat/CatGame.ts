@@ -17,7 +17,7 @@ export class CatGame {
 
   constructor(
     private readonly canvas: HTMLCanvasElement,
-    private settings: CatSettings
+    private settings: CatSettings,
   ) {
     const context = canvas.getContext("2d");
     if (!context) {

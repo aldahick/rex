@@ -24,14 +24,14 @@ export class SteamResolver {
     private readonly progressManager: ProgressManager,
     private readonly progressResolver: ProgressResolver,
     private readonly steamGameManager: SteamGameManager,
-    private readonly steamPlayerManager: SteamPlayerManager
+    private readonly steamPlayerManager: SteamPlayerManager,
   ) {}
 
   @resolveMutation()
   async fetchSteamGames(
     root: never,
     args: never,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["fetchSteamGames"]> {
     if (!(await context.isAuthorized(IAuthPermission.AdminSteam))) {
       throw new Error("Forbidden");
@@ -39,7 +39,7 @@ export class SteamResolver {
     const progress = await this.progressManager.create("fetchSteamGames");
     this.progressManager.resolveSafe(
       progress.id,
-      this.steamGameManager.fetchAll(progress.id)
+      this.steamGameManager.fetchAll(progress.id),
     );
     return this.progressResolver.makeGql(progress);
   }
@@ -47,7 +47,7 @@ export class SteamResolver {
   @resolveQuery()
   async steamGames(
     root: never,
-    { page, search }: IQuerySteamGamesArgs
+    { page, search }: IQuerySteamGamesArgs,
   ): Promise<IQuery["steamGames"]> {
     return this.steamGameManager.search(search, {
       offset: page * SEARCH_PAGE_SIZE,
@@ -58,10 +58,10 @@ export class SteamResolver {
   @resolveQuery()
   async steamPlayer(
     root: never,
-    { steamId64 }: IQuerySteamPlayerArgs
+    { steamId64 }: IQuerySteamPlayerArgs,
   ): Promise<IQuery["steamPlayer"]> {
     const { player, ownedGames = [] } = await this.steamPlayerManager.get(
-      steamId64
+      steamId64,
     );
     return this.makeGql(player, ownedGames);
   }
@@ -69,17 +69,17 @@ export class SteamResolver {
   @resolveQuery()
   async steamPlayers(
     root: never,
-    { steamIds64 }: IQuerySteamPlayersArgs
+    { steamIds64 }: IQuerySteamPlayersArgs,
   ): Promise<IQuery["steamPlayers"]> {
     const players = await this.steamPlayerManager.getMany(steamIds64);
     return players.map(({ player, ownedGames = [] }) =>
-      this.makeGql(player, ownedGames)
+      this.makeGql(player, ownedGames),
     );
   }
 
   private makeGql(
     player: SteamPlayer,
-    ownedGames: SteamGameModel[]
+    ownedGames: SteamGameModel[],
   ): ISteamPlayer {
     return {
       ...player,

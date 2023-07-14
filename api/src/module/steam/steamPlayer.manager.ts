@@ -14,7 +14,7 @@ export interface SteamPlayerWithGames {
 export class SteamPlayerManager {
   constructor(
     private readonly steamGameManager: SteamGameManager,
-    private readonly steamService: SteamService
+    private readonly steamService: SteamService,
   ) {}
 
   async get(steamId64: string): Promise<SteamPlayerWithGames> {
@@ -23,7 +23,7 @@ export class SteamPlayerManager {
       throw new Error(`Steam player ${steamId64} not found`);
     }
     const ownedGameIds = await this.steamService.getPlayerOwnedGameIds(
-      steamId64
+      steamId64,
     );
     const ownedGames = ownedGameIds
       ? await this.steamGameManager.getMany(ownedGameIds)
@@ -43,18 +43,18 @@ export class SteamPlayerManager {
             ? {
                 player,
                 ownedGameIds: await this.steamService.getPlayerOwnedGameIds(
-                  player.id
+                  player.id,
                 ),
               }
             : undefined;
-        })
-      )
+        }),
+      ),
     );
     if (players.length !== steamIds64.length) {
       throw new Error("Some steam players could not be found");
     }
     const ownedGames = await this.steamGameManager.getMany(
-      players.flatMap((p) => p.ownedGameIds ?? [])
+      players.flatMap((p) => p.ownedGameIds ?? []),
     );
     return players.map(({ player, ownedGameIds }) => ({
       player,
@@ -68,10 +68,10 @@ export class SteamPlayerManager {
     return Promise.all(
       identifiers.map(async (identifier) => {
         const steamId = await this.steamService.getSteamId64FromUsername(
-          identifier
+          identifier,
         );
         return steamId ?? identifier;
-      })
+      }),
     );
   }
 }

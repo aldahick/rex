@@ -23,14 +23,14 @@ export class MediaResolver {
     private readonly mediaManager: MediaManager,
     private readonly progressManager: ProgressManager,
     private readonly progressResolver: ProgressResolver,
-    private readonly userManager: UserManager
+    private readonly userManager: UserManager,
   ) {}
 
   @resolveQuery()
   async mediaItems(
     root: never,
     { dir }: IQueryMediaItemsArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IQuery["mediaItems"]> {
     const user = await this.fetchUser(context);
     return this.mediaManager.list(user, dir);
@@ -40,7 +40,7 @@ export class MediaResolver {
   async addMediaDownload(
     root: never,
     { url, destinationKey }: IMutationAddMediaDownloadArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["addMediaDownload"]> {
     const user = await this.fetchUser(context);
     const progress = await this.progressManager.create("addMediaDownload");
@@ -51,7 +51,7 @@ export class MediaResolver {
         url,
         destinationKey,
         progressId: progress.id,
-      })
+      }),
     );
     return this.progressResolver.makeGql(progress);
   }
@@ -60,7 +60,7 @@ export class MediaResolver {
   async createMedia(
     root: never,
     { key, data }: IMutationCreateMediaArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["createMedia"]> {
     const user = await this.fetchUser(context);
     await this.mediaManager.create({ user, key, data });
@@ -71,7 +71,7 @@ export class MediaResolver {
   async createMediaUpload(
     root: never,
     { key }: IMutationCreateMediaUploadArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["createMediaUpload"]> {
     // enforce auth
     await this.fetchUser(context);
@@ -80,7 +80,7 @@ export class MediaResolver {
   }
 
   private async fetchUser(
-    context: RexContext
+    context: RexContext,
   ): Promise<Pick<UserModel, "id" | "email">> {
     if (
       !context.userId ||

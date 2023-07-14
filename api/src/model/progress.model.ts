@@ -11,7 +11,7 @@ export class ProgressTable extends BaseTable {
     createdAt: t.timestamp(),
     status: t.enum(
       "progress_status",
-      Object.values(IProgressStatus) as [IProgressStatus, ...IProgressStatus[]]
+      Object.values(IProgressStatus) as [IProgressStatus, ...IProgressStatus[]],
     ),
   }));
   relations = {

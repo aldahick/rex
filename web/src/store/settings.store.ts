@@ -19,7 +19,7 @@ export class SettingsStore {
   constructor() {
     this.settings =
       (JSON.parse(
-        localStorage.getItem(SETTINGS_KEY) ?? "null"
+        localStorage.getItem(SETTINGS_KEY) ?? "null",
       ) as Settings | null) ?? DEFAULT_SETTINGS;
     makeAutoObservable(this);
   }

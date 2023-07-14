@@ -22,5 +22,5 @@ export const change = rakeDb(
     migrationsPath: "../migrations",
     useCodeUpdater: false,
     import: (path) => import(pathToFileURL(resolvePath(path)).toString()),
-  }
+  },
 );

@@ -5,7 +5,7 @@ import { change } from "../util/orchid.js";
 change(async (db) => {
   await db.createEnum(
     "transcription_status",
-    Object.values(ITranscriptionStatus) as [ITranscriptionStatus]
+    Object.values(ITranscriptionStatus) as [ITranscriptionStatus],
   );
   await db.createTable("transcriptions", (t) => ({
     id: t.uuid().primaryKey(),

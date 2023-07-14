@@ -75,5 +75,5 @@ export const CatSettingsForm: React.FC<CatSettingsProps> = observer(
         />
       </div>
     );
-  }
+  },
 );

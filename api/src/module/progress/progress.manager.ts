@@ -31,13 +31,13 @@ export class ProgressManager {
   async addLogs(
     id: string,
     logs: string | string[],
-    status?: IProgressStatus
+    status?: IProgressStatus,
   ): Promise<void> {
     await this.db.progressLogs.createMany(
       (logs instanceof Array ? logs : [logs]).map((text) => ({
         text,
         createdAt: new Date(),
-      }))
+      })),
     );
     if (status) {
       await this.db.progress.where({ id }).update({ status });
@@ -49,7 +49,7 @@ export class ProgressManager {
       const errorMessage = err instanceof Error ? err.message : (err as string);
       await this.addLogs(
         progressId,
-        `An unexpected error occurred: ${errorMessage}`
+        `An unexpected error occurred: ${errorMessage}`,
       );
     });
   }

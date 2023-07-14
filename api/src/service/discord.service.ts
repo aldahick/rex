@@ -13,7 +13,7 @@ export interface DiscordCommand {
   handle(
     message: Message,
     args: string[],
-    command: string
+    command: string,
   ): Promise<void | undefined | string>;
 }
 export const discordCommand = makeRegistryDecorator(commandToken);
@@ -36,7 +36,7 @@ export class DiscordService {
   constructor(
     private readonly config: RexConfig,
     private readonly logger: Logger,
-    @injectAll(commandToken) commands: DiscordCommand[]
+    @injectAll(commandToken) commands: DiscordCommand[],
   ) {
     for (const handler of commands) {
       const commands = Array.isArray(handler.command)
@@ -94,7 +94,7 @@ export class DiscordService {
       })
       .catch(async (err) => {
         this.logger.error(
-          `uncaught error in discord command ${command}: ${err}`
+          `uncaught error in discord command ${command}: ${err}`,
         );
         await message.reply("sorry, an internal error occurred");
       });

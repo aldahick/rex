@@ -17,7 +17,7 @@ export class PlayersCommand implements DiscordCommand {
   async handle(
     message: Message<boolean>,
     args: string[],
-    command: string
+    command: string,
   ): Promise<string | undefined> {
     const [serverUrl] = args;
     if (!serverUrl) {
@@ -46,7 +46,7 @@ export class PlayersCommand implements DiscordCommand {
     const names = players
       .map((p) => p.name ?? "")
       .sort((a, b) =>
-        a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+        a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()),
       )
       .filter((n) => !!n.trim());
     const playersText = pluralize("player", names.length);

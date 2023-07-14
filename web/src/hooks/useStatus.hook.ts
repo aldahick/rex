@@ -18,7 +18,7 @@ class Status {
       err instanceof Error ? err.message : (err as string),
       {
         variant: "error",
-      }
+      },
     );
     return null;
   };

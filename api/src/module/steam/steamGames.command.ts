@@ -20,19 +20,19 @@ export class SteamGamesCommand implements DiscordCommand {
   constructor(
     private readonly hastebinService: HastebinService,
     private readonly logger: Logger,
-    private readonly steamPlayerManager: SteamPlayerManager
+    private readonly steamPlayerManager: SteamPlayerManager,
   ) {}
 
   async handle(
     message: Message,
     identifiers: string[],
-    command: string
+    command: string,
   ): Promise<string | undefined> {
     if (!identifiers.length) {
       return `Usage: ${command} <steam usernames or ids...>`;
     }
     const steamIds = await this.steamPlayerManager.resolveUsernames(
-      identifiers
+      identifiers,
     );
     let players: SteamPlayerWithGames[];
     const res = await message.reply("Gimme a second to think about it...");
@@ -45,7 +45,7 @@ export class SteamGamesCommand implements DiscordCommand {
           `
 An error occurred: ${err.message}
 You may have given a bad user ID - make sure to use your steam ID (if your profile URL is https://steamcommunity.com/id/tiin57, give me "tiin57")
-`.trim()
+`.trim(),
         );
       }
       return;
@@ -66,7 +66,7 @@ You may have given a bad user ID - make sure to use your steam ID (if your profi
     }
     const body = compact(commonGameNames)
       .sort((a, b) =>
-        a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+        a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()),
       )
       .map((name) => `* ${name}`)
       .join("\n");
@@ -84,7 +84,7 @@ You may have given a bad user ID - make sure to use your steam ID (if your profi
           ? `Some of them have their profiles set to private: ${noGamePlayerNames}`
           : ""
       }
-`.trim()
+`.trim(),
     );
   }
 }

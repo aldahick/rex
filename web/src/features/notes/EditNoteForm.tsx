@@ -27,7 +27,7 @@ export const EditNoteForm: React.FC<{
         length: 256,
       },
       false,
-      [usage]
+      [usage],
     );
 
   const isCryptoSupported = () =>
@@ -49,8 +49,8 @@ export const EditNoteForm: React.FC<{
           iv,
         },
         await encodedKey(iv, "encrypt"),
-        new TextEncoder().encode(body)
-      )
+        new TextEncoder().encode(body),
+      ),
     );
     return JSON.stringify({
       iv: Array.from(iv),
@@ -83,7 +83,7 @@ export const EditNoteForm: React.FC<{
             iv,
           },
           await encodedKey(iv, "decrypt"),
-          encrypted
+          encrypted,
         )
         .then((d) => new TextDecoder().decode(d));
     } catch (err) {

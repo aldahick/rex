@@ -7,7 +7,7 @@ import { change } from "../util/orchid.js";
 change(async (db) => {
   await db.createEnum(
     "progress_status",
-    Object.values(IProgressStatus) as [IProgressStatus, ...IProgressStatus[]]
+    Object.values(IProgressStatus) as [IProgressStatus, ...IProgressStatus[]],
   );
   await db.createTable("steam_games", (t) => ({
     id: t.integer().primaryKey(),

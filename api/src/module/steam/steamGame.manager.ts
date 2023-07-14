@@ -14,7 +14,7 @@ export class SteamGameManager {
   constructor(
     private readonly db: DatabaseService,
     private readonly progressManager: ProgressManager,
-    private readonly steamService: SteamService
+    private readonly steamService: SteamService,
   ) {}
 
   async getMany(ids: number[]): Promise<SteamGameModel[]> {
@@ -25,7 +25,7 @@ export class SteamGameManager {
     await this.progressManager.addLogs(
       progressId,
       "Deleting all previous games...",
-      IProgressStatus.InProgress
+      IProgressStatus.InProgress,
     );
     await this.db.steamGames.where().delete();
     await this.progressManager.addLogs(progressId, "Fetching games...");
@@ -33,25 +33,25 @@ export class SteamGameManager {
     for (const gameChunk of chunk(allGames, FETCH_CHUNK_SIZE)) {
       await this.progressManager.addLogs(
         progressId,
-        `Saving game chunk, #${gameChunk.length} of ${allGames.length} total`
+        `Saving game chunk, #${gameChunk.length} of ${allGames.length} total`,
       );
       await this.db.steamGames.createMany(
         gameChunk.map((game) => ({
           id: game.id,
           name: game.name,
-        }))
+        })),
       );
     }
     await this.progressManager.addLogs(
       progressId,
       `Finished inserting ${allGames.length} games.`,
-      IProgressStatus.Complete
+      IProgressStatus.Complete,
     );
   }
 
   async search(
     text: string,
-    { offset, limit }: { offset: number; limit: number }
+    { offset, limit }: { offset: number; limit: number },
   ): Promise<SteamGameModel[]> {
     return this.db.steamGames
       .where({

@@ -15,7 +15,7 @@ export class RexContext {
   constructor(
     private readonly userManager: UserManager,
     readonly token?: string,
-    readonly userId?: string
+    readonly userId?: string,
   ) {}
 
   async isAuthorized(permission: IAuthPermission): Promise<boolean> {
@@ -34,7 +34,7 @@ export class RexContext {
 export class AuthContextGenerator implements ContextGenerator {
   constructor(
     private readonly authManager: AuthManager,
-    private readonly userManager: UserManager
+    private readonly userManager: UserManager,
   ) {}
 
   async generateContext({ headers }: ContextRequest): Promise<RexContext> {

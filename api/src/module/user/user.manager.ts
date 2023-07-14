@@ -10,7 +10,7 @@ import { AuthManager } from "../auth/auth.manager.js";
 export class UserManager {
   constructor(
     private readonly authManager: AuthManager,
-    private readonly db: DatabaseService
+    private readonly db: DatabaseService,
   ) {}
 
   async exists(id: string): Promise<boolean> {
@@ -73,7 +73,7 @@ export class UserManager {
    * @returns key: user ID
    */
   async fetchRolesByUsers(
-    userIds: string[]
+    userIds: string[],
   ): Promise<Map<string, RoleModel[]>> {
     const userRoles = await this.db.userRoles
       .join("role")

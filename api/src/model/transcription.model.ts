@@ -17,8 +17,8 @@ export class TranscriptionTable extends BaseTable {
       "transcription_status",
       Object.values(ITranscriptionStatus) as [
         ITranscriptionStatus,
-        ...ITranscriptionStatus[]
-      ]
+        ...ITranscriptionStatus[],
+      ],
     ),
   }));
   relations = {

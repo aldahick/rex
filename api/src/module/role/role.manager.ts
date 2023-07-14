@@ -37,7 +37,7 @@ export class RoleManager {
 
   async updatePermissions(
     roleId: string,
-    permissions: IAuthPermission[]
+    permissions: IAuthPermission[],
   ): Promise<void> {
     await this.db.roles.find(roleId).update({ permissions });
   }

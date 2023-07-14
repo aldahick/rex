@@ -38,7 +38,7 @@ export class SteamService {
         new URLSearchParams({
           key: this.apiKey,
           steamids: steamId64,
-        }).toString()
+        }).toString(),
     );
     if (players.length === 0) {
       throw new Error(`no players found for steamid="${steamId64}"`);
@@ -56,7 +56,7 @@ export class SteamService {
   }
 
   async getPlayerOwnedGameIds(
-    steamId64: string
+    steamId64: string,
   ): Promise<number[] | undefined> {
     const url = resolveUrl(BASE_URL, "/IPlayerService/GetOwnedGames/v0001/?");
     const {
@@ -68,13 +68,13 @@ export class SteamService {
         new URLSearchParams({
           key: this.apiKey,
           steamid: steamId64,
-        }).toString()
+        }).toString(),
     );
     return games?.map(({ appid }) => appid);
   }
 
   async getSteamId64FromUsername(
-    username: string
+    username: string,
   ): Promise<string | undefined> {
     const url = resolveUrl(BASE_URL, "/ISteamUser/ResolveVanityURL/v0001/?");
     const {
@@ -86,7 +86,7 @@ export class SteamService {
         new URLSearchParams({
           key: this.apiKey,
           vanityurl: username,
-        }).toString()
+        }).toString(),
     );
     return steamid;
   }

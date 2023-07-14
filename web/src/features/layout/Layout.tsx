@@ -60,5 +60,5 @@ export const Layout: React.FC<React.PropsWithChildren> = observer(
         </ThemeProvider>
       </ApolloProvider>
     );
-  }
+  },
 );

@@ -18,7 +18,7 @@ export class ProgressResolver {
   async progress(
     root: unknown,
     { id }: IQueryProgressArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IQuery["progress"]> {
     if (!context.userId) {
       throw new Error("Forbidden");
@@ -30,7 +30,7 @@ export class ProgressResolver {
   @resolveQuery()
   async progresses(
     root: unknown,
-    { ids }: IQueryProgressesArgs
+    { ids }: IQueryProgressesArgs,
   ): Promise<IQuery["progresses"]> {
     const progresses = await this.progressManager.fetchMany(ids);
     return progresses.map((p) => this.makeGql(p));

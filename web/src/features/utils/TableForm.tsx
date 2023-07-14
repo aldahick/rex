@@ -60,13 +60,13 @@ export const TableForm = <Key extends string>({
     setRows(() => {
       const missingColumns = Object.entries<TableFormColumn>(columns).filter(
         ([key, { isOptional = false }]) =>
-          !isOptional && newRow[key as Key] !== undefined
+          !isOptional && newRow[key as Key] !== undefined,
       );
       if (missingColumns.length > 0) {
         status.error(
           `Missing required fields: ${missingColumns
             .map(([key]) => key)
-            .join(", ")}`
+            .join(", ")}`,
         );
         return rows;
       }

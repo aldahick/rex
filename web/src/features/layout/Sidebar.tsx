@@ -57,7 +57,7 @@ export const Sidebar: React.FC = observer(() => {
               .filter(
                 ({ permissions }) =>
                   !permissions ||
-                  permissions.every((p) => authStore.isAuthorized(p))
+                  permissions.every((p) => authStore.isAuthorized(p)),
               )
               .map((page) => (
                 <SidebarItem

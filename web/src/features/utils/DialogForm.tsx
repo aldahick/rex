@@ -47,7 +47,7 @@ export const DialogForm = <FieldKey extends string>({
     Object.entries<FieldDefinition>(fields).map(([key, { initialValue }]) => [
       key,
       initialValue ?? "",
-    ])
+    ]),
   ) as unknown as { [key in FieldKey]: string };
   const [fieldValues, setFieldValues] =
     useState<{ [key in FieldKey]: string }>(initialFieldValues);
@@ -65,7 +65,7 @@ export const DialogForm = <FieldKey extends string>({
     ).filter(([fieldKey]) => fieldValues[fieldKey].length === 0);
     if (missingFields.length > 0) {
       const labels = missingFields.map(
-        ([fieldKey, { label }]) => label ?? startCase(fieldKey)
+        ([fieldKey, { label }]) => label ?? startCase(fieldKey),
       );
       return status.error(`Missing field values: ${labels.join(", ")}`);
     }
@@ -102,7 +102,7 @@ export const DialogForm = <FieldKey extends string>({
                 <Grid item key={fieldKey}>
                   {render ? (
                     render(fieldValues[fieldKey], (value: string) =>
-                      onFieldChange(fieldKey, value)
+                      onFieldChange(fieldKey, value),
                     )
                   ) : (
                     <TextField
@@ -116,7 +116,7 @@ export const DialogForm = <FieldKey extends string>({
                     />
                   )}
                 </Grid>
-              )
+              ),
             )}
           </Grid>
         </DialogContent>

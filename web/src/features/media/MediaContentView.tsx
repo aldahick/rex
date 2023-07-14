@@ -68,5 +68,5 @@ export const MediaContentView: React.FC<MediaContentViewProps> = observer(
       default:
         return <Typography>Unknown MIME type {mimeType}</Typography>;
     }
-  }
+  },
 );

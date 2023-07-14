@@ -12,7 +12,7 @@ export class HelpCommand implements DiscordCommand {
 
   constructor(
     private readonly config: RexConfig,
-    private readonly discordService: DiscordService
+    private readonly discordService: DiscordService,
   ) {}
 
   async handle(): Promise<string> {
@@ -27,9 +27,9 @@ export class HelpCommand implements DiscordCommand {
         ({ command, helpText }) =>
           `${(command instanceof Array ? command : [command])
             .map(
-              (command) => `\`${this.config.discord.commandPrefix}${command}\``
+              (command) => `\`${this.config.discord.commandPrefix}${command}\``,
             )
-            .join(", ")}: ${helpText}`
+            .join(", ")}: ${helpText}`,
       )
       .join("\n")}`;
   }

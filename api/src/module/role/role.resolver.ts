@@ -22,7 +22,7 @@ export class RoleResolver {
   async roles(
     root: never,
     args: never,
-    context: RexContext
+    context: RexContext,
   ): Promise<IQuery["roles"]> {
     if (!context.userId) {
       throw new Error("Forbidden");
@@ -35,7 +35,7 @@ export class RoleResolver {
   async createRole(
     root: unknown,
     { name }: IMutationCreateRoleArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["createRole"]> {
     if (!(await context.isAuthorized(IAuthPermission.AdminRoles))) {
       throw new Error("Forbidden");
@@ -48,7 +48,7 @@ export class RoleResolver {
   async deleteRole(
     root: unknown,
     { id }: IMutationDeleteRoleArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["deleteRole"]> {
     if (!(await context.isAuthorized(IAuthPermission.AdminRoles))) {
       throw new Error("Forbidden");
@@ -61,7 +61,7 @@ export class RoleResolver {
   async updateRole(
     root: unknown,
     { id, name }: IMutationUpdateRoleArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["updateRole"]> {
     if (!(await context.isAuthorized(IAuthPermission.AdminRoles))) {
       throw new Error("Forbidden");
@@ -74,7 +74,7 @@ export class RoleResolver {
   async updateRolePermissions(
     root: unknown,
     { id, permissions }: IMutationUpdateRolePermissionsArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["updateRolePermissions"]> {
     if (!(await context.isAuthorized(IAuthPermission.AdminRoles))) {
       throw new Error("Forbidden");

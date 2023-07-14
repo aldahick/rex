@@ -32,17 +32,17 @@ export class AuthResolver {
     private readonly db: DatabaseService,
     private readonly googleAuthService: GoogleAuthService,
     private readonly userManager: UserManager,
-    private readonly userResolver: UserResolver
+    private readonly userResolver: UserResolver,
   ) {}
 
   @resolveMutation()
   async createAuthTokenGoogle(
     root: never,
-    { googleIdToken, clientType }: IMutationCreateAuthTokenGoogleArgs
+    { googleIdToken, clientType }: IMutationCreateAuthTokenGoogleArgs,
   ): Promise<IMutation["createAuthTokenGoogle"]> {
     const googlePayload = await this.googleAuthService.getIdTokenPayload(
       googleIdToken,
-      this.config.googleAuth.clientIds[clientIdsByType[clientType]]
+      this.config.googleAuth.clientIds[clientIdsByType[clientType]],
     );
     if (!googlePayload) {
       throw new Error("Invalid Google token");
@@ -57,7 +57,7 @@ export class AuthResolver {
   @resolveMutation()
   async createAuthTokenLocal(
     root: never,
-    { username, password }: IMutationCreateAuthTokenLocalArgs
+    { username, password }: IMutationCreateAuthTokenLocalArgs,
   ): Promise<IMutation["createAuthTokenLocal"]> {
     const [user] = await this.userManager
       .whereEmailOrUsername(username)
@@ -67,7 +67,7 @@ export class AuthResolver {
     }
     const isValid = await this.authManager.comparePassword(
       password,
-      user.passwordHash
+      user.passwordHash,
     );
     if (!isValid) {
       throw new Error("Invalid username/email or password");
@@ -79,7 +79,7 @@ export class AuthResolver {
   async createAuthToken(
     root: never,
     { userId }: IMutationCreateAuthTokenArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["createAuthToken"]> {
     if (!(await context.isAuthorized(IAuthPermission.AdminUsers))) {
       throw new Error("Forbidden");

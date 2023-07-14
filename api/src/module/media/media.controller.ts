@@ -19,14 +19,14 @@ const HTTP_PARTIAL_CODE = 206;
 export class MediaController {
   constructor(
     private readonly mediaManager: MediaManager,
-    private readonly userManager: UserManager
+    private readonly userManager: UserManager,
   ) {}
 
   @get("/v1/media/content")
   async getContent(
     req: HttpRequest,
     res: HttpResponse,
-    context: RexContext
+    context: RexContext,
   ): Promise<void> {
     const { key } = req.query as Record<string, string>;
     if (typeof key !== "string") {
@@ -54,7 +54,7 @@ export class MediaController {
   async uploadContent(
     req: HttpRequest,
     res: HttpResponse,
-    context: RexContext
+    context: RexContext,
   ): Promise<{ ok: boolean }> {
     const { key } = req.query as Record<string, string>;
     if (typeof key !== "string") {
@@ -75,7 +75,7 @@ export class MediaController {
     req: HttpRequest,
     res: HttpResponse,
     user: Pick<UserModel, "email">,
-    key: string
+    key: string,
   ): Promise<{ start: number; end?: number }> {
     const mimeType = mime.getType(key) ?? "text/plain";
     let start = 0;
@@ -109,7 +109,7 @@ export class MediaController {
    */
   async can(
     context: RexContext,
-    permission = IAuthPermission.Media
+    permission = IAuthPermission.Media,
   ): Promise<string | undefined> {
     return context.userId && (await context.isAuthorized(permission))
       ? context.userId

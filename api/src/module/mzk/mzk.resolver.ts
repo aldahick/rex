@@ -21,7 +21,7 @@ export class MzkResolver {
   async startTranscription(
     root: never,
     { mediaKey }: IMutationStartTranscriptionArgs,
-    context: RexContext
+    context: RexContext,
   ): Promise<IMutation["startTranscription"]> {
     const userId = await this.can(context);
     if (!userId) {
@@ -31,7 +31,7 @@ export class MzkResolver {
     const transcription = await this.mzkManager.create(
       userId,
       mediaKey,
-      filename
+      filename,
     );
     await this.mzkManager.start(transcription);
     return this.makeGql(await this.mzkManager.fetchOne(transcription.id));
@@ -41,7 +41,7 @@ export class MzkResolver {
   async transcriptions(
     root: never,
     args: never,
-    context: RexContext
+    context: RexContext,
   ): Promise<IQuery["transcriptions"]> {
     const userId = await this.can(context);
     if (!userId) {

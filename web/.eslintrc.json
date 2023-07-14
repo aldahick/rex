@@ -20,7 +20,7 @@
     "node": true,
     "jest": true
   },
-  "ignorePatterns": ["*.js", "src/types/graphql.ts", "vite.config.ts"],
+  "ignorePatterns": ["*.js", "src/graphql.ts", "vite.config.ts"],
   "settings": {
     "react": {
       "version": "detect"
