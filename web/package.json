@@ -69,5 +69,12 @@
     "prettier": "^3.0.0",
     "typescript": "^5.1.6",
     "vite": "^4.4.4"
+  },
+  "pnpm": {
+    "auditConfig": {
+      "ignoreCves": [
+        "CVE-2022-25883"
+      ]
+    }
   }
 }
