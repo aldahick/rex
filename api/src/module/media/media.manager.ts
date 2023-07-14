@@ -95,7 +95,13 @@ export class MediaManager {
     dir: string
   ): Promise<IMediaItem[]> {
     const baseDir = this.toFilename(user, dir);
-    const files = (await fs.readdir(baseDir)).filter((f) => !f.startsWith("."));
+    let files: string[];
+    try {
+      files = (await fs.readdir(baseDir)).filter((f) => !f.startsWith("."));
+    } catch {
+      await fs.mkdir(baseDir, { recursive: true });
+      return [];
+    }
     return Promise.all(
       files.map(async (filename) => {
         const stats = await fs.stat(path.resolve(baseDir, filename));
@@ -109,6 +115,7 @@ export class MediaManager {
             : IMediaItemType.Directory;
         }
         const [key = ""] = filename.split("/").slice(-1);
+        console.log(filename, key);
         return {
           key,
           type,
