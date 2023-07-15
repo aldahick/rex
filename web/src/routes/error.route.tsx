@@ -37,6 +37,11 @@ export const ErrorRoute: React.FC = () => {
       </Layout>
     );
   }
+  const isDark = document.body.style.background === "rgb(18, 18, 18)";
 
-  return <div>An unexpected error occurred: {message}</div>;
+  return (
+    <div style={{ color: isDark ? "orange" : "red" }}>
+      An unexpected error occurred: {message}
+    </div>
+  );
 };

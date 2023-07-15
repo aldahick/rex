@@ -10,7 +10,7 @@ export interface Settings {
 
 const SETTINGS_KEY = "rex.settings";
 const DEFAULT_SETTINGS: Settings = {
-  theme: ThemeSetting.Light,
+  theme: ThemeSetting.Dark,
 };
 
 export class SettingsStore {

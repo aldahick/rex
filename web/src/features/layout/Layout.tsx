@@ -5,15 +5,13 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 } from "@apollo/client";
-import { Grid, Toolbar } from "@mui/material";
+import { Grid } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { SnackbarProvider } from "notistack";
 import React, { useEffect, useState } from "react";
 
 import { config } from "../../config";
 import { useStores } from "../../hooks";
-import { Navbar } from "./Navbar";
-import { Sidebar } from "./Sidebar";
 import { ThemeProvider } from "./ThemeProvider";
 
 const makeClient = (token: string | undefined) =>
@@ -48,11 +46,8 @@ export const Layout: React.FC<React.PropsWithChildren> = observer(
       <ApolloProvider client={client}>
         <ThemeProvider>
           <SnackbarProvider>
-            <Navbar />
-            <Sidebar />
             <Grid container justifyContent="center">
-              <Toolbar />
-              <Grid item width="100%" style={{ marginTop: "2em" }}>
+              <Grid item width="100%">
                 {children}
               </Grid>
             </Grid>
@@ -60,5 +55,5 @@ export const Layout: React.FC<React.PropsWithChildren> = observer(
         </ThemeProvider>
       </ApolloProvider>
     );
-  },
+  }
 );

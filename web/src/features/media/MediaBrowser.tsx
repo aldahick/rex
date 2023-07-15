@@ -12,7 +12,7 @@ import { FileTreeEntry, getDirAt } from "./FileTree";
 
 const mediaItemToEntry = (
   { key, type }: IMediaItem,
-  dir: string
+  dir: string,
 ): FileTreeEntry => ({
   fetched: type === IMediaItemType.File,
   type: type === IMediaItemType.File ? "file" : "directory",

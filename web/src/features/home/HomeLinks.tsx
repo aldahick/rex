@@ -1,17 +1,166 @@
+import MapIcon from "@mui/icons-material/Map";
+import PublicIcon from "@mui/icons-material/Public";
+import { Grid, Link, Typography, useTheme } from "@mui/material";
 import React from "react";
+import { Link as RouterLink } from "react-router-dom";
 
+import githubDarkLogoUrl from "../../images/logos/github-dark.png";
+import githubLightLogoUrl from "../../images/logos/github-light.png";
+import linkedInLogoUrl from "../../images/logos/linkedin.png";
+import stravaLogoUrl from "../../images/logos/strava.svg";
 import { HexSelect } from "../utils/HexSelect";
+import { SocialBadge } from "../utils/SocialBadge";
 
-export const HomeLinks: React.FC = () => {
+const BLUE = "rgba(0, 87, 183, 0.5)";
+const YELLOW = "rgba(255, 221, 0, 0.5)";
+
+const repositories = [
+  { icon: PublicIcon, repo: "rex" },
+  { icon: MapIcon, repo: "mapgame" },
+];
+
+export interface HomeLinksProps {
+  primaryBackground?: string;
+  secondaryBackground?: string;
+}
+
+export const HomeLinks: React.FC<HomeLinksProps> = ({
+  primaryBackground = BLUE,
+  secondaryBackground = YELLOW,
+}) => {
+  const theme = useTheme();
   return (
-    <HexSelect>
+    <HexSelect center>
       {{
-        topLeft: () => <div style={{ backgroundColor: "green" }} />,
-        topCenter: () => <div style={{ backgroundColor: "blue" }} />,
-        topRight: () => <div style={{ backgroundColor: "purple" }} />,
-        bottomLeft: () => <div style={{ backgroundColor: "yellow" }} />,
-        bottomCenter: () => <div style={{ backgroundColor: "orange" }} />,
-        bottomRight: () => <div style={{ backgroundColor: "red" }} />,
+        topLeft: ({ style }) => (
+          <Grid
+            style={style}
+            container
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            sx={{
+              bgcolor: primaryBackground,
+              paddingTop: `calc(${style.minHeight} / 4)`,
+            }}
+          >
+            <SocialBadge
+              imageUrl={
+                theme.palette.mode === "dark"
+                  ? githubDarkLogoUrl
+                  : githubLightLogoUrl
+              }
+              url="https://github.com/aldahick"
+              label="@aldahick"
+              textColor="textPrimary"
+              imageProps={{ alt: "GitHub logo" }}
+            />
+            {repositories.map(({ repo, icon: Icon }) => (
+              <Grid key={repo} item sx={{ marginTop: "1em" }}>
+                <Link
+                  href={`https://github.com/aldahick/${repo}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Grid container alignContent="center">
+                    <Icon />
+                    <Typography component="span">&nbsp;{repo}</Typography>
+                  </Grid>
+                </Link>
+              </Grid>
+            ))}
+          </Grid>
+        ),
+        topCenter: ({ style }) => (
+          <Grid
+            style={style}
+            container
+            alignItems="center"
+            justifyContent="center"
+            sx={{ bgcolor: secondaryBackground }}
+          >
+            <Typography
+              textAlign="center"
+              variant="h1"
+              style={{ cursor: "default" }}
+            >
+              👋
+            </Typography>
+          </Grid>
+        ),
+        topRight: ({ style }) => (
+          <Grid
+            style={style}
+            container
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            sx={{
+              bgcolor: primaryBackground,
+              paddingTop: `calc(${style.minHeight} / 4)`,
+            }}
+          >
+            <SocialBadge
+              imageUrl={linkedInLogoUrl}
+              url="https://linkedin.com/in/aldahick"
+              label="@aldahick"
+              textColor="textPrimary"
+              imageProps={{ alt: "LinkedIn logo" }}
+            />
+            <div style={{ marginTop: "1em" }}>
+              <SocialBadge
+                imageUrl={stravaLogoUrl}
+                url="https://strava.com/athletes/aldahick"
+                label="@aldahick"
+                textColor="textPrimary"
+                imageProps={{ alt: "Strava logo" }}
+              />
+            </div>
+          </Grid>
+        ),
+        bottomLeft: ({ style }) => (
+          <Grid
+            style={style}
+            container
+            alignItems="center"
+            justifyContent="center"
+            sx={{ bgcolor: secondaryBackground }}
+          >
+            <Link
+              href="https://google.com/?q=local+library+hours"
+              style={{
+                textDecoration: "none",
+                cursor: "default",
+                color: "rgba(255, 221, 0, 0.04)",
+              }}
+            >
+              Put your eyes to better use
+            </Link>
+          </Grid>
+        ),
+        bottomCenter: ({ style }) => (
+          <Grid
+            style={style}
+            container
+            alignItems="center"
+            justifyContent="center"
+            sx={{
+              bgcolor: primaryBackground,
+              paddingTop: `calc(${style.minHeight} / 4)`,
+            }}
+          >
+            <Link
+              component={RouterLink}
+              to="/cat"
+              style={{ textDecoration: "none", textAlign: "center" }}
+            >
+              <Typography variant="h3">🐈</Typography>
+              <Typography>The cat game!</Typography>
+            </Link>
+          </Grid>
+        ),
+        bottomRight: ({ style }) => (
+          <div style={{ ...style, backgroundColor: secondaryBackground }} />
+        ),
       }}
     </HexSelect>
   );

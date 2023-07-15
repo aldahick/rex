@@ -1,18 +1,27 @@
 import { Grid, Link, Typography, TypographyProps } from "@mui/material";
 import React from "react";
 
-export const SocialBadge: React.FC<{
+export interface SocialBadgeProps {
   label?: React.ReactNode;
   imageUrl: string;
   url?: string;
   imageProps?: Partial<React.ImgHTMLAttributes<HTMLImageElement>>;
   textColor?: TypographyProps["color"];
   size?: number;
-}> = ({ label, imageUrl, url, imageProps, textColor, size }) => (
+}
+
+export const SocialBadge: React.FC<SocialBadgeProps> = ({
+  label,
+  imageUrl,
+  url,
+  imageProps,
+  textColor,
+  size,
+}) => (
   <Link href={url}>
     <Grid container alignItems="center" direction="column">
       <Grid item>
-        <img src={imageUrl} height={size ?? 32} alt="Logo" {...imageProps} />
+        <img src={imageUrl} height={size ?? 32} {...imageProps} />
       </Grid>
       {typeof label === "string" ? (
         <Grid item>
