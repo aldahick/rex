@@ -39,8 +39,8 @@ dependencies:
     specifier: ^3.0.0
     version: 3.0.0
   orchid-orm:
-    specifier: ^1.13.2
-    version: 1.13.2(typescript@5.1.6)
+    specifier: ^1.13.6
+    version: 1.13.6(typescript@5.1.6)
   pg:
     specifier: ^8.11.1
     version: 8.11.1
@@ -48,8 +48,8 @@ dependencies:
     specifier: ^8.0.0
     version: 8.0.0
   pqb:
-    specifier: ^0.15.2
-    version: 0.15.2
+    specifier: ^0.16.3
+    version: 0.16.3
   reflect-metadata:
     specifier: ^0.1.13
     version: 0.1.13
@@ -5252,23 +5252,18 @@ packages:
       wcwidth: 1.0.1
     dev: true
 
-  /orchid-core@0.7.1:
-    resolution: {integrity: sha512-oJZ5VblgIzbWYMAMRyFQcyksO5VTQYZPwrNjvALhHdaFYChbt2mkiBJFPTC/jcb+br4nxndN0NyDMdP30kUCzg==}
-    dev: false
-
   /orchid-core@0.8.2:
     resolution: {integrity: sha512-8rPBMIqfApfvmeX/GopLSb4u8jyEu5onPeZ0E6jhjan/IAh356xVWBV8+nz3yiwrGGIkdd18eWPnx0n4w4xqwg==}
-    dev: true
 
-  /orchid-orm@1.13.2(typescript@5.1.6):
-    resolution: {integrity: sha512-NbF3Ui7WKBluRXtftrMeDKFV01+7qobEEljThdHullK16iLC8LHjJp1lLBanUB7lJtHW/EN03oDaDQs2g3tC6A==}
+  /orchid-orm@1.13.6(typescript@5.1.6):
+    resolution: {integrity: sha512-sM8jdfUkCUK0t63JxUybEVMH/Tws9QYK9DgzZd0v8RAlGjfrhMWFzOMH+YgtOU8ykDx4UqFCFhRGGyirIGJd9A==}
     hasBin: true
     peerDependencies:
       typescript: '*'
     dependencies:
       inflection: 2.0.1
-      orchid-core: 0.7.1
-      pqb: 0.15.2
+      orchid-core: 0.8.2
+      pqb: 0.16.3
       prompts: 2.4.2
       typescript: 5.1.6
     transitivePeerDependencies:
@@ -5604,15 +5599,6 @@ packages:
     resolution: {integrity: sha512-VdlZoocy5lCP0c/t66xAfclglEapXPCIVhqqJRncYpvbCgImF0w67aPKfbqUMr72tO2k5q0TdTZwCLjPTI6C9g==}
     dev: true
 
-  /pqb@0.15.2:
-    resolution: {integrity: sha512-f0ItSUZ72bQxBB0kchJpOSVhxojQkmN2buwz1CiFKIjhaHBGtLYGplzQzbBTsvep+Tk/byDAAAfcr8fsjjIQ/g==}
-    dependencies:
-      orchid-core: 0.7.1
-      pg: 8.11.1
-    transitivePeerDependencies:
-      - pg-native
-    dev: false
-
   /pqb@0.16.3:
     resolution: {integrity: sha512-ALqlBB3k4OKuIhWBqE/B1zLSkzRPmVqMLAaLJUDgG9sQ9oZmLXMmm2C8fSBg/WFhcTN+QEKs/O1uHo8k4zPJag==}
     dependencies:
@@ -5620,7 +5606,6 @@ packages:
       pg: 8.11.1
     transitivePeerDependencies:
       - pg-native
-    dev: true
 
   /prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}

@@ -34,10 +34,10 @@
     "graphql": "^16.7.1",
     "jsonwebtoken": "^9.0.0",
     "mime": "^3.0.0",
-    "orchid-orm": "^1.13.2",
+    "orchid-orm": "^1.13.6",
     "pg": "^8.11.1",
     "pluralize": "^8.0.0",
-    "pqb": "^0.15.2",
+    "pqb": "^0.16.3",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {

@@ -14,7 +14,7 @@ export const CatRoute: React.FC = () => {
   });
 
   return (
-    <div>
+    <div style={{ marginTop: "1em" }}>
       <CatSettingsForm value={settings} onChange={setSettings} />
       <CatCanvas settings={settings} />
     </div>
