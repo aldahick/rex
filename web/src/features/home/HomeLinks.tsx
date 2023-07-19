@@ -10,6 +10,7 @@ import linkedInLogoUrl from "../../images/logos/linkedin.png";
 import stravaLogoUrl from "../../images/logos/strava.svg";
 import { HexSelect } from "../utils/HexSelect";
 import { SocialBadge } from "../utils/SocialBadge";
+import { AthenaIcon } from "./AthenaIcon";
 
 const BLUE = "rgba(0, 87, 183, 0.5)";
 const YELLOW = "rgba(255, 221, 0, 0.5)";
@@ -17,6 +18,7 @@ const YELLOW = "rgba(255, 221, 0, 0.5)";
 const repositories = [
   { icon: PublicIcon, repo: "rex" },
   { icon: MapIcon, repo: "mapgame" },
+  { icon: AthenaIcon, repo: "athena" },
 ];
 
 export interface HomeLinksProps {
@@ -30,7 +32,7 @@ export const HomeLinks: React.FC<HomeLinksProps> = ({
 }) => {
   const theme = useTheme();
   return (
-    <HexSelect center>
+    <HexSelect>
       {{
         topLeft: ({ style }) => (
           <Grid
@@ -41,7 +43,7 @@ export const HomeLinks: React.FC<HomeLinksProps> = ({
             justifyContent="center"
             sx={{
               bgcolor: primaryBackground,
-              paddingTop: `calc(${style.minHeight} / 4)`,
+              paddingTop: `calc(${style.minHeight} / 3)`,
             }}
           >
             <SocialBadge
