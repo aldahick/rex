@@ -14,9 +14,16 @@ export const CatCanvas: React.FC<CatCanvasProps> = ({ settings }) => {
   const [game, setGame] = useState<CatGame>();
 
   const handleRef = useCallback((canvas: HTMLCanvasElement) => {
-    const game = new CatGame(canvas, settings);
-    game.start();
-    setGame(game);
+    if (!canvas) {
+      if (game) {
+        game.stop();
+        setGame(undefined);
+      }
+      return;
+    }
+    const newGame = new CatGame(canvas, settings);
+    newGame.start();
+    setGame(newGame);
   }, []);
 
   useEffect(() => {
