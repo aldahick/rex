@@ -1,8 +1,15 @@
-import { Grid, Typography, useTheme } from "@mui/material";
+import { Grid, styled, Typography } from "@mui/material";
 import React, { useState } from "react";
 
 import { FileAddressBar } from "./FileAddressBar";
 import { FileTree, FileTreeEntry } from "./FileTree";
+
+const TitleBoxGrid = styled(Grid)(({ theme }) => ({
+  backgroundColor: theme.palette.grey[900],
+  borderTopLeftRadius: "50%",
+  borderTopRightRadius: "50%",
+  paddingTop: "1em",
+})) as typeof Grid;
 
 export interface FileBrowserProps {
   dir: string;
@@ -12,7 +19,6 @@ export interface FileBrowserProps {
 
 export const FileBrowser: React.FC<FileBrowserProps> = ({ root, onExpand }) => {
   const [currentDir, setCurrentDir] = useState("");
-  const theme = useTheme();
 
   const handleDirChange = (newDir: string) => {
     setCurrentDir(newDir);
@@ -22,22 +28,11 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({ root, onExpand }) => {
     <Grid container marginTop="1em">
       <Grid item xs={12}>
         <Grid container>
-          <Grid
-            item
-            xs={4}
-            md={3}
-            lg={2}
-            bgcolor={theme.palette.grey[900]}
-            sx={{
-              borderTopLeftRadius: "50%",
-              borderTopRightRadius: "50%",
-              paddingTop: "1em",
-            }}
-          >
+          <TitleBoxGrid item xs={4} md={3} lg={2}>
             <Typography variant="h5" textAlign="center">
               Rex Media
             </Typography>
-          </Grid>
+          </TitleBoxGrid>
           <Grid item flexGrow={1}>
             <FileAddressBar dir={currentDir} onChange={handleDirChange} />
           </Grid>
