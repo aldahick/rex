@@ -1,6 +1,6 @@
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
 import FolderIcon from "@mui/icons-material/Folder";
+import ExpandCloseIcon from "@mui/icons-material/KeyboardArrowDown";
+import ExpandOpenIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
   Collapse,
   List,
@@ -9,7 +9,7 @@ import {
   ListItemText,
   styled,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const CenteredListItemIcon = styled(ListItemIcon)({
   justifyContent: "center",
@@ -26,43 +26,66 @@ export interface FileTreeEntry {
 /**
  * Creates directory parents for path if none exist
  */
-export const getDirAt = (root: FileTreeEntry, path: string): FileTreeEntry => {
-  if (path === "") {
+export const getDirAt = (
+  root: FileTreeEntry,
+  fullDir: string,
+): FileTreeEntry => {
+  if (fullDir === "") {
     return root;
   }
-  const parts = path.split("/");
+  const parts = fullDir.split("/");
   let current = root;
-  for (const part of parts) {
-    let next = current.children.find((e) => e.path === part);
-    console.log({ current, part, next });
+  const prefix = root.path ? `${root.path}/` : "";
+  parts.forEach((part, index) => {
+    let next = current.children.find(
+      (e) => e.path === part || e.path?.endsWith("/" + part),
+    );
     if (!next) {
-      next = { type: "directory", children: [], fetched: false };
+      const path = prefix + parts.slice(0, index + 1).join("/");
+      next = { type: "directory", children: [], fetched: false, path };
       current.children.push(next);
     }
     current = next;
-  }
+  });
   return current;
 };
 
 export interface FileTreeProps {
+  dir: string;
   entry: FileTreeEntry;
+  onDirChange: (value: string) => void;
   onExpand: (value: string) => void;
 }
 
-export const FileTree: React.FC<FileTreeProps> = ({ entry, onExpand }) => {
+export const FileTree: React.FC<FileTreeProps> = ({
+  dir,
+  entry,
+  onDirChange,
+  onExpand,
+}) => {
   const [open, setOpen] = useState(!entry.path);
+
+  useEffect(() => {
+    if (entry.path && dir.startsWith(entry.path) && !entry.fetched) {
+      setOpen(true);
+      onExpand(entry.path);
+    }
+  }, [dir]);
 
   const dirChildren = entry.children.filter((c) => c.type === "directory");
 
   const handleExpand = () => {
-    if (!entry.path || (entry.fetched && !dirChildren.length)) {
+    if (!entry.path) {
       return;
     }
     setOpen((prev) => !prev);
+    if (entry.fetched && !dirChildren.length) {
+      return;
+    }
     onExpand(entry.path ?? "");
   };
 
-  const ExpandIcon = open ? ExpandMore : ExpandLess;
+  const ExpandIcon = open ? ExpandCloseIcon : ExpandOpenIcon;
   const label = entry.path?.split("/").slice(-1) ?? "Root";
 
   return (
@@ -70,8 +93,9 @@ export const FileTree: React.FC<FileTreeProps> = ({ entry, onExpand }) => {
       <ListItemButton
         sx={entry.path ? { pl: entry.path.split("/").length * 4 } : {}}
         onClick={handleExpand}
+        selected={dir === (entry.path ?? "")}
       >
-        {entry.children.length || !entry.fetched ? <ExpandIcon /> : null}
+        <ExpandIcon />
         <CenteredListItemIcon>
           <FolderIcon />
         </CenteredListItemIcon>
@@ -81,7 +105,13 @@ export const FileTree: React.FC<FileTreeProps> = ({ entry, onExpand }) => {
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {dirChildren.map((entry) => (
-              <FileTree key={entry.path} entry={entry} onExpand={onExpand} />
+              <FileTree
+                key={entry.path}
+                dir={dir}
+                entry={entry}
+                onDirChange={onDirChange}
+                onExpand={onExpand}
+              />
             ))}
           </List>
         </Collapse>

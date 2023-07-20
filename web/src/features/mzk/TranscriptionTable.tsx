@@ -1,7 +1,7 @@
 import DownloadIcon from "@mui/icons-material/Download";
 import { IconButton, TableCell, TableRow, Typography } from "@mui/material";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { useTranscriptionsQuery } from "../../graphql";
 import { useStatus } from "../../hooks";
@@ -9,7 +9,16 @@ import { Table } from "../utils/Table";
 
 export const TranscriptionTable: React.FC = () => {
   const transcriptionsRes = useTranscriptionsQuery();
+  const navigate = useNavigate();
   const status = useStatus();
+
+  useEffect(() => {
+    const count = transcriptionsRes.data?.transcriptions.length;
+    if (count === 0) {
+      status.warn("You haven't uploaded any recordings to transcribe!");
+      navigate("/media");
+    }
+  }, [transcriptionsRes]);
 
   if (transcriptionsRes.error) {
     return status.error(
@@ -20,15 +29,6 @@ export const TranscriptionTable: React.FC = () => {
   const transcriptions = transcriptionsRes.data?.transcriptions;
   if (!transcriptions) {
     return null;
-  }
-
-  if (!transcriptions.length) {
-    return (
-      <Typography textAlign="center">
-        You have no transcriptions! <Link to="/media">Upload media</Link> and
-        make some.
-      </Typography>
-    );
   }
 
   return (

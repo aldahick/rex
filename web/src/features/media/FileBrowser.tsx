@@ -1,6 +1,7 @@
-import { Grid } from "@mui/material";
-import React from "react";
+import { Grid, Typography, useTheme } from "@mui/material";
+import React, { useState } from "react";
 
+import { FileAddressBar } from "./FileAddressBar";
 import { FileTree, FileTreeEntry } from "./FileTree";
 
 export interface FileBrowserProps {
@@ -10,12 +11,49 @@ export interface FileBrowserProps {
 }
 
 export const FileBrowser: React.FC<FileBrowserProps> = ({ root, onExpand }) => {
+  const [currentDir, setCurrentDir] = useState("");
+  const theme = useTheme();
+
+  const handleDirChange = (newDir: string) => {
+    setCurrentDir(newDir);
+  };
+
   return (
-    <Grid container>
-      <Grid item xs={4} md={3} lg={2}>
-        <FileTree entry={root} onExpand={onExpand} />
+    <Grid container marginTop="1em">
+      <Grid item xs={12}>
+        <Grid container>
+          <Grid
+            item
+            xs={4}
+            md={3}
+            lg={2}
+            bgcolor={theme.palette.grey[900]}
+            sx={{
+              borderTopLeftRadius: "50%",
+              borderTopRightRadius: "50%",
+              paddingTop: "1em",
+            }}
+          >
+            <Typography variant="h5" textAlign="center">
+              Rex Media
+            </Typography>
+          </Grid>
+          <Grid item flexGrow={1}>
+            <FileAddressBar dir={currentDir} onChange={handleDirChange} />
+          </Grid>
+        </Grid>
       </Grid>
-      <Grid item flexGrow={1}></Grid>
+      <Grid item xs={12}>
+        <Grid item xs={4} md={3} lg={2}>
+          <FileTree
+            dir={currentDir}
+            entry={root}
+            onExpand={onExpand}
+            onDirChange={handleDirChange}
+          />
+        </Grid>
+        <Grid item flexGrow={1}></Grid>
+      </Grid>
     </Grid>
   );
 };

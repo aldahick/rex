@@ -37,16 +37,14 @@ export const MediaBrowser: React.FC = () => {
   const status = useStatus();
 
   const handleExpand = (newDir: string) => {
-    console.log("handle expand", newDir);
     setDir(newDir);
     fetchMediaItems({ variables: { dir: newDir } }).then((result) => {
       const mediaItems = result.data?.mediaItems;
-      console.log({ mediaItems });
       if (mediaItems) {
         const entry = getDirAt(root, newDir);
         entry.children = mediaItems.map((i) => mediaItemToEntry(i, newDir));
         entry.fetched = true;
-        console.log("new entry!", entry);
+        console.log(JSON.stringify(root, null, 2));
       } else if (result.error) {
         status.error(result.error);
       }

@@ -115,7 +115,6 @@ export class MediaManager {
             : IMediaItemType.Directory;
         }
         const [key = ""] = filename.split("/").slice(-1);
-        console.log(filename, key);
         return {
           key,
           type,
