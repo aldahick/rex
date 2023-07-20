@@ -8,7 +8,7 @@ import {
 } from "../../graphql";
 import { useStatus } from "../../hooks";
 import { FileBrowser } from "./FileBrowser";
-import { FileTreeEntry, getDirAt } from "./FileTree";
+import { FileTreeEntry, getDirAt } from "./FileTreeEntry";
 
 const mediaItemToEntry = (
   { key, type }: IMediaItem,
@@ -36,15 +36,14 @@ export const MediaBrowser: React.FC = () => {
   const [fetchMediaItems] = useMediaItemsLazyQuery();
   const status = useStatus();
 
-  const handleExpand = (newDir: string) => {
-    setDir(newDir);
+  const handleDirChange = (newDir: string) => {
     fetchMediaItems({ variables: { dir: newDir } }).then((result) => {
       const mediaItems = result.data?.mediaItems;
       if (mediaItems) {
-        const entry = getDirAt(root, newDir);
+        const entry = getDirAt(root, newDir, true);
         entry.children = mediaItems.map((i) => mediaItemToEntry(i, newDir));
         entry.fetched = true;
-        console.log(JSON.stringify(root, null, 2));
+        setDir(newDir);
       } else if (result.error) {
         status.error(result.error);
       }
@@ -52,8 +51,15 @@ export const MediaBrowser: React.FC = () => {
   };
 
   useEffect(() => {
-    handleExpand("");
+    handleDirChange("");
   }, []);
 
-  return <FileBrowser dir={dir} root={root} onExpand={handleExpand} />;
+  return (
+    <FileBrowser
+      dir={dir}
+      root={root}
+      onDirChange={handleDirChange}
+      onExpand={handleDirChange}
+    />
+  );
 };

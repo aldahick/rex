@@ -11,44 +11,11 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
+import { FileTreeEntry } from "./FileTreeEntry";
+
 const CenteredListItemIcon = styled(ListItemIcon)({
   justifyContent: "center",
 });
-
-export interface FileTreeEntry {
-  /** If undefined, this is the root entry. Does NOT start with "/" */
-  path?: string;
-  fetched: boolean;
-  type: "file" | "directory";
-  children: FileTreeEntry[];
-}
-
-/**
- * Creates directory parents for path if none exist
- */
-export const getDirAt = (
-  root: FileTreeEntry,
-  fullDir: string,
-): FileTreeEntry => {
-  if (fullDir === "") {
-    return root;
-  }
-  const parts = fullDir.split("/");
-  let current = root;
-  const prefix = root.path ? `${root.path}/` : "";
-  parts.forEach((part, index) => {
-    let next = current.children.find(
-      (e) => e.path === part || e.path?.endsWith("/" + part),
-    );
-    if (!next) {
-      const path = prefix + parts.slice(0, index + 1).join("/");
-      next = { type: "directory", children: [], fetched: false, path };
-      current.children.push(next);
-    }
-    current = next;
-  });
-  return current;
-};
 
 export interface FileTreeProps {
   dir: string;
@@ -85,21 +52,24 @@ export const FileTree: React.FC<FileTreeProps> = ({
     onExpand(entry.path ?? "");
   };
 
+  const handleTextClick = () => {
+    onDirChange(entry.path ?? "");
+  };
+
   const ExpandIcon = open ? ExpandCloseIcon : ExpandOpenIcon;
-  const label = entry.path?.split("/").slice(-1) ?? "Root";
+  const label = entry.path?.split("/").slice(-1)[0] ?? "Root";
 
   return (
     <>
       <ListItemButton
         sx={entry.path ? { pl: entry.path.split("/").length * 4 } : {}}
-        onClick={handleExpand}
         selected={dir === (entry.path ?? "")}
       >
-        <ExpandIcon />
-        <CenteredListItemIcon>
+        <ExpandIcon onClick={handleExpand} />
+        <CenteredListItemIcon onClick={handleExpand}>
           <FolderIcon />
         </CenteredListItemIcon>
-        <ListItemText primary={label} />
+        <ListItemText primary={label} onClick={handleTextClick} />
       </ListItemButton>
       {dirChildren.length ? (
         <Collapse in={open} timeout="auto" unmountOnExit>
