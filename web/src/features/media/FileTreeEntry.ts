@@ -9,17 +9,17 @@ export interface FileTreeEntry {
 /**
  * @param createDirs creates directory parents for path if none exist - otherwise, returns undefined
  */
-export function getDirAt(
+export function getFileEntryAt(
   root: FileTreeEntry,
   fullDir: string,
   createDirs: true,
 ): FileTreeEntry;
-export function getDirAt(
+export function getFileEntryAt(
   root: FileTreeEntry,
   fullDir: string,
   createDirs: false,
 ): FileTreeEntry | undefined;
-export function getDirAt(
+export function getFileEntryAt(
   root: FileTreeEntry,
   fullDir: string,
   createDirs: boolean,
@@ -43,3 +43,12 @@ export function getDirAt(
   }
   return current;
 }
+
+export const sortFileEntries = (a: FileTreeEntry, b: FileTreeEntry): number => {
+  if (!a.path) return -1;
+  if (!b.path) return 1;
+  if (a.type === b.type) {
+    return a.path.localeCompare(b.path);
+  }
+  return a.type === "directory" ? -1 : 1;
+};

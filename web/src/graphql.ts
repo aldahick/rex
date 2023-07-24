@@ -10,7 +10,7 @@ export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' |
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string | number; output: string; }
+  ID: { input: string; output: string; }
   String: { input: string; output: string; }
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
@@ -44,6 +44,7 @@ export type IAuthToken = {
 export type IConfig = {
   __typename?: 'Config';
   createAnonymousUsers: Scalars['Boolean']['output'];
+  mediaDataLimit: Scalars['Int']['output'];
 };
 
 export type IMediaItem = {
@@ -70,6 +71,7 @@ export type IMutation = {
   createNote: INote;
   createRole: IRole;
   createUser: IUser;
+  deleteMedia: Scalars['Boolean']['output'];
   deleteRole: Scalars['Boolean']['output'];
   fetchSteamGames: IProgress;
   removeNote: Scalars['Boolean']['output'];
@@ -135,6 +137,11 @@ export type IMutationCreateUserArgs = {
   email: Scalars['String']['input'];
   password?: InputMaybe<Scalars['String']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type IMutationDeleteMediaArgs = {
+  key: Scalars['String']['input'];
 };
 
 
@@ -348,6 +355,20 @@ export type IMediaItemsQueryVariables = Exact<{
 
 
 export type IMediaItemsQuery = { __typename?: 'Query', mediaItems: Array<{ __typename?: 'MediaItem', key: string, type: IMediaItemType }> };
+
+export type ICreateMediaUploadMutationVariables = Exact<{
+  key: Scalars['String']['input'];
+}>;
+
+
+export type ICreateMediaUploadMutation = { __typename?: 'Mutation', uploadUrl: string };
+
+export type IDeleteMediaMutationVariables = Exact<{
+  key: Scalars['String']['input'];
+}>;
+
+
+export type IDeleteMediaMutation = { __typename?: 'Mutation', deleteMedia: boolean };
 
 export type ITranscriptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -590,6 +611,68 @@ export function useMediaItemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type MediaItemsQueryHookResult = ReturnType<typeof useMediaItemsQuery>;
 export type MediaItemsLazyQueryHookResult = ReturnType<typeof useMediaItemsLazyQuery>;
 export type MediaItemsQueryResult = Apollo.QueryResult<IMediaItemsQuery, IMediaItemsQueryVariables>;
+export const CreateMediaUploadDocument = gql`
+    mutation CreateMediaUpload($key: String!) {
+  uploadUrl: createMediaUpload(key: $key)
+}
+    `;
+export type ICreateMediaUploadMutationFn = Apollo.MutationFunction<ICreateMediaUploadMutation, ICreateMediaUploadMutationVariables>;
+
+/**
+ * __useCreateMediaUploadMutation__
+ *
+ * To run a mutation, you first call `useCreateMediaUploadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMediaUploadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMediaUploadMutation, { data, loading, error }] = useCreateMediaUploadMutation({
+ *   variables: {
+ *      key: // value for 'key'
+ *   },
+ * });
+ */
+export function useCreateMediaUploadMutation(baseOptions?: Apollo.MutationHookOptions<ICreateMediaUploadMutation, ICreateMediaUploadMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ICreateMediaUploadMutation, ICreateMediaUploadMutationVariables>(CreateMediaUploadDocument, options);
+      }
+export type CreateMediaUploadMutationHookResult = ReturnType<typeof useCreateMediaUploadMutation>;
+export type CreateMediaUploadMutationResult = Apollo.MutationResult<ICreateMediaUploadMutation>;
+export type CreateMediaUploadMutationOptions = Apollo.BaseMutationOptions<ICreateMediaUploadMutation, ICreateMediaUploadMutationVariables>;
+export const DeleteMediaDocument = gql`
+    mutation DeleteMedia($key: String!) {
+  deleteMedia(key: $key)
+}
+    `;
+export type IDeleteMediaMutationFn = Apollo.MutationFunction<IDeleteMediaMutation, IDeleteMediaMutationVariables>;
+
+/**
+ * __useDeleteMediaMutation__
+ *
+ * To run a mutation, you first call `useDeleteMediaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMediaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMediaMutation, { data, loading, error }] = useDeleteMediaMutation({
+ *   variables: {
+ *      key: // value for 'key'
+ *   },
+ * });
+ */
+export function useDeleteMediaMutation(baseOptions?: Apollo.MutationHookOptions<IDeleteMediaMutation, IDeleteMediaMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<IDeleteMediaMutation, IDeleteMediaMutationVariables>(DeleteMediaDocument, options);
+      }
+export type DeleteMediaMutationHookResult = ReturnType<typeof useDeleteMediaMutation>;
+export type DeleteMediaMutationResult = Apollo.MutationResult<IDeleteMediaMutation>;
+export type DeleteMediaMutationOptions = Apollo.BaseMutationOptions<IDeleteMediaMutation, IDeleteMediaMutationVariables>;
 export const TranscriptionsDocument = gql`
     query Transcriptions {
   transcriptions {

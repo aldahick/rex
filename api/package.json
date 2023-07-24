@@ -10,7 +10,8 @@
     "build": "tsc",
     "lint": "eslint src",
     "generate": "graphql-codegen --config codegen.graphql.yml",
-    "db": "ts-node --esm src/util/orchid.ts"
+    "db": "ts-node --esm src/util/orchid.ts",
+    "test": "node --enable-source-maps --test dist"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,7 @@
   },
   "homepage": "https://github.com/aldahick/rex#readme",
   "dependencies": {
-    "@athenajs/core": "^0.0.21",
+    "@athenajs/core": "^0.0.23",
     "@athenajs/utils": "^0.0.13",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",

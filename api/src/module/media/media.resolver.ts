@@ -7,6 +7,7 @@ import {
   IMutationAddMediaDownloadArgs,
   IMutationCreateMediaArgs,
   IMutationCreateMediaUploadArgs,
+  IMutationDeleteMediaArgs,
   IQuery,
   IQueryMediaItemsArgs,
 } from "../../graphql.js";
@@ -63,7 +64,7 @@ export class MediaResolver {
     context: RexContext,
   ): Promise<IMutation["createMedia"]> {
     const user = await this.fetchUser(context);
-    await this.mediaManager.create({ user, key, data });
+    await this.mediaManager.create(user.email, key, data);
     return true;
   }
 
@@ -77,6 +78,17 @@ export class MediaResolver {
     await this.fetchUser(context);
     key = encodeURIComponent(key);
     return `${this.config.http.url}/v1/media/content?key=${key}`;
+  }
+
+  @resolveMutation()
+  async deleteMedia(
+    root: never,
+    { key }: IMutationDeleteMediaArgs,
+    context: RexContext,
+  ): Promise<IMutation["deleteMedia"]> {
+    const user = await this.fetchUser(context);
+    await this.mediaManager.delete(user.email, key);
+    return true;
   }
 
   private async fetchUser(

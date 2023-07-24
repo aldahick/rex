@@ -41,6 +41,7 @@ export type IAuthToken = {
 export type IConfig = {
   __typename?: 'Config';
   createAnonymousUsers: Scalars['Boolean']['output'];
+  mediaDataLimit: Scalars['Int']['output'];
 };
 
 export type IMediaItem = {
@@ -67,6 +68,7 @@ export type IMutation = {
   createNote: INote;
   createRole: IRole;
   createUser: IUser;
+  deleteMedia: Scalars['Boolean']['output'];
   deleteRole: Scalars['Boolean']['output'];
   fetchSteamGames: IProgress;
   removeNote: Scalars['Boolean']['output'];
@@ -132,6 +134,11 @@ export type IMutationCreateUserArgs = {
   email: Scalars['String']['input'];
   password?: InputMaybe<Scalars['String']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type IMutationDeleteMediaArgs = {
+  key: Scalars['String']['input'];
 };
 
 

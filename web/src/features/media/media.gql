@@ -4,3 +4,11 @@ query MediaItems($dir: String!) {
     type
   }
 }
+
+mutation CreateMediaUpload($key: String!) {
+  uploadUrl: createMediaUpload(key: $key)
+}
+
+mutation DeleteMedia($key: String!) {
+  deleteMedia(key: $key)
+}

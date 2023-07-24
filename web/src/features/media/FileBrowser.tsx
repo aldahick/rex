@@ -16,15 +16,19 @@ const TitleBoxGrid = styled(Grid)(({ theme }) => ({
 export interface FileBrowserProps {
   dir: string;
   root: FileTreeEntry;
+  onDelete: (entry: FileTreeEntry) => void;
   onDirChange: (value: string) => void;
   onExpand: (value: string) => void;
+  onUploadStart: (file: File) => void;
 }
 
 export const FileBrowser: React.FC<FileBrowserProps> = ({
   dir,
   root,
+  onDelete,
   onDirChange,
   onExpand,
+  onUploadStart,
 }) => {
   return (
     <Grid container marginTop="1em">
@@ -55,7 +59,9 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
               <FileListBrowser
                 dir={dir}
                 root={root}
+                onDelete={onDelete}
                 onDirChange={onDirChange}
+                onUploadStart={onUploadStart}
               />
             ) : null}
           </Grid>

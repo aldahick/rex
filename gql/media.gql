@@ -1,7 +1,9 @@
 extend type Mutation {
   addMediaDownload(url: String!, destinationKey: String!): Progress!
   createMedia(key: String!, data: String!): Boolean!
+  # returns a URL - POST the file body to it
   createMediaUpload(key: String!): String!
+  deleteMedia(key: String!): Boolean!
 }
 
 extend type Query {

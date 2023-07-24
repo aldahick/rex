@@ -8,10 +8,9 @@ import {
 import mime from "mime";
 
 import { IAuthPermission } from "../../graphql.js";
-import { UserModel } from "../../model/index.js";
 import { RexContext } from "../auth/index.js";
 import { UserManager } from "../user/index.js";
-import { MediaManager } from "./media.manager.js";
+import { MediaManager, MediaStats } from "./media.manager.js";
 
 const HTTP_PARTIAL_CODE = 206;
 
@@ -38,11 +37,12 @@ export class MediaController {
     }
 
     const user = { email: await this.userManager.fetchEmail(userId) };
-    if (!(await this.mediaManager.isFile(user, key))) {
+    const stats = await this.mediaManager.stat(user, key);
+    if (!stats?.isFile()) {
       throw new Error(`Media "${key}" not found`);
     }
 
-    const { start, end } = await this.sendContentHeaders(req, res, user, key);
+    const { start, end } = await this.sendContentHeaders(req, res, key, stats);
     const stream = this.mediaManager.createReadStream(user, key, {
       start,
       end,
@@ -64,18 +64,22 @@ export class MediaController {
     if (!userId) {
       throw new Error("Forbidden");
     }
+    const email = await this.userManager.fetchEmail(userId);
+    const fileSize = await this.mediaManager.getRemainingSpace({ email });
+    const data = await req.file({ limits: { fileSize } });
+    if (!data) {
+      throw new Error("Missing a multipart file");
+    }
 
-    const user = { email: await this.userManager.fetchEmail(userId) };
-    const data = req.body as Buffer;
-    await this.mediaManager.create({ user, key, data });
+    await this.mediaManager.create(email, key, data.file);
     return { ok: true };
   }
 
   private async sendContentHeaders(
     req: HttpRequest,
     res: HttpResponse,
-    user: Pick<UserModel, "email">,
     key: string,
+    stats: MediaStats,
   ): Promise<{ start: number; end?: number }> {
     const mimeType = mime.getType(key) ?? "text/plain";
     let start = 0;
@@ -84,7 +88,6 @@ export class MediaController {
       return { start, end };
     }
 
-    const size = await this.mediaManager.getSize(user, key);
     if (req.headers.range !== undefined) {
       const tokens = req.headers.range.replace("bytes=", "").split("-");
       if (tokens.length === 2) {
@@ -92,6 +95,7 @@ export class MediaController {
         end = Number(tokens[1]);
       }
     }
+    const size = stats.size;
     if (end === undefined) {
       end = size - 1;
     }

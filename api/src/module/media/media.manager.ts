@@ -1,6 +1,12 @@
 import { injectable, Logger } from "@athenajs/core";
 import axios from "axios";
-import { createReadStream, createWriteStream, promises as fs } from "fs";
+import {
+  createReadStream,
+  createWriteStream,
+  Dirent,
+  promises as fs,
+  Stats,
+} from "fs";
 import path from "path";
 import { Readable } from "stream";
 
@@ -8,6 +14,8 @@ import { RexConfig } from "../../config.js";
 import { IMediaItem, IMediaItemType, IProgressStatus } from "../../graphql.js";
 import { UserModel } from "../../model/index.js";
 import { ProgressManager } from "../progress/index.js";
+
+export type MediaStats = Stats;
 
 @injectable()
 export class MediaManager {
@@ -76,18 +84,20 @@ export class MediaManager {
     stream.resume();
   }
 
-  async create({
-    user,
-    key,
-    data,
-  }: {
-    user: Pick<UserModel, "email">;
-    key: string;
-    data: string | Buffer;
-  }): Promise<void> {
-    const filename = this.toFilename(user, key);
+  async create(
+    email: string,
+    key: string,
+    data: string | Readable,
+  ): Promise<void> {
+    const filename = this.toFilename({ email }, key);
     await fs.mkdir(path.dirname(filename), { recursive: true });
     await fs.writeFile(filename, data);
+  }
+
+  async delete(email: string, key: string): Promise<void> {
+    const path = this.toFilename({ email }, key);
+    const stats = await fs.stat(path);
+    await fs.rm(path, { recursive: stats.isDirectory() });
   }
 
   async list(
@@ -95,37 +105,32 @@ export class MediaManager {
     dir: string,
   ): Promise<IMediaItem[]> {
     const baseDir = this.toFilename(user, dir);
-    let files: string[];
+    let entries: Dirent[];
     try {
-      files = (await fs.readdir(baseDir)).filter((f) => !f.startsWith("."));
+      entries = (await fs.readdir(baseDir, { withFileTypes: true })).filter(
+        (f) => !f.name.startsWith("."),
+      );
     } catch {
       await fs.mkdir(baseDir, { recursive: true });
       return [];
     }
     return Promise.all(
-      files.map(async (filename) => {
-        const stats = await fs.stat(path.resolve(baseDir, filename));
+      entries.map(async (entry) => {
         let type = IMediaItemType.File;
-        if (stats.isDirectory()) {
+        if (entry.isDirectory()) {
           const seriesStats = await fs
-            .stat(path.resolve(baseDir, filename, ".series"))
+            .stat(path.resolve(baseDir, entry.name, ".series"))
             .catch(() => undefined);
           type = seriesStats?.isFile()
             ? IMediaItemType.Series
             : IMediaItemType.Directory;
         }
-        const [key = ""] = filename.split("/").slice(-1);
         return {
-          key,
+          key: entry.name,
           type,
         };
       }),
     );
-  }
-
-  async getSize(user: Pick<UserModel, "email">, key: string): Promise<number> {
-    const { size } = await fs.stat(this.toFilename(user, key));
-    return size;
   }
 
   createReadStream(
@@ -136,31 +141,56 @@ export class MediaManager {
     return createReadStream(this.toFilename(user, key), { start, end });
   }
 
-  async exists(user: Pick<UserModel, "email">, key: string): Promise<boolean> {
+  async stat(
+    user: Pick<UserModel, "email">,
+    key: string,
+  ): Promise<MediaStats | undefined> {
     try {
-      await fs.access(this.toFilename(user, key));
-      return true;
-    } catch (err) {
-      return false;
+      return await fs.stat(this.toFilename(user, key));
+    } catch {
+      return undefined;
     }
   }
 
-  async isFile(user: Pick<UserModel, "email">, key: string): Promise<boolean> {
-    try {
-      const stats = await fs.stat(this.toFilename(user, key));
-      return stats.isFile();
-    } catch (err) {
-      return false;
+  /**
+   * @returns the user's remaining media data limit, in bytes
+   */
+  async getRemainingSpace(user: Pick<UserModel, "email">): Promise<number> {
+    const max = this.config.media.dataLimit;
+    return max - (await this.getUsedSpace(user));
+  }
+
+  async getUsedSpace(
+    user: Pick<UserModel, "email">,
+    key?: string,
+  ): Promise<number> {
+    const dirPath = this.toFilename(user, key ?? "");
+    const children = await fs
+      .readdir(dirPath, { withFileTypes: true })
+      .catch(() => []);
+    let total = 0;
+    for (const child of children) {
+      if (child.isFile()) {
+        const stats = await fs.stat(path.resolve(dirPath, child.name));
+        total += stats.size;
+      } else {
+        const childPath = this.toFilename(
+          user,
+          path.resolve(key ?? "", child.name),
+        );
+        total += await this.getUsedSpace(user, childPath);
+      }
     }
+    return total;
   }
 
   private toFilename(user: Pick<UserModel, "email">, key: string): string {
-    const { mediaDir = "" } = this.config;
-    if (mediaDir === "") {
+    const { dir } = this.config.media;
+    if (!dir) {
       throw new Error("Missing environment variable MEDIA_DIR");
     }
     return path.resolve(
-      mediaDir,
+      dir,
       user.email,
       key.replace(/^\//, "").replace(/\.\./g, ""),
     );

@@ -1,5 +1,7 @@
 import { BaseConfig, config } from "@athenajs/core";
 
+import { stringToBytes } from "./util/byte.js";
+
 @config()
 export class RexConfig extends BaseConfig {
   readonly dockerSocketPath = this.optional("DOCKER_SOCKET_PATH");
@@ -25,7 +27,10 @@ export class RexConfig extends BaseConfig {
     url: this.required("HTTP_URL"),
   };
 
-  readonly mediaDir = this.optional("MEDIA_DIR");
+  readonly media = {
+    dataLimit: stringToBytes(this.required("MEDIA_DATA_LIMIT")),
+    dir: this.optional("MEDIA_DIR"),
+  };
 
   readonly mzk = {
     runner: {

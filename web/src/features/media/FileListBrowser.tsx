@@ -2,7 +2,12 @@ import { Grid, styled } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 import { FileListItem } from "./FileListItem";
-import { FileTreeEntry, getDirAt } from "./FileTreeEntry";
+import {
+  FileTreeEntry,
+  getFileEntryAt,
+  sortFileEntries,
+} from "./FileTreeEntry";
+import { FileUploadArea } from "./FileUploadArea";
 
 const EntryGrid = styled(Grid)({
   margin: "0.25em",
@@ -11,23 +16,29 @@ const EntryGrid = styled(Grid)({
 export interface FileListBrowserProps {
   dir: string;
   root: FileTreeEntry;
+  onDelete: (entry: FileTreeEntry) => void;
   onDirChange: (value: string) => void;
+  onUploadStart: (file: File) => void;
 }
 
 export const FileListBrowser: React.FC<FileListBrowserProps> = ({
   dir,
   root,
+  onDelete,
   onDirChange,
+  onUploadStart,
 }) => {
-  const [children, setChildren] = useState<FileTreeEntry[]>(root.children);
+  const [children, setChildren] = useState<FileTreeEntry[]>(
+    root.children.sort(sortFileEntries),
+  );
 
   useEffect(() => {
     if (!dir) {
-      return setChildren(root.children);
+      return setChildren(root.children.sort(sortFileEntries));
     }
-    const entry = getDirAt(root, dir, false);
+    const entry = getFileEntryAt(root, dir, false);
     if (entry) {
-      setChildren(entry.children);
+      setChildren(entry.children.sort(sortFileEntries));
     }
   }, [dir, root]);
 
@@ -36,12 +47,19 @@ export const FileListBrowser: React.FC<FileListBrowserProps> = ({
   }
 
   return (
-    <Grid container paddingTop="1em" paddingLeft="2em">
+    <Grid container paddingTop="1em" paddingLeft="2em" direction="column">
       {children.map((entry) => (
-        <EntryGrid item xs={12} key={entry.path ?? ""}>
-          <FileListItem entry={entry} onDirChange={onDirChange} />
+        <EntryGrid item key={entry.path ?? ""}>
+          <FileListItem
+            entry={entry}
+            onDirChange={onDirChange}
+            onDelete={onDelete}
+          />
         </EntryGrid>
       ))}
+      <Grid item style={{ padding: "0.25em" }}>
+        <FileUploadArea onStart={onUploadStart} />
+      </Grid>
     </Grid>
   );
 };

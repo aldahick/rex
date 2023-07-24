@@ -10,6 +10,7 @@ export class ConfigResolver {
   async fetch(): Promise<IQuery["config"]> {
     return {
       createAnonymousUsers: this.config.userRegistration,
+      mediaDataLimit: this.config.media.dataLimit,
     };
   }
 }
