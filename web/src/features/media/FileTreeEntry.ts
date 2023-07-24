@@ -44,11 +44,9 @@ export function getFileEntryAt(
   return current;
 }
 
-export const sortFileEntries = (a: FileTreeEntry, b: FileTreeEntry): number => {
-  if (!a.path) return -1;
-  if (!b.path) return 1;
-  if (a.type === b.type) {
-    return a.path.localeCompare(b.path);
+export const sortFileEntries = (entry: FileTreeEntry): string => {
+  if (!entry.path) {
+    return "";
   }
-  return a.type === "directory" ? -1 : 1;
+  return `${entry.type}:${entry.path}`;
 };

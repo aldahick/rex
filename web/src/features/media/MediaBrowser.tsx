@@ -1,6 +1,7 @@
 import { cloneDeep } from "lodash";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
+import { useImmer } from "use-immer";
 
 import {
   IMediaItem,
@@ -35,7 +36,7 @@ const EMPTY_ROOT: FileTreeEntry = {
 export const MediaBrowser: React.FC = observer(() => {
   // no preceding "/"
   const [dir, setDir] = useState("");
-  const [root, setRoot] = useState<FileTreeEntry>(cloneDeep(EMPTY_ROOT));
+  const [root, setRoot] = useImmer(cloneDeep(EMPTY_ROOT));
   const [fetchMediaItems] = useMediaItemsLazyQuery();
   const [createMediaUpload] = useCreateMediaUploadMutation();
   const [deleteMedia] = useDeleteMediaMutation();
@@ -46,9 +47,13 @@ export const MediaBrowser: React.FC = observer(() => {
     const result = await fetchMediaItems({ variables: { dir: newDir } });
     const mediaItems = result.data?.mediaItems;
     if (mediaItems) {
-      const entry = getFileEntryAt(root, newDir, true);
-      entry.children = mediaItems.map((i) => mediaItemToEntry(i, newDir));
-      entry.fetched = true;
+      setRoot((root) => {
+        const entry = getFileEntryAt(root, newDir, true);
+        entry.children = mediaItems.map((i) =>
+          cloneDeep(mediaItemToEntry(i, newDir)),
+        );
+        entry.fetched = true;
+      });
       setDir(newDir);
     } else if (result.error) {
       status.error(result.error);
@@ -61,16 +66,16 @@ export const MediaBrowser: React.FC = observer(() => {
     }
     await deleteMedia({ variables: { key: entry.path } });
     const dirPath = entry.path.split("/").slice(0, -1).join("/");
-    const dirEntry = getFileEntryAt(root, dirPath, false);
-    if (dirEntry) {
-      dirEntry.children = dirEntry.children.filter(
-        (c) => c.path !== entry.path,
-      );
-      console.log(dirEntry.children);
-      setRoot(root);
-    } else {
-      console.warn("No parent entry found while deleting", entry);
-    }
+    setRoot((root) => {
+      const dirEntry = getFileEntryAt(root, dirPath, false);
+      if (dirEntry) {
+        dirEntry.children = dirEntry.children.filter(
+          (c) => c.path !== entry.path,
+        );
+      } else {
+        console.warn("No parent entry found while deleting", entry);
+      }
+    });
     status.info(`Successfully deleted "${entry.path}"`);
   };
 
@@ -95,13 +100,19 @@ export const MediaBrowser: React.FC = observer(() => {
         ((await uploadRes.json()).message as string) ?? uploadRes.statusText;
       throw new Error(`Failed to upload file: ${err}`);
     }
-    const dirEntry = getFileEntryAt(root, dir, false);
-    if (dirEntry) {
-      dirEntry.children = dirEntry.children.filter((c) => c.path !== key);
-      setRoot(root);
-    } else {
-      console.warn("No parent entry found while uploading", file, key);
-    }
+    setRoot((root) => {
+      const dirEntry = getFileEntryAt(root, dir, false);
+      if (dirEntry) {
+        dirEntry.children.push({
+          fetched: false,
+          type: "file",
+          children: [],
+          path: key,
+        });
+      } else {
+        console.warn("No parent entry found while uploading", file, key);
+      }
+    });
     status.success(`Successfully uploaded ${file.name}`);
   };
 

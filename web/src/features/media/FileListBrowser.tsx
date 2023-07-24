@@ -1,4 +1,5 @@
 import { Grid, styled } from "@mui/material";
+import { sortBy } from "lodash";
 import React, { useEffect, useState } from "react";
 
 import { FileListItem } from "./FileListItem";
@@ -29,16 +30,16 @@ export const FileListBrowser: React.FC<FileListBrowserProps> = ({
   onUploadStart,
 }) => {
   const [children, setChildren] = useState<FileTreeEntry[]>(
-    root.children.sort(sortFileEntries),
+    sortBy(root.children, sortFileEntries),
   );
 
   useEffect(() => {
     if (!dir) {
-      return setChildren(root.children.sort(sortFileEntries));
+      return setChildren(sortBy(root.children, sortFileEntries));
     }
     const entry = getFileEntryAt(root, dir, false);
     if (entry) {
-      setChildren(entry.children.sort(sortFileEntries));
+      setChildren(sortBy(entry.children, sortFileEntries));
     }
   }, [dir, root]);
 

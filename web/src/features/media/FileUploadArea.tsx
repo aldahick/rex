@@ -1,6 +1,6 @@
 import UploadIcon from "@mui/icons-material/Upload";
 import { Grid, IconButton, styled, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 import { getFileListItemIcon, PathTypography } from "./FileListItem";
@@ -19,8 +19,10 @@ export interface FileUploadAreaProps {
 }
 
 export const FileUploadArea: React.FC<FileUploadAreaProps> = ({ onStart }) => {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+  const [files, setFiles] = useState<File[]>([]);
+  const { getRootProps, getInputProps } = useDropzone({
     multiple: false,
+    onDrop: (acceptedFiles) => setFiles([...files, ...acceptedFiles]),
   });
 
   useEffect(() => {
@@ -32,12 +34,13 @@ export const FileUploadArea: React.FC<FileUploadAreaProps> = ({ onStart }) => {
   }, []);
 
   const handleUploadClick = () => {
-    onStart(acceptedFiles[0]);
+    onStart(files[0]);
+    setFiles([]);
   };
 
   const Icon = getFileListItemIcon({
     type: "file",
-    path: acceptedFiles[0]?.name,
+    path: files[0]?.name,
   });
 
   return (
@@ -46,17 +49,12 @@ export const FileUploadArea: React.FC<FileUploadAreaProps> = ({ onStart }) => {
         <Grid
           container
           alignItems="center"
-          style={acceptedFiles.length ? {} : { opacity: 0 }}
+          style={files.length ? {} : { opacity: 0 }}
         >
           <Icon />
-          <PathTypography>
-            {acceptedFiles.map((f) => f.name).join(", ")}
-          </PathTypography>
+          <PathTypography>{files.map((f) => f.name).join(", ")}</PathTypography>
           <Grid item flexGrow={1} />
-          <IconButton
-            onClick={handleUploadClick}
-            disabled={!acceptedFiles.length}
-          >
+          <IconButton onClick={handleUploadClick} disabled={!files.length}>
             <UploadIcon color="success" />
           </IconButton>
         </Grid>
