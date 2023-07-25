@@ -9,7 +9,7 @@ This is a monorepo for [my personal site](https://alexhicks.net), Rex, which inc
 
 ## 🎼 [/mzk](https://alexhicks.net/mzk)
 
-Transcribe monotonic recordings into sheet music using the [Omnizart] project! I wrote a [paper](./docs/automatic-music-transcription-at-scale.pdf) and a [reference implementation](https://github.com/aldahick/mzk) for a cloud computing course at IUPUI, and subsequently reimplemented it as a production-ready feature in Rex. The Docker-based executor, connecting Omnizart to Rex's media API, is [written](./docker/mzk) in Python. It's vastly overengineered for its expected use case, but that's what this project is all about, or something. In that spirit, I'm basically reimplementing it while porting it to Rex, and [that](./api/src/module/media/) [effort](./api/src/module/mzk/) is [still](./web/src/features/media/) [underway](./web/src/features/mzk/).
+Transcribe monotonic recordings into sheet music using the [Omnizart](https://github.com/Music-and-Culture-Technology-Lab/omnizart) project! I wrote a [paper](./docs/automatic-music-transcription-at-scale.pdf) and a [reference implementation](https://github.com/aldahick/mzk) for a cloud computing course at IUPUI, and subsequently reimplemented it as a production-ready feature in Rex. The Docker-based executor, connecting Omnizart to Rex's media API, is [written](./docker/mzk) in Python. It's vastly overengineered for its expected use case, but that's what this project is all about, or something. In that spirit, I'm basically reimplementing it while porting it to Rex, and [that](./api/src/module/media/) [effort](./api/src/module/mzk/) is [still](./web/src/features/media/) [underway](./web/src/features/mzk/).
 
 ## 🐈 [/cat](https://alexhicks.net/cat)
 
