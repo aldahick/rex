@@ -14,8 +14,8 @@ import {
   useStartTranscriptionMutation,
 } from "../../graphql";
 import { useStatus, useStores } from "../../hooks";
-import { FileBrowser } from "./FileBrowser";
-import { FileTreeEntry, getFileEntryAt } from "./FileTreeEntry";
+import { FileBrowser } from "../file/FileBrowser";
+import { FileTreeEntry, getFileEntryAt } from "../file/FileTreeEntry";
 
 const mediaItemToEntry = (
   { key, type }: IMediaItem,
