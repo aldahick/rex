@@ -1,6 +1,8 @@
+import { Link, Typography } from "@mui/material";
 import { cloneDeep } from "lodash";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import { useImmer } from "use-immer";
 
 import {
@@ -9,6 +11,7 @@ import {
   useCreateMediaUploadMutation,
   useDeleteMediaMutation,
   useMediaItemsLazyQuery,
+  useStartTranscriptionMutation,
 } from "../../graphql";
 import { useStatus, useStores } from "../../hooks";
 import { FileBrowser } from "./FileBrowser";
@@ -40,6 +43,7 @@ export const MediaBrowser: React.FC = observer(() => {
   const [fetchMediaItems] = useMediaItemsLazyQuery();
   const [createMediaUpload] = useCreateMediaUploadMutation();
   const [deleteMedia] = useDeleteMediaMutation();
+  const [startTranscription] = useStartTranscriptionMutation();
   const status = useStatus();
   const { authStore } = useStores();
 
@@ -116,6 +120,27 @@ export const MediaBrowser: React.FC = observer(() => {
     status.success(`Successfully uploaded ${file.name}`);
   };
 
+  const handleStartTranscription = async (entry: FileTreeEntry) => {
+    if (!entry.path || entry.type !== "file") {
+      throw new Error("Cannot transcribe a directory");
+    }
+    const res = await startTranscription({ variables: { key: entry.path } });
+    if (res.errors || !res.data) {
+      throw (
+        res.errors?.[0] ?? new Error("No transcription ID returned from API")
+      );
+    }
+    const { transcription } = res.data;
+    status.success(
+      <Typography>
+        Started transcribing {entry.path}{" "}
+        <Link component={RouterLink} to={`/mzk/${transcription.id}`}>
+          here
+        </Link>
+      </Typography>,
+    );
+  };
+
   useEffect(() => {
     changeDir("");
   }, []);
@@ -128,6 +153,9 @@ export const MediaBrowser: React.FC = observer(() => {
       onDirChange={changeDir}
       onExpand={changeDir}
       onUploadStart={(file) => uploadFile(file).catch(status.error)}
+      onTranscribe={(entry) =>
+        handleStartTranscription(entry).catch(status.error)
+      }
     />
   );
 });

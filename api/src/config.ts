@@ -20,6 +20,11 @@ export class RexConfig extends BaseConfig {
     },
   };
 
+  readonly googleCloud = {
+    projectId: this.optional("GOOGLE_CLOUD_PROJECT_ID"),
+    credentialsPath: this.optional("GOOGLE_CLOUD_CREDENTIALS_PATH"),
+  };
+
   readonly http = {
     host: this.optional("HTTP_HOST") || undefined,
     jwtKey: this.required("HTTP_JWT_KEY"),

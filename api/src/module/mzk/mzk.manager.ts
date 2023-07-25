@@ -1,10 +1,12 @@
 import { injectable } from "@athenajs/core";
+import { createHash } from "crypto";
 
 import { RexConfig } from "../../config.js";
 import { ITranscriptionStatus } from "../../graphql.js";
 import { TranscriptionModel } from "../../model/index.js";
 import { DatabaseService } from "../../service/database.service.js";
 import { DockerService } from "../../service/docker.service.js";
+import { GoogleCloudService } from "../../service/googleCloud.service.js";
 import { AuthManager } from "../auth/auth.manager.js";
 
 @injectable()
@@ -14,6 +16,7 @@ export class MzkManager {
     private readonly config: RexConfig,
     private readonly db: DatabaseService,
     private readonly docker: DockerService,
+    private readonly googleCloud: GoogleCloudService,
   ) {}
 
   async fetchMany(userId: string): Promise<TranscriptionModel[]> {
@@ -46,11 +49,21 @@ export class MzkManager {
       },
     } = this.config;
     const token = this.authManager.signToken(transcription.userId);
-    const args = [url, token, transcription.inputKey, transcription.outputKey];
+    const args = [
+      url.replace("://localhost:", "://host.docker.internal:"),
+      token,
+      transcription.inputKey,
+      transcription.outputKey,
+    ];
     if (platform === "docker") {
       await this.docker.run(image, args);
     } else if (platform === "gcp") {
-      throw new Error("NOT IMPLEMENTED");
+      const name = `${transcription.userId}:${transcription.outputKey}`;
+      await this.googleCloud.createAndRun({
+        image,
+        name: "mzk-" + createHash("md5").update(name).digest("hex"),
+        args,
+      });
     }
   }
 }

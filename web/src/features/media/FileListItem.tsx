@@ -2,6 +2,7 @@ import AudioIcon from "@mui/icons-material/AudioFile";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FolderIcon from "@mui/icons-material/Folder";
 import ImageIcon from "@mui/icons-material/Image";
+import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import VideoIcon from "@mui/icons-material/VideoFile";
 import { Grid, IconButton, styled, Typography } from "@mui/material";
 import mime from "mime";
@@ -16,33 +17,38 @@ export const PathTypography = styled(Typography)({
 
 const IconPlaceholder = styled("div")({ minWidth: "24px" });
 
-export const getFileListItemIcon = (
+export const getFileEntryType = (
   entry: Pick<FileTreeEntry, "path" | "type">,
-) => {
+): [typeof IconPlaceholder | typeof ImageIcon, string | undefined] => {
   if (entry.type === "directory" || !entry.path) {
-    return FolderIcon;
+    return [FolderIcon, undefined];
   }
   const type = mime.getType(entry.path);
   if (type?.startsWith("image/")) {
-    return ImageIcon;
+    return [ImageIcon, type];
   } else if (type?.startsWith("audio/")) {
-    return AudioIcon;
+    return [AudioIcon, type];
   } else if (type?.startsWith("video/")) {
-    return VideoIcon;
+    return [VideoIcon, type];
   }
-  return IconPlaceholder;
+  return [IconPlaceholder, type ?? undefined];
 };
 
-export interface FileListItemProps {
-  entry: FileTreeEntry;
+export interface FileListItemCallbacks {
   onDelete: (entry: FileTreeEntry) => void;
   onDirChange: (value: string) => void;
+  onTranscribe: (entry: FileTreeEntry) => void;
+}
+
+export interface FileListItemProps extends FileListItemCallbacks {
+  entry: FileTreeEntry;
 }
 
 export const FileListItem: React.FC<FileListItemProps> = ({
   entry,
   onDelete,
   onDirChange,
+  onTranscribe,
 }) => {
   const [hover, setHover] = useState(false);
 
@@ -58,8 +64,11 @@ export const FileListItem: React.FC<FileListItemProps> = ({
   const handleMouseLeave = () => {
     setHover(false);
   };
+  const handleTranscribe = () => {
+    onTranscribe(entry);
+  };
 
-  const Icon = getFileListItemIcon(entry);
+  const [Icon, type] = getFileEntryType(entry);
 
   return (
     <Grid
@@ -74,9 +83,16 @@ export const FileListItem: React.FC<FileListItemProps> = ({
         {entry.path?.split("/").slice(-1)[0]}
       </PathTypography>
       <Grid item flexGrow={1} onClick={handleClick} />
-      <IconButton onClick={handleDelete} style={hover ? {} : { opacity: 0 }}>
-        <DeleteIcon color="error" />
-      </IconButton>
+      <Grid item style={hover ? {} : { opacity: 0 }}>
+        {type?.startsWith("audio/") ? (
+          <IconButton onClick={handleTranscribe}>
+            <MusicNoteIcon />
+          </IconButton>
+        ) : null}
+        <IconButton onClick={handleDelete}>
+          <DeleteIcon color="error" />
+        </IconButton>
+      </Grid>
     </Grid>
   );
 };

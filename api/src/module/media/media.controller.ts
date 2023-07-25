@@ -12,7 +12,8 @@ import { RexContext } from "../auth/index.js";
 import { UserManager } from "../user/index.js";
 import { MediaManager, MediaStats } from "./media.manager.js";
 
-const HTTP_PARTIAL_CODE = 206;
+const HTTP_SUCCESS = 200;
+const HTTP_PARTIAL = 206;
 
 @controller()
 export class MediaController {
@@ -47,7 +48,7 @@ export class MediaController {
       start,
       end,
     });
-    res.send(stream);
+    return res.send(stream);
   }
 
   @post("/v1/media/content")
@@ -96,15 +97,17 @@ export class MediaController {
       }
     }
     const size = stats.size;
+    const status = end && end > size ? HTTP_PARTIAL : HTTP_SUCCESS;
     if (end === undefined) {
       end = size - 1;
     }
-    res.status(HTTP_PARTIAL_CODE).headers({
+    const headers = {
       "Accept-Range": "bytes",
-      "Content-Length": end - start + 1,
+      "Content-Length": (end - start + 1).toString(),
       "Content-Range": `bytes ${start}-${end}/${size}`,
       "Content-Type": mimeType,
-    });
+    };
+    res.status(status).headers(headers);
     return { start, end };
   }
 

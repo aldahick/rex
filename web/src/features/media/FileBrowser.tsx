@@ -3,6 +3,7 @@ import React from "react";
 
 import { FileAddressBar } from "./FileAddressBar";
 import { FileListBrowser } from "./FileListBrowser";
+import { FileListItemCallbacks } from "./FileListItem";
 import { FileTree } from "./FileTree";
 import { FileTreeEntry } from "./FileTreeEntry";
 
@@ -13,11 +14,9 @@ const TitleBoxGrid = styled(Grid)(({ theme }) => ({
   paddingTop: "1em",
 })) as typeof Grid;
 
-export interface FileBrowserProps {
+export interface FileBrowserProps extends FileListItemCallbacks {
   dir: string;
   root: FileTreeEntry;
-  onDelete: (entry: FileTreeEntry) => void;
-  onDirChange: (value: string) => void;
   onExpand: (value: string) => void;
   onUploadStart: (file: File) => void;
 }
@@ -25,10 +24,10 @@ export interface FileBrowserProps {
 export const FileBrowser: React.FC<FileBrowserProps> = ({
   dir,
   root,
-  onDelete,
-  onDirChange,
   onExpand,
   onUploadStart,
+  onDirChange,
+  ...callbacks
 }) => {
   return (
     <Grid container marginTop="1em">
@@ -59,9 +58,9 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
               <FileListBrowser
                 dir={dir}
                 root={root}
-                onDelete={onDelete}
                 onDirChange={onDirChange}
                 onUploadStart={onUploadStart}
+                {...callbacks}
               />
             ) : null}
           </Grid>

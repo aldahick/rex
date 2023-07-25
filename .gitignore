@@ -5,3 +5,4 @@ dist
 logs
 tsconfig.tsbuildinfo
 api/gql
+google-cloud-credentials.json

@@ -3,7 +3,7 @@ import { Grid, IconButton, styled, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-import { getFileListItemIcon, PathTypography } from "./FileListItem";
+import { getFileEntryType, PathTypography } from "./FileListItem";
 
 const DropAreaDiv = styled("div")(({ theme }) => ({
   minHeight: "100vh",
@@ -38,7 +38,7 @@ export const FileUploadArea: React.FC<FileUploadAreaProps> = ({ onStart }) => {
     setFiles([]);
   };
 
-  const Icon = getFileListItemIcon({
+  const [Icon] = getFileEntryType({
     type: "file",
     path: files[0]?.name,
   });

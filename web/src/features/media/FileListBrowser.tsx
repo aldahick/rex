@@ -2,7 +2,7 @@ import { Grid, styled } from "@mui/material";
 import { sortBy } from "lodash";
 import React, { useEffect, useState } from "react";
 
-import { FileListItem } from "./FileListItem";
+import { FileListItem, FileListItemCallbacks } from "./FileListItem";
 import {
   FileTreeEntry,
   getFileEntryAt,
@@ -14,20 +14,17 @@ const EntryGrid = styled(Grid)({
   margin: "0.25em",
 }) as typeof Grid;
 
-export interface FileListBrowserProps {
+export interface FileListBrowserProps extends FileListItemCallbacks {
   dir: string;
   root: FileTreeEntry;
-  onDelete: (entry: FileTreeEntry) => void;
-  onDirChange: (value: string) => void;
   onUploadStart: (file: File) => void;
 }
 
 export const FileListBrowser: React.FC<FileListBrowserProps> = ({
   dir,
   root,
-  onDelete,
-  onDirChange,
   onUploadStart,
+  ...callbacks
 }) => {
   const [children, setChildren] = useState<FileTreeEntry[]>(
     sortBy(root.children, sortFileEntries),
@@ -51,11 +48,7 @@ export const FileListBrowser: React.FC<FileListBrowserProps> = ({
     <Grid container paddingTop="1em" paddingLeft="2em" direction="column">
       {children.map((entry) => (
         <EntryGrid item key={entry.path ?? ""}>
-          <FileListItem
-            entry={entry}
-            onDirChange={onDirChange}
-            onDelete={onDelete}
-          />
+          <FileListItem entry={entry} {...callbacks} />
         </EntryGrid>
       ))}
       <Grid item style={{ padding: "0.25em" }}>

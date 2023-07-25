@@ -26,6 +26,7 @@
   "dependencies": {
     "@athenajs/core": "^0.0.23",
     "@athenajs/utils": "^0.0.13",
+    "@google-cloud/run": "^0.6.0",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "discord.js": "^14.11.0",

@@ -5,9 +5,6 @@ import sys
 import tempfile
 import urllib
 
-print("Loading Omnizart...")
-from omnizart.music.app import MusicTranscription
-
 class Config:
   def __init__(self, api_url: str, api_token: str, input_key: str, output_key: str):
     self.api_url = api_url
@@ -30,17 +27,25 @@ class Transcribe:
   def download_media_item(self, key: str) -> str:
     quoted_key = urllib.parse.quote(key, safe="")
     url = f"{self.config.api_url}/v1/media/content?key={quoted_key}"
-    headers = {"Authorization": f"token {self.config.api_token}"}
     fd, path = tempfile.mkstemp()
-    with os.fdopen(fd, "wb") as file:
-      with requests.get(url, stream=True, headers=headers) as resp:
-        resp.raise_for_status()
-        for chunk in resp.iter_content():
-          file.write(chunk)
+    headers = f"-H 'Authorization: bearer {self.config.api_token}'"
+    print(f"Downloading {key} from {url} to {path}")
+    # oddly, much faster than equivalent requests.get code. user error, wsl issue, or something else?
+    os.system(f"curl {headers} '{url}' > {path}")
+    # headers = {"Authorization": f"bearer {self.config.api_token}"}
+    # with os.fdopen(fd, "wb") as file:
+    #   with requests.get(url, stream=True, headers=headers) as resp:
+    #     if resp.status_code != 200:
+    #       raise Exception(f"Failed to fetch recording media: {resp.status_code}, {resp.text}")
+    #     for chunk in resp.iter_content():
+    #       file.write(chunk)
+    print(f"Downloaded {key} size {os.path.getsize(path)/pow(1024,2)} MB")
     return path
 
   # returns path to transcription output PDF
-  def transcribe(input_path: str) -> str:
+  def transcribe(self, input_path: str) -> str:
+    print("Loading Omnizart...")
+    from omnizart.music.app import MusicTranscription
     fd, output_path = tempfile.mkstemp()
     os.fdopen(fd).close()
     MusicTranscription().transcribe(input_path, output=output_path)
@@ -53,7 +58,8 @@ class Transcribe:
       data = file.read()
       requests.post(url, data=data, headers=headers)
 
-def main(args: List[str]):
+# omnizart's deps prevent upgrading to python 3.11 / typed lists :(
+def main(args: list):
   config = Config(*args)
   transcribe = Transcribe(config)
   transcribe.run()

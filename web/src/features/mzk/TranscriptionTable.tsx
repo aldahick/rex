@@ -15,7 +15,7 @@ export const TranscriptionTable: React.FC = () => {
   useEffect(() => {
     const count = transcriptionsRes.data?.transcriptions.length;
     if (count === 0) {
-      status.warn("You haven't uploaded any recordings to transcribe!");
+      status.warn("You haven't started any transcriptions!");
       navigate("/media");
     }
   }, [transcriptionsRes]);

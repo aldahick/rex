@@ -8,11 +8,22 @@ export class DockerService {
   constructor(private readonly config: RexConfig) {}
 
   async run(image: string, args: string[]): Promise<void> {
-    const docker = new Docker({ socketPath: this.config.dockerSocketPath });
-    await docker.run(image, args, process.stdout, {
-      HostConfig: {
-        AutoRemove: true,
-      },
-    });
+    const socketPath = this.config.dockerSocketPath;
+    try {
+      const docker = new Docker({ socketPath });
+      await docker.run(image, args, process.stdout, {
+        HostConfig: {
+          AutoRemove: true,
+        },
+      });
+    } catch (err) {
+      if (
+        err instanceof Error &&
+        err.message === `connect ENOENT ${socketPath}`
+      ) {
+        throw new Error("Failed to connect to Docker server: socket not found");
+      }
+      throw err;
+    }
   }
 }

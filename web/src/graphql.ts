@@ -375,6 +375,13 @@ export type ITranscriptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ITranscriptionsQuery = { __typename?: 'Query', transcriptions: Array<{ __typename?: 'Transcription', id: string, status: ITranscriptionStatus, filename: string, pdf?: { __typename?: 'MediaItem', key: string } | undefined }> };
 
+export type IStartTranscriptionMutationVariables = Exact<{
+  key: Scalars['String']['input'];
+}>;
+
+
+export type IStartTranscriptionMutation = { __typename?: 'Mutation', transcription: { __typename?: 'Transcription', id: string } };
+
 export type ICreateNoteMutationVariables = Exact<{
   title: Scalars['String']['input'];
 }>;
@@ -712,6 +719,39 @@ export function useTranscriptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type TranscriptionsQueryHookResult = ReturnType<typeof useTranscriptionsQuery>;
 export type TranscriptionsLazyQueryHookResult = ReturnType<typeof useTranscriptionsLazyQuery>;
 export type TranscriptionsQueryResult = Apollo.QueryResult<ITranscriptionsQuery, ITranscriptionsQueryVariables>;
+export const StartTranscriptionDocument = gql`
+    mutation StartTranscription($key: String!) {
+  transcription: startTranscription(mediaKey: $key) {
+    id
+  }
+}
+    `;
+export type IStartTranscriptionMutationFn = Apollo.MutationFunction<IStartTranscriptionMutation, IStartTranscriptionMutationVariables>;
+
+/**
+ * __useStartTranscriptionMutation__
+ *
+ * To run a mutation, you first call `useStartTranscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStartTranscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [startTranscriptionMutation, { data, loading, error }] = useStartTranscriptionMutation({
+ *   variables: {
+ *      key: // value for 'key'
+ *   },
+ * });
+ */
+export function useStartTranscriptionMutation(baseOptions?: Apollo.MutationHookOptions<IStartTranscriptionMutation, IStartTranscriptionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<IStartTranscriptionMutation, IStartTranscriptionMutationVariables>(StartTranscriptionDocument, options);
+      }
+export type StartTranscriptionMutationHookResult = ReturnType<typeof useStartTranscriptionMutation>;
+export type StartTranscriptionMutationResult = Apollo.MutationResult<IStartTranscriptionMutation>;
+export type StartTranscriptionMutationOptions = Apollo.BaseMutationOptions<IStartTranscriptionMutation, IStartTranscriptionMutationVariables>;
 export const CreateNoteDocument = gql`
     mutation CreateNote($title: String!) {
   createNote(title: $title) {

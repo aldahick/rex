@@ -8,3 +8,9 @@ query Transcriptions {
     }
   }
 }
+
+mutation StartTranscription($key: String!) {
+  transcription: startTranscription(mediaKey: $key) {
+    id
+  }
+}
