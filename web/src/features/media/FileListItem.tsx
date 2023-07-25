@@ -11,7 +11,6 @@ import React, { useState } from "react";
 import { FileTreeEntry } from "./FileTreeEntry";
 
 export const PathTypography = styled(Typography)({
-  fontSize: 18,
   marginLeft: "1em",
 }) as typeof Typography;
 
@@ -82,7 +81,7 @@ export const FileListItem: React.FC<FileListItemProps> = ({
       <PathTypography onClick={handleClick}>
         {entry.path?.split("/").slice(-1)[0]}
       </PathTypography>
-      <Grid item flexGrow={1} onClick={handleClick} />
+      <Grid item xs={true} onClick={handleClick} />
       <Grid item style={hover ? {} : { opacity: 0 }}>
         {type?.startsWith("audio/") ? (
           <IconButton onClick={handleTranscribe}>

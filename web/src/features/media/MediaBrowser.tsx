@@ -84,12 +84,15 @@ export const MediaBrowser: React.FC = observer(() => {
   };
 
   const uploadFile = async (file: File) => {
-    const key = dir + "/" + file.name;
+    const key = (dir === "" ? "" : `${dir}/`) + file.name;
     const res = await createMediaUpload({ variables: { key } });
     if (res.errors || !res.data) {
       throw res.errors?.[0] ?? new Error("No upload URL returned from API");
     }
     const { uploadUrl: url } = res.data;
+    status.info(
+      `Uploading file ${key}... (${(file.size / 1024 ** 2).toFixed(2)} MB)`,
+    );
     const form = new FormData();
     form.append("file", file);
     const uploadRes = await fetch(url, {
@@ -106,7 +109,7 @@ export const MediaBrowser: React.FC = observer(() => {
     }
     setRoot((root) => {
       const dirEntry = getFileEntryAt(root, dir, false);
-      if (dirEntry) {
+      if (dirEntry && !dirEntry.children.some((e) => e.path === key)) {
         dirEntry.children.push({
           fetched: false,
           type: "file",

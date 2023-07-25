@@ -10,6 +10,13 @@ import {
 } from "./FileTreeEntry";
 import { FileUploadArea } from "./FileUploadArea";
 
+const RootGrid = styled(Grid)(({ theme }) => ({
+  padding: "1em",
+  [theme.breakpoints.up("md")]: {
+    paddingLeft: "2em",
+  },
+}));
+
 const EntryGrid = styled(Grid)({
   margin: "0.25em",
 }) as typeof Grid;
@@ -45,7 +52,7 @@ export const FileListBrowser: React.FC<FileListBrowserProps> = ({
   }
 
   return (
-    <Grid container paddingTop="1em" paddingLeft="2em" direction="column">
+    <RootGrid container paddingTop="1em" direction="column">
       {children.map((entry) => (
         <EntryGrid item key={entry.path ?? ""}>
           <FileListItem entry={entry} {...callbacks} />
@@ -54,6 +61,6 @@ export const FileListBrowser: React.FC<FileListBrowserProps> = ({
       <Grid item style={{ padding: "0.25em" }}>
         <FileUploadArea onStart={onUploadStart} />
       </Grid>
-    </Grid>
+    </RootGrid>
   );
 };

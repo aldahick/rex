@@ -3,16 +3,17 @@ import { Grid, IconButton, styled, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
+import { RexLink } from "../utils/RexLink";
 import { getFileEntryType, PathTypography } from "./FileListItem";
 
-const DropAreaDiv = styled("div")(({ theme }) => ({
+const DropAreaDiv = styled("div")({
   minHeight: "100vh",
-  backgroundColor: theme.palette.grey[900],
-}));
+  backgroundColor: "rgba(33,33,33,0.25)",
+});
 
-const UploadRowDiv = styled("div")(({ theme }) => ({
-  backgroundColor: theme.palette.grey[900],
-}));
+const UploadRowDiv = styled("div")({
+  backgroundColor: "rgba(33,33,33,0.25)",
+});
 
 export interface FileUploadAreaProps {
   onStart: (file: File) => void;
@@ -20,8 +21,9 @@ export interface FileUploadAreaProps {
 
 export const FileUploadArea: React.FC<FileUploadAreaProps> = ({ onStart }) => {
   const [files, setFiles] = useState<File[]>([]);
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps, open } = useDropzone({
     multiple: false,
+    noClick: true,
     onDrop: (acceptedFiles) => setFiles([...files, ...acceptedFiles]),
   });
 
@@ -63,7 +65,11 @@ export const FileUploadArea: React.FC<FileUploadAreaProps> = ({ onStart }) => {
         <input {...getInputProps()} />
         <Grid container justifyContent="center" paddingTop="2em">
           <Typography textAlign="center">
-            Drop files or click here to upload!
+            Drop a file or click{" "}
+            <RexLink to="" onClick={open} sx={{ cursor: "pointer" }}>
+              here
+            </RexLink>
+            {" to upload!"}
           </Typography>
         </Grid>
       </DropAreaDiv>

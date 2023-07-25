@@ -12,6 +12,9 @@ const TitleBoxGrid = styled(Grid)(({ theme }) => ({
   borderTopLeftRadius: "50%",
   borderTopRightRadius: "50%",
   paddingTop: "1em",
+  [theme.breakpoints.down("sm")]: {
+    display: "none",
+  },
 })) as typeof Grid;
 
 export interface FileBrowserProps extends FileListItemCallbacks {
@@ -33,7 +36,7 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
     <Grid container marginTop="1em">
       <Grid item xs={12}>
         <Grid container>
-          <TitleBoxGrid item xs={4} md={3} xl={2}>
+          <TitleBoxGrid item md={3} xl={2}>
             <Typography variant="h5" textAlign="center">
               Rex Media
             </Typography>
@@ -45,7 +48,7 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
       </Grid>
       <Grid item xs={12}>
         <Grid container>
-          <Grid item xs={4} md={3} xl={2}>
+          <Grid item xs={12} md={3} xl={2}>
             <FileTree
               dir={dir}
               entry={root}

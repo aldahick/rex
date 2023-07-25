@@ -8,6 +8,7 @@ import {
   ListItemIcon,
   ListItemText,
   styled,
+  useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
@@ -30,7 +31,10 @@ export const FileTree: React.FC<FileTreeProps> = ({
   onDirChange,
   onExpand,
 }) => {
-  const [open, setOpen] = useState(!entry.path);
+  const theme = useTheme();
+  const [open, setOpen] = useState(
+    !entry.path && window.innerWidth > theme.breakpoints.values.md,
+  );
 
   useEffect(() => {
     if (entry.path && dir.startsWith(entry.path) && !entry.fetched) {
@@ -42,11 +46,8 @@ export const FileTree: React.FC<FileTreeProps> = ({
   const dirChildren = entry.children.filter((c) => c.type === "directory");
 
   const handleExpand = () => {
-    if (!entry.path) {
-      return;
-    }
     setOpen((prev) => !prev);
-    if (entry.fetched && !dirChildren.length) {
+    if (entry.fetched) {
       return;
     }
     onExpand(entry.path ?? "");
