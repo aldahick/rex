@@ -1,9 +1,9 @@
-import { Breadcrumbs, Grid, Link, Typography } from "@mui/material";
+import { Breadcrumbs, Grid, Typography } from "@mui/material";
 import React from "react";
-import { Link as RouterLink } from "react-router-dom";
 
 import { useNoteQuery } from "../../graphql";
 import { useStatus } from "../../hooks";
+import { RexLink } from "../utils/RexLink";
 import { EditNoteForm } from "./EditNoteForm";
 
 interface NoteEditorProps {
@@ -23,9 +23,9 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({ id }) => {
     <Grid container direction="column">
       <Grid item>
         <Breadcrumbs>
-          <Link component={RouterLink} to="/notes" color="inherit">
+          <RexLink to="/notes" color="inherit">
             Notes
-          </Link>
+          </RexLink>
           <Typography>{note.title}</Typography>
         </Breadcrumbs>
       </Grid>

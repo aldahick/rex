@@ -3,7 +3,6 @@ import PublicIcon from "@mui/icons-material/Public";
 import { Grid, Link, Typography, useTheme } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { Link as RouterLink } from "react-router-dom";
 
 import { IAuthPermission } from "../../graphql";
 import { useStores } from "../../hooks";
@@ -12,6 +11,7 @@ import githubLightLogoUrl from "../../images/logos/github-light.png";
 import linkedInLogoUrl from "../../images/logos/linkedin.png";
 import stravaLogoUrl from "../../images/logos/strava.svg";
 import { HexSelect } from "../utils/HexSelect";
+import { RexLink } from "../utils/RexLink";
 import { SocialBadge } from "../utils/SocialBadge";
 import { AthenaIcon } from "./AthenaIcon";
 
@@ -152,14 +152,10 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
                 paddingTop: `calc(${style.minHeight} / 4)`,
               }}
             >
-              <Link
-                component={RouterLink}
-                to="/cat"
-                style={{ textDecoration: "none", textAlign: "center" }}
-              >
+              <RexLink to="/cat" textAlign="center">
                 <Typography variant="h3">🐈</Typography>
                 <Typography>The cat game!</Typography>
-              </Link>
+              </RexLink>
             </Grid>
           ),
           bottomRight: ({ style }) => (
@@ -172,14 +168,10 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
             >
               {authStore.isAuthorized(IAuthPermission.Media) &&
               authStore.isAuthorized(IAuthPermission.Transcriptions) ? (
-                <Link
-                  component={RouterLink}
-                  to="/mzk"
-                  style={{ textDecoration: "none", textAlign: "center" }}
-                >
+                <RexLink to="/mzk" textAlign="center">
                   <Typography variant="h3">🎼</Typography>
                   <Typography>Transcribe sheet music with AI!</Typography>
-                </Link>
+                </RexLink>
               ) : null}
             </Grid>
           ),

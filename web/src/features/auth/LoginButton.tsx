@@ -1,21 +1,14 @@
-import { Button, Link } from "@mui/material";
+import { Button } from "@mui/material";
 import React from "react";
-import { Link as RouterLink } from "react-router-dom";
+
+import { RexLink } from "../utils/RexLink";
 
 export const LoginButton: React.FC = () => {
   return (
     <Button color="secondary" variant="outlined">
-      <Link
-        component={RouterLink}
-        to="/login"
-        style={{
-          fontWeight: 600,
-          color: "inherit",
-          textDecoration: "none",
-        }}
-      >
+      <RexLink to="/login" color="inherit" fontWeight={600}>
         Log In
-      </Link>
+      </RexLink>
     </Button>
   );
 };

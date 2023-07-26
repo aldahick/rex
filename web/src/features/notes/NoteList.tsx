@@ -1,9 +1,9 @@
-import { Grid, Link, TableCell, TableRow } from "@mui/material";
+import { Grid, TableCell, TableRow } from "@mui/material";
 import React from "react";
-import { Link as RouterLink } from "react-router-dom";
 
 import { useNotesQuery } from "../../graphql";
 import { useStatus } from "../../hooks";
+import { RexLink } from "../utils/RexLink";
 import { Table } from "../utils/Table";
 import { AddNoteForm } from "./AddNoteForm";
 import { DeleteNoteButton } from "./DeleteNoteButton";
@@ -28,9 +28,7 @@ export const NoteList: React.FC = () => {
           {notes.map((note) => (
             <TableRow key={note.id}>
               <TableCell>
-                <Link component={RouterLink} to={`/notes/${note.id}`}>
-                  {note.title}
-                </Link>
+                <RexLink to={`/notes/${note.id}`}>{note.title}</RexLink>
               </TableCell>
               <TableCell>{new Date(note.createdAt).toLocaleString()}</TableCell>
               <TableCell>

@@ -3,17 +3,17 @@ import {
   AppBar,
   Grid,
   IconButton,
-  Link,
   styled,
   Toolbar,
   Typography,
 } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { useStores } from "../../hooks";
 import { LoginButton } from "../auth/LoginButton";
+import { RexLink } from "../utils/RexLink";
 import { ThemeSelect } from "./ThemeSelect";
 
 const Title = styled(Typography)({
@@ -37,14 +37,9 @@ export const Navbar: React.FC = observer(() => {
           <MenuIcon />
         </IconButton>
         <Title variant="h6" color="inherit">
-          <Link
-            component={RouterLink}
-            to="/"
-            color="inherit"
-            style={{ textDecoration: "none" }}
-          >
+          <RexLink to="/" color="inherit">
             Alex Hicks
-          </Link>
+          </RexLink>
         </Title>
         <Grid item>
           <Grid container spacing={1} alignItems="center">

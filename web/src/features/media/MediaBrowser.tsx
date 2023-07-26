@@ -1,8 +1,7 @@
-import { Link, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { cloneDeep } from "lodash";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
 import { useImmer } from "use-immer";
 
 import {
@@ -16,6 +15,7 @@ import {
 import { useStatus, useStores } from "../../hooks";
 import { FileBrowser } from "../file/FileBrowser";
 import { FileTreeEntry, getFileEntryAt } from "../file/FileTreeEntry";
+import { RexLink } from "../utils/RexLink";
 
 const mediaItemToEntry = (
   { key, type }: IMediaItem,
@@ -137,9 +137,7 @@ export const MediaBrowser: React.FC = observer(() => {
     status.success(
       <Typography>
         Started transcribing {entry.path}{" "}
-        <Link component={RouterLink} to={`/mzk/${transcription.id}`}>
-          here
-        </Link>
+        <RexLink to={`/mzk/${transcription.id}`}>here</RexLink>
       </Typography>,
     );
   };
