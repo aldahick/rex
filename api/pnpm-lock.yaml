@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@athenajs/core':
-    specifier: ^0.0.23
-    version: 0.0.23
+    specifier: ^0.0.25
+    version: 0.0.25
   '@athenajs/utils':
     specifier: ^0.0.13
     version: 0.0.13
@@ -377,8 +377,8 @@ packages:
       fastify-plugin: 4.5.0
     dev: false
 
-  /@athenajs/core@0.0.23:
-    resolution: {integrity: sha512-eTbS055qHKTyi+FuDb6rlzkhK6XvA5/gKIr95FmkX/XO59xsnrpp9tP1ba/VW/JQfOhcr06U5E1uno3FfHGwXQ==}
+  /@athenajs/core@0.0.25:
+    resolution: {integrity: sha512-+euoxpjWjwkwfJpvE7YFHhksYEn10CjwIiM+/emNUVAJBFF7Yg1avn/GkjoDaMIYFzkcaLCB7PFAUXAZ1FHcwA==}
     dependencies:
       '@aldahick/tsyringe': 4.7.1
       '@apollo/server': 4.7.5(graphql@16.7.1)
