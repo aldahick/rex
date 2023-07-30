@@ -3,7 +3,6 @@ import {
   contextGenerator,
   ContextRequest,
 } from "@athenajs/core";
-import { IncomingHttpHeaders } from "http";
 
 import { IAuthPermission } from "../../graphql.js";
 import { UserManager } from "../user/user.manager.js";
@@ -37,8 +36,8 @@ export class AuthContextGenerator implements ContextGenerator {
     private readonly userManager: UserManager,
   ) {}
 
-  async generateContext({ headers }: ContextRequest): Promise<RexContext> {
-    const token = this.getToken(headers);
+  async generateContext(req: ContextRequest): Promise<RexContext> {
+    const token = this.getToken(req);
     if (!token) {
       return new RexContext(this.userManager);
     }
@@ -46,7 +45,10 @@ export class AuthContextGenerator implements ContextGenerator {
     return new RexContext(this.userManager, token, userId);
   }
 
-  private getToken(headers: IncomingHttpHeaders): string | undefined {
+  private getToken({ headers, query }: ContextRequest): string | undefined {
+    if (query.token) {
+      return query.token;
+    }
     const auth = headers["authorization"];
     if (!auth) {
       return undefined;

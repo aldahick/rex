@@ -5,4 +5,5 @@ dist
 logs
 tsconfig.tsbuildinfo
 api/gql
+api/media
 google-cloud-credentials.json

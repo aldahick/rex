@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import { FileTreeEntry } from "./FileTreeEntry";
 
 export const PathTypography = styled(Typography)({
+  cursor: "pointer",
   marginLeft: "1em",
 }) as typeof Typography;
 
@@ -36,6 +37,7 @@ export const getFileEntryType = (
 export interface FileListItemCallbacks {
   onDelete: (entry: FileTreeEntry) => void;
   onDirChange: (value: string) => void;
+  onFileOpen: (entry: FileTreeEntry) => void;
   onTranscribe: (entry: FileTreeEntry) => void;
 }
 
@@ -47,12 +49,17 @@ export const FileListItem: React.FC<FileListItemProps> = ({
   entry,
   onDelete,
   onDirChange,
+  onFileOpen,
   onTranscribe,
 }) => {
   const [hover, setHover] = useState(false);
 
   const handleClick = () => {
-    onDirChange(entry.path ?? "");
+    if (entry.type === "directory") {
+      onDirChange(entry.path ?? "");
+    } else {
+      onFileOpen(entry);
+    }
   };
   const handleDelete = () => {
     onDelete(entry);

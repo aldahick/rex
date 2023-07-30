@@ -16,6 +16,7 @@ import { useStatus, useStores } from "../../hooks";
 import { FileBrowser } from "../file/FileBrowser";
 import { FileTreeEntry, getFileEntryAt } from "../file/FileTreeEntry";
 import { RexLink } from "../utils/RexLink";
+import { MediaContentView } from "./MediaContentView";
 
 const mediaItemToEntry = (
   { key, type }: IMediaItem,
@@ -40,6 +41,7 @@ export const MediaBrowser: React.FC = observer(() => {
   // no preceding "/"
   const [dir, setDir] = useState("");
   const [root, setRoot] = useImmer(cloneDeep(EMPTY_ROOT));
+  const [selected, setSelected] = useState<FileTreeEntry>();
   const [fetchMediaItems] = useMediaItemsLazyQuery();
   const [createMediaUpload] = useCreateMediaUploadMutation();
   const [deleteMedia] = useDeleteMediaMutation();
@@ -150,9 +152,15 @@ export const MediaBrowser: React.FC = observer(() => {
     <FileBrowser
       dir={dir}
       root={root}
+      content={
+        selected && authStore.token ? (
+          <MediaContentView entry={selected} token={authStore.token} />
+        ) : undefined
+      }
       onDelete={(entry) => deleteFile(entry).catch(status.error)}
       onDirChange={changeDir}
       onExpand={changeDir}
+      onFileOpen={(entry) => setSelected(entry)}
       onUploadStart={(file) => uploadFile(file).catch(status.error)}
       onTranscribe={(entry) =>
         handleStartTranscription(entry).catch(status.error)

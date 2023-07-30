@@ -48,6 +48,7 @@ export class MediaController {
       start,
       end,
     });
+    console.log({ stream });
     return res.send(stream);
   }
 
@@ -93,7 +94,7 @@ export class MediaController {
       const tokens = req.headers.range.replace("bytes=", "").split("-");
       if (tokens.length === 2) {
         start = Number(tokens[0]);
-        end = Number(tokens[1]);
+        end = tokens[1] ? Number(tokens[1]) : undefined;
       }
     }
     const size = stats.size;

@@ -34,7 +34,6 @@ const routes: RouteObject[] = [
     children: [
       {
         index: true,
-        // path: "/",
         element: <RootRoute />,
       },
       {

@@ -110,7 +110,12 @@ export class MediaManager {
       entries = (await fs.readdir(baseDir, { withFileTypes: true })).filter(
         (f) => !f.name.startsWith("."),
       );
-    } catch {
+    } catch (err) {
+      if (err instanceof Error && "code" in err) {
+        if ((err as NodeJS.ErrnoException).code === "ENOTDIR") {
+          return [];
+        }
+      }
       await fs.mkdir(baseDir, { recursive: true });
       return [];
     }

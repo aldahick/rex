@@ -45,13 +45,7 @@ export const Layout: React.FC<React.PropsWithChildren> = observer(
     return (
       <ApolloProvider client={client}>
         <ThemeProvider>
-          <SnackbarProvider>
-            <Grid container justifyContent="center">
-              <Grid item width="100%">
-                {children}
-              </Grid>
-            </Grid>
-          </SnackbarProvider>
+          <SnackbarProvider>{children}</SnackbarProvider>
         </ThemeProvider>
       </ApolloProvider>
     );

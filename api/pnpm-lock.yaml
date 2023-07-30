@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@athenajs/core':
-    specifier: ^0.0.25
-    version: 0.0.25
+    specifier: ^0.0.26
+    version: 0.0.26
   '@athenajs/utils':
     specifier: ^0.0.13
     version: 0.0.13
@@ -377,8 +377,8 @@ packages:
       fastify-plugin: 4.5.0
     dev: false
 
-  /@athenajs/core@0.0.25:
-    resolution: {integrity: sha512-+euoxpjWjwkwfJpvE7YFHhksYEn10CjwIiM+/emNUVAJBFF7Yg1avn/GkjoDaMIYFzkcaLCB7PFAUXAZ1FHcwA==}
+  /@athenajs/core@0.0.26:
+    resolution: {integrity: sha512-5D1+7veflYxZxU6T4fXJqdU3d4xUW1wqEBaT3w39Bw8qL4AmNMxJXssBqxRoWHkzZjJl29qsBVDNnfGapYagWg==}
     dependencies:
       '@aldahick/tsyringe': 4.7.1
       '@apollo/server': 4.7.5(graphql@16.7.1)
@@ -2856,6 +2856,7 @@ packages:
   /buildcheck@0.0.6:
     resolution: {integrity: sha512-8f9ZJCUXyT1M35Jx7MkBgmBMo3oHTTBIPLiY9xyL0pl3T5RwcPEY8cUHr5LBNfu/fk6c2T4DJZuVM/8ZZT2D2A==}
     engines: {node: '>=10.0.0'}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -5371,6 +5372,7 @@ packages:
 
   /nan@2.17.0:
     resolution: {integrity: sha512-2ZTgtl0nJsO0KQCjEpxcIr5D+Yv90plTitZt9JBfQvVJDS5seMl3FOvsh3+9CoYWXf/1l5OaZzzF6nDm4cagaQ==}
+    requiresBuild: true
     dev: false
     optional: true
 

@@ -39,12 +39,14 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               initialUsername={initialUsername}
               onSuccess={handleSuccess}
             />
-            <DividerText>OR</DividerText>
             {googleClientId ? (
-              <GoogleLoginButton
-                clientId={googleClientId}
-                onSuccess={handleSuccess}
-              />
+              <>
+                <DividerText>OR</DividerText>
+                <GoogleLoginButton
+                  clientId={googleClientId}
+                  onSuccess={handleSuccess}
+                />
+              </>
             ) : null}
           </Grid>
         </Grid>

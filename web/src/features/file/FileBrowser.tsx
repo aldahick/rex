@@ -2,7 +2,7 @@ import { Grid, styled, Typography } from "@mui/material";
 import React from "react";
 
 import { FileAddressBar } from "./FileAddressBar";
-import { FileListBrowser } from "./FileListBrowser";
+import { FileListBrowser, FileListBrowserProps } from "./FileListBrowser";
 import { FileListItemCallbacks } from "./FileListItem";
 import { FileTree } from "./FileTree";
 import { FileTreeEntry } from "./FileTreeEntry";
@@ -17,12 +17,13 @@ const TitleBoxGrid = styled(Grid)(({ theme }) => ({
   },
 })) as typeof Grid;
 
-export interface FileBrowserProps extends FileListItemCallbacks {
-  dir: string;
-  root: FileTreeEntry;
-  onExpand: (value: string) => void;
-  onUploadStart: (file: File) => void;
-}
+export type FileBrowserProps = FileListItemCallbacks &
+  Pick<FileListBrowserProps, "content"> & {
+    dir: string;
+    root: FileTreeEntry;
+    onExpand: (value: string) => void;
+    onUploadStart: (file: File) => void;
+  };
 
 export const FileBrowser: React.FC<FileBrowserProps> = ({
   dir,
@@ -30,7 +31,7 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
   onExpand,
   onUploadStart,
   onDirChange,
-  ...callbacks
+  ...browserProps
 }) => {
   return (
     <Grid container marginTop="1em">
@@ -63,7 +64,7 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
                 root={root}
                 onDirChange={onDirChange}
                 onUploadStart={onUploadStart}
-                {...callbacks}
+                {...browserProps}
               />
             ) : null}
           </Grid>
