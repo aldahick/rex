@@ -1,10 +1,16 @@
-const required = (key: string): string => {
+const makeAttributeName = (key: string): string =>
+  `env-${key.split("_").join("-").toLowerCase()}`;
+
+const optional = (key: string): string | undefined => {
   const envKey = `VITE_${key}`;
-  const attribute = `env-${key.split("_").join("-").toLowerCase()}`;
-  const value =
-    import.meta.env[envKey] ?? document.body.getAttribute(attribute);
+  const attribute = makeAttributeName(key);
+  return import.meta.env[envKey] ?? document.body.getAttribute(attribute);
+};
+
+const required = (key: string): string => {
+  const value = optional(key);
   if (!value) {
-    document.body.removeAttribute(attribute);
+    document.body.removeAttribute(makeAttributeName(key));
     throw new Error(`Missing required config variable ${key}`);
   }
   return value;
@@ -13,5 +19,5 @@ const required = (key: string): string => {
 export const config = {
   apiUrl: required("API_URL"),
   basePath: required("BASE_PATH"),
-  googleClientId: required("GOOGLE_CLIENT_ID"),
+  googleClientId: optional("GOOGLE_CLIENT_ID"),
 };
