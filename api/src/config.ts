@@ -44,8 +44,6 @@ export class RexConfig extends BaseConfig {
     },
   };
 
-  readonly redisUrl = this.optional("REDIS_URL");
-
   readonly postgresUrl = this.required("POSTGRES_URL");
 
   readonly steamApiKey = this.optional("STEAM_API_KEY");
