@@ -1,6 +1,6 @@
 {
   "name": "@aldahick/rex-web",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Personal web frontend",
   "scripts": {
     "dev": "vite",
