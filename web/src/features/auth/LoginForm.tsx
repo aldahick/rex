@@ -31,25 +31,21 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   };
 
   return (
-    <Grid container>
-      <Grid item xs={12}>
-        <Grid container justifyContent="center">
-          <Grid item xs={12} sm={8} md={6} lg={4}>
-            <LocalAuthForm
-              initialUsername={initialUsername}
+    <Grid container justifyContent="center">
+      <Grid item xs={12} sm={8} md={6} lg={4}>
+        <LocalAuthForm
+          initialUsername={initialUsername}
+          onSuccess={handleSuccess}
+        />
+        {googleClientId ? (
+          <>
+            <DividerText>OR</DividerText>
+            <GoogleLoginButton
+              clientId={googleClientId}
               onSuccess={handleSuccess}
             />
-            {googleClientId ? (
-              <>
-                <DividerText>OR</DividerText>
-                <GoogleLoginButton
-                  clientId={googleClientId}
-                  onSuccess={handleSuccess}
-                />
-              </>
-            ) : null}
-          </Grid>
-        </Grid>
+          </>
+        ) : null}
       </Grid>
     </Grid>
   );

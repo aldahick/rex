@@ -7,7 +7,9 @@ import { Outlet, RouteObject, RouterProvider } from "react-router";
 import { createBrowserRouter } from "react-router-dom";
 
 import { config } from "./config";
+import { AuthGuard } from "./features/auth/AuthGuard";
 import { Layout } from "./features/layout/Layout";
+import { IAuthPermission } from "./graphql";
 import { StoreProvider } from "./hooks";
 import { CatRoute } from "./routes/cat.route";
 import { ErrorRoute } from "./routes/error.route";
@@ -28,7 +30,6 @@ const routes: RouteObject[] = [
         </Layout>
       </StoreProvider>
     ),
-    // TODO improve display
     errorElement: <ErrorRoute />,
     path: "/",
     children: [
@@ -50,19 +51,40 @@ const routes: RouteObject[] = [
       },
       {
         path: "/media",
-        element: <MediaRoute />,
+        element: (
+          <AuthGuard permissions={[IAuthPermission.Media]}>
+            <MediaRoute />
+          </AuthGuard>
+        ),
       },
       {
         path: "/mzk",
-        element: <MzkRoute />,
+        element: (
+          <AuthGuard
+            permissions={[
+              IAuthPermission.Media,
+              IAuthPermission.Transcriptions,
+            ]}
+          >
+            <MzkRoute />
+          </AuthGuard>
+        ),
       },
       {
         path: "/notes/:id",
-        element: <NoteRoute />,
+        element: (
+          <AuthGuard permissions={[IAuthPermission.Notes]}>
+            <NoteRoute />
+          </AuthGuard>
+        ),
       },
       {
         path: "/notes",
-        element: <NotesRoute />,
+        element: (
+          <AuthGuard permissions={[IAuthPermission.Notes]}>
+            <NotesRoute />
+          </AuthGuard>
+        ),
       },
     ],
   },
