@@ -5,7 +5,6 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 } from "@apollo/client";
-import { Grid } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { SnackbarProvider } from "notistack";
 import React, { useEffect, useState } from "react";
