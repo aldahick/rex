@@ -1,13 +1,13 @@
 import UploadIcon from "@mui/icons-material/Upload";
 import { Grid, IconButton, styled, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 import { RexLink } from "../utils/RexLink";
 import { getFileEntryType, PathTypography } from "./FileListItem";
 
 const DropAreaDiv = styled("div")({
-  minHeight: "100vh",
+  minHeight: "50vh",
   backgroundColor: "rgba(33,33,33,0.25)",
 });
 
@@ -26,14 +26,6 @@ export const FileUploadArea: React.FC<FileUploadAreaProps> = ({ onStart }) => {
     noClick: true,
     onDrop: (acceptedFiles) => setFiles([...files, ...acceptedFiles]),
   });
-
-  useEffect(() => {
-    const oldOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = oldOverflow;
-    };
-  }, []);
 
   const handleUploadClick = () => {
     onStart(files[0]);
