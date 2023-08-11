@@ -23,6 +23,11 @@
     "url": "https://github.com/aldahick/rex/issues"
   },
   "homepage": "https://github.com/aldahick/rex#readme",
+  "pnpm": {
+    "overrides": {
+      "semver": "~7.5.2"
+    }
+  },
   "dependencies": {
     "@athenajs/core": "^0.0.26",
     "@athenajs/utils": "^0.0.13",
@@ -65,12 +70,5 @@
     "ts-node": "^10.9.1",
     "tsc-watch": "^6.0.4",
     "typescript": "^5.1.6"
-  },
-  "pnpm": {
-    "auditConfig": {
-      "ignoreCves": [
-        "CVE-2022-25883"
-      ]
-    }
   }
 }
