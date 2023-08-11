@@ -31,7 +31,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   };
 
   return (
-    <Grid container justifyContent="center">
+    <Grid container justifyContent="center" sx={{ mt: "1em" }}>
       <Grid item xs={12} sm={8} md={6} lg={4}>
         <LocalAuthForm
           initialUsername={initialUsername}

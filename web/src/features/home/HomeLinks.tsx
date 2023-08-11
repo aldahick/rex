@@ -82,13 +82,15 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
               justifyContent="center"
               sx={{ bgcolor: secondaryBackground }}
             >
-              <Typography
-                textAlign="center"
-                variant="h1"
-                style={{ cursor: "default" }}
-              >
-                👋
-              </Typography>
+              <RexLink to="/login" title="Log in">
+                <Typography
+                  textAlign="center"
+                  variant="h1"
+                  style={{ cursor: "pointer" }}
+                >
+                  👋
+                </Typography>
+              </RexLink>
             </Grid>
           ),
           topRight: ({ style }) => (
@@ -166,13 +168,20 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
               justifyContent="center"
               sx={{ bgcolor: secondaryBackground }}
             >
-              {authStore.isAuthorized(IAuthPermission.Media) &&
-              authStore.isAuthorized(IAuthPermission.Transcriptions) ? (
-                <RexLink to="/mzk" textAlign="center">
-                  <Typography variant="h3">🎼</Typography>
-                  <Typography>Transcribe sheet music with AI!</Typography>
-                </RexLink>
-              ) : null}
+              <div>
+                {authStore.isAuthorized(IAuthPermission.Transcriptions) ? (
+                  <RexLink to="/mzk" textAlign="center">
+                    <Typography variant="h3">🎼</Typography>
+                    <Typography>Transcribe sheet music with AI!</Typography>
+                  </RexLink>
+                ) : null}
+                {authStore.isAuthorized(IAuthPermission.Media) ? (
+                  <RexLink to="/media" textAlign="center">
+                    <Typography variant="h3">📁</Typography>
+                    <Typography>Manage your uploaded media</Typography>
+                  </RexLink>
+                ) : null}
+              </div>
             </Grid>
           ),
         }}
