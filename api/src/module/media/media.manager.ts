@@ -189,15 +189,19 @@ export class MediaManager {
     return total;
   }
 
-  private toFilename(user: Pick<UserModel, "email">, key: string): string {
+  toFilename(user: Pick<UserModel, "email">, key: string): string {
+    return path.resolve(
+      this.root,
+      user.email,
+      key.replace(/^\//, "").replace(/\.\./g, ""),
+    );
+  }
+
+  get root(): string {
     const { dir } = this.config.media;
     if (!dir) {
       throw new Error("Missing environment variable MEDIA_DIR");
     }
-    return path.resolve(
-      dir,
-      user.email,
-      key.replace(/^\//, "").replace(/\.\./g, ""),
-    );
+    return path.resolve(dir);
   }
 }

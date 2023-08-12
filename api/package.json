@@ -29,8 +29,8 @@
     }
   },
   "dependencies": {
-    "@athenajs/core": "^0.0.26",
-    "@athenajs/utils": "^0.0.13",
+    "@athenajs/core": "^0.0.28",
+    "@athenajs/utils": "^0.0.14",
     "@google-cloud/run": "^0.6.0",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",

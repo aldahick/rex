@@ -1,7 +1,13 @@
 {
+  "name": "@aldahick/rex",
+  "license": "MIT",
+  "private": true,
+  "version": "0.1.15",
   "scripts": {
     "generate": "bash scripts/generate.sh",
-    "version": "bash scripts/version.sh"
-  },
-  "version": "0.1.15"
+    "version": "bash scripts/version.sh",
+    "build:api": "cd api && pnpm build",
+    "build:mzk": "docker build -t ghcr.io/aldahick/mzk-runner:local docker/mzk",
+    "build:web": "cd web && pnpm build"
+  }
 }

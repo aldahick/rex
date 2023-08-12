@@ -3,11 +3,12 @@ import { createHash } from "crypto";
 
 import { RexConfig } from "../../config.js";
 import { ITranscriptionStatus } from "../../graphql.js";
-import { TranscriptionModel } from "../../model/index.js";
+import { TranscriptionModel, UserModel } from "../../model/index.js";
 import { DatabaseService } from "../../service/database.service.js";
 import { DockerService } from "../../service/docker.service.js";
 import { GoogleCloudService } from "../../service/googleCloud.service.js";
 import { AuthManager } from "../auth/auth.manager.js";
+import { MediaManager } from "../media/media.manager.js";
 
 @injectable()
 export class MzkManager {
@@ -17,6 +18,7 @@ export class MzkManager {
     private readonly db: DatabaseService,
     private readonly docker: DockerService,
     private readonly googleCloud: GoogleCloudService,
+    private readonly mediaManager: MediaManager,
   ) {}
 
   async fetchMany(userId: string): Promise<TranscriptionModel[]> {
@@ -41,7 +43,10 @@ export class MzkManager {
     });
   }
 
-  async start(transcription: TranscriptionModel): Promise<void> {
+  async start(
+    transcription: TranscriptionModel,
+    user: Pick<UserModel, "email">,
+  ): Promise<void> {
     const {
       http: { url },
       mzk: {
@@ -53,11 +58,26 @@ export class MzkManager {
       url.replace("://localhost:", "://host.docker.internal:"),
       token,
       transcription.inputKey,
-      transcription.outputKey,
     ];
     if (platform === "docker") {
-      await this.docker.run(image, args);
+      const hostPath = this.mediaManager.toFilename(
+        user,
+        transcription.outputKey,
+      );
+      const containerPath = "/output";
+      args.push(`file://${containerPath}`);
+      await this.docker.run({
+        image,
+        args,
+        volumePaths: [
+          {
+            container: containerPath,
+            host: hostPath,
+          },
+        ],
+      });
     } else if (platform === "gcp") {
+      args.push(`rex://${transcription.outputKey}`);
       const name = `${transcription.userId}:${transcription.outputKey}`;
       await this.googleCloud.createAndRun({
         image,

@@ -6,11 +6,11 @@ import tempfile
 import urllib
 
 class Config:
-  def __init__(self, api_url: str, api_token: str, input_key: str, output_key: str):
+  def __init__(self, api_url: str, api_token: str, input_key: str, output_uri: str):
     self.api_url = api_url
     self.api_token = api_token
     self.input_key = input_key
-    self.output_key = output_key
+    self.output_uri = output_uri
 
 class Transcribe:
   def __init__(self, config: Config):
@@ -19,7 +19,7 @@ class Transcribe:
   def run(self):
     input_path = self.download_media_item(self.config.input_key)
     output_path = self.transcribe(input_path)
-    self.create_media_item(self.config.output_key, output_path)
+    self.upload(self.config.output_uri, output_path)
     os.remove(input_path)
     os.remove(output_path)
 
@@ -27,7 +27,7 @@ class Transcribe:
   def download_media_item(self, key: str) -> str:
     quoted_key = urllib.parse.quote(key, safe="")
     url = f"{self.config.api_url}/v1/media/content?key={quoted_key}"
-    fd, path = tempfile.mkstemp()
+    fd, path = tempfile.mkstemp(suffix="." + key.split(".")[-1])
     headers = f"-H 'Authorization: bearer {self.config.api_token}'"
     print(f"Downloading {key} from {url} to {path}")
     # oddly, much faster than equivalent requests.get code. user error, wsl issue, or something else?
@@ -50,6 +50,12 @@ class Transcribe:
     os.fdopen(fd).close()
     MusicTranscription().transcribe(input_path, output=output_path)
     return output_path
+
+  def upload(self, uri: str, path: str):
+    if uri.startswith("file://"):
+      os.rename(path, uri[7:])
+    elif uri.startswith("rex://"):
+      self.create_media_item(uri[6:], path)
 
   def create_media_item(self, key: str, path: str):
     url = f"{self.config.api_url}/graphql"

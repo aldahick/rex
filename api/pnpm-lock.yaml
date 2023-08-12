@@ -9,11 +9,11 @@ overrides:
 
 dependencies:
   '@athenajs/core':
-    specifier: ^0.0.26
-    version: 0.0.26
+    specifier: ^0.0.28
+    version: 0.0.28
   '@athenajs/utils':
-    specifier: ^0.0.13
-    version: 0.0.13
+    specifier: ^0.0.14
+    version: 0.0.14
   '@google-cloud/run':
     specifier: ^0.6.0
     version: 0.6.0
@@ -380,13 +380,13 @@ packages:
       fastify-plugin: 4.5.0
     dev: false
 
-  /@athenajs/core@0.0.26:
-    resolution: {integrity: sha512-5D1+7veflYxZxU6T4fXJqdU3d4xUW1wqEBaT3w39Bw8qL4AmNMxJXssBqxRoWHkzZjJl29qsBVDNnfGapYagWg==}
+  /@athenajs/core@0.0.28:
+    resolution: {integrity: sha512-EA+r0AvFHSHZ+IqA+QVoFcnLn5+WDnBXVp0uw3n3iUPhu8WMhz8lAjL5FY2CpqrZ/GobuYcfEH2Gug2rPEKKmg==}
     dependencies:
       '@aldahick/tsyringe': 4.7.1
       '@apollo/server': 4.7.5(graphql@16.7.1)
       '@as-integrations/fastify': 1.3.2(@apollo/server@4.7.5)(fastify@4.19.2)
-      '@athenajs/utils': 0.0.13
+      '@athenajs/utils': 0.0.14
       '@fastify/cors': 8.3.0
       '@fastify/multipart': 7.7.2
       dotenv: 16.3.1
@@ -400,8 +400,8 @@ packages:
       - supports-color
     dev: false
 
-  /@athenajs/utils@0.0.13:
-    resolution: {integrity: sha512-DpFMwMEpfE13f1gyAEQ7DVF1DHi1OuZBQfKbJL9QYRR6OpJNXUfUUbfANFsslLsn7vTEcKp8jrcBftydPL7GGg==}
+  /@athenajs/utils@0.0.14:
+    resolution: {integrity: sha512-KM3UwYt23ofYgT3mFbT7eqFPJD0ElyEhMUt0kW+ix9kgTRy/Hrnn2e4y4AQ0joGgGqrwfKkne8+02wGObo8ePw==}
     dependencies:
       graphql: 16.7.1
     dev: false

@@ -48,7 +48,6 @@ export class MediaController {
       start,
       end,
     });
-    console.log({ stream });
     return res.send(stream);
   }
 
@@ -72,7 +71,6 @@ export class MediaController {
     if (!data) {
       throw new Error("Missing a multipart file");
     }
-
     await this.mediaManager.create(email, key, data.file);
     return { ok: true };
   }

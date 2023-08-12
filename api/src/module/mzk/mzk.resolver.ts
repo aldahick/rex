@@ -11,11 +11,15 @@ import {
 } from "../../graphql.js";
 import { TranscriptionModel } from "../../model/index.js";
 import { RexContext } from "../auth/auth.context.js";
+import { UserManager } from "../user/user.manager.js";
 import { MzkManager } from "./mzk.manager.js";
 
 @resolver()
 export class MzkResolver {
-  constructor(private mzkManager: MzkManager) {}
+  constructor(
+    private readonly mzkManager: MzkManager,
+    private readonly userManager: UserManager,
+  ) {}
 
   @resolveMutation()
   async startTranscription(
@@ -33,7 +37,8 @@ export class MzkResolver {
       mediaKey,
       filename,
     );
-    await this.mzkManager.start(transcription);
+    const email = await this.userManager.fetchEmail(userId);
+    await this.mzkManager.start(transcription, { email });
     return this.makeGql(await this.mzkManager.fetchOne(transcription.id));
   }
 
