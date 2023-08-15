@@ -17,7 +17,7 @@ const RootGrid = styled(Grid)(({ theme }) => ({
   },
 }));
 
-const EntryGrid = styled(Grid)({
+const ChildGrid = styled(Grid)({
   margin: "0.25em",
 }) as typeof Grid;
 
@@ -55,14 +55,17 @@ export const FileListBrowser: React.FC<FileListBrowserProps> = ({
 
   return (
     <RootGrid container paddingTop="1em" direction="column">
+      {content ? <ChildGrid>{content}</ChildGrid> : null}
       {children.map((entry) => (
-        <EntryGrid item key={entry.path ?? ""}>
+        <ChildGrid item key={entry.path ?? ""}>
           <FileListItem entry={entry} {...callbacks} />
-        </EntryGrid>
+        </ChildGrid>
       ))}
-      <Grid item style={{ padding: "0.25em" }}>
-        {content ?? <FileUploadArea onStart={onUploadStart} />}
-      </Grid>
+      {content ? null : (
+        <ChildGrid>
+          <FileUploadArea onStart={onUploadStart} />
+        </ChildGrid>
+      )}
     </RootGrid>
   );
 };
