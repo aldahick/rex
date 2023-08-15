@@ -1,5 +1,8 @@
 import { injectable } from "@athenajs/core";
+import { spawn } from "child_process";
 import { createHash } from "crypto";
+import { promises as fs } from "fs";
+import path from "path";
 
 import { RexConfig } from "../../config.js";
 import { ITranscriptionStatus } from "../../graphql.js";
@@ -50,22 +53,20 @@ export class MzkManager {
     const {
       http: { url },
       mzk: {
-        runner: { image, platform },
+        runner: { dir, image, platform },
       },
     } = this.config;
     const token = this.authManager.signToken(transcription.userId);
-    const args = [
-      url.replace("://localhost:", "://host.docker.internal:"),
-      token,
-      transcription.inputKey,
-    ];
+    const args = [url, token, transcription.inputKey] as [string, ...string[]];
+    const hostPath = this.mediaManager.toFilename(
+      user,
+      transcription.outputKey,
+    );
     if (platform === "docker") {
-      const hostPath = this.mediaManager.toFilename(
-        user,
-        transcription.outputKey,
-      );
       const containerPath = "/output";
       args.push(`file://${containerPath}`);
+      args[0] = args[0].replace("://localhost:", "://host.docker.internal:");
+      await fs.writeFile(hostPath, "");
       await this.docker.run({
         image,
         args,
@@ -84,6 +85,28 @@ export class MzkManager {
         name: "mzk-" + createHash("md5").update(name).digest("hex"),
         args,
       });
+    } else if (platform === "spawn" && dir) {
+      args.push(`file://${hostPath}`);
+      const scriptPath = path.resolve(process.cwd(), dir, "main.py");
+      args.splice(0, 0, scriptPath);
+      console.log(args);
+      const python = spawn("python3", args);
+      await new Promise<void>((resolve, reject) => {
+        python.stdout.on("data", (chunk) => console.log(chunk.toString()));
+        python.stderr.on("data", (chunk) => console.error(chunk.toString()));
+        python.on("error", reject);
+        python.on("close", (code) => {
+          if (code !== 0) {
+            reject(`Omnizart failed to execute with code ${code}`);
+          } else {
+            resolve();
+          }
+        });
+      });
+    } else {
+      throw new Error(
+        `Unrecognized or misconfigured Mzk platform set: ${platform}`,
+      );
     }
   }
 }
