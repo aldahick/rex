@@ -23,7 +23,7 @@ export class AuthStore {
     }
   }
 
-  setToken(token: AuthTokenData | undefined): void {
+  setToken(token: AuthTokenData): void {
     localStorage.setItem(TOKEN_KEY, JSON.stringify(token));
     this.data = token;
   }

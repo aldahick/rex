@@ -14,6 +14,7 @@ import { StoreProvider } from "./hooks";
 import { CatRoute } from "./routes/cat.route";
 import { ErrorRoute } from "./routes/error.route";
 import { LoginRoute } from "./routes/login.route";
+import { LogoutRoute } from "./routes/logout.route";
 import { MediaRoute } from "./routes/media.route";
 import { MzkRoute } from "./routes/mzk.route";
 import { NoteRoute } from "./routes/note.route";
@@ -40,6 +41,10 @@ const routes: RouteObject[] = [
       {
         path: "/login",
         element: <LoginRoute />,
+      },
+      {
+        path: "/logout",
+        element: <LogoutRoute />,
       },
       {
         path: "/register",
