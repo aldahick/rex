@@ -1,6 +1,6 @@
 {
   "name": "@aldahick/rex-api",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Personal API server",
   "main": "dist/main.js",
   "type": "module",
