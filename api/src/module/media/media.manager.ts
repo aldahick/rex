@@ -141,7 +141,7 @@ export class MediaManager {
   createReadStream(
     user: Pick<UserModel, "email">,
     key: string,
-    { start, end }: { start: number; end?: number },
+    { start, end }: { start: number; end: number },
   ): Readable {
     return createReadStream(this.toFilename(user, key), { start, end });
   }

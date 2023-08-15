@@ -14,6 +14,7 @@ import { MediaManager, MediaStats } from "./media.manager.js";
 
 const HTTP_SUCCESS = 200;
 const HTTP_PARTIAL = 206;
+const CONTENT_LENGTH = 10 * 1024 ** 2; // 10mb
 
 @controller()
 export class MediaController {
@@ -79,35 +80,39 @@ export class MediaController {
     req: HttpRequest,
     res: HttpResponse,
     key: string,
-    stats: MediaStats,
-  ): Promise<{ start: number; end?: number }> {
+    { size }: MediaStats,
+  ): Promise<{ start: number; end: number }> {
     const mimeType = mime.getType(key) ?? "text/plain";
-    let start = 0;
-    let end: number | undefined;
-    if (!mimeType.startsWith("video/") && !mimeType.startsWith("audio/")) {
-      return { start, end };
-    }
-
-    if (req.headers.range !== undefined) {
-      const tokens = req.headers.range.replace("bytes=", "").split("-");
-      if (tokens.length === 2) {
-        start = Number(tokens[0]);
-        end = tokens[1] ? Number(tokens[1]) : undefined;
-      }
-    }
-    const size = stats.size;
-    const status = end && end > size ? HTTP_PARTIAL : HTTP_SUCCESS;
-    if (end === undefined) {
-      end = size - 1;
-    }
+    const [start, end] = this.getRange(req, size);
     const headers = {
       "Accept-Range": "bytes",
-      "Content-Length": (end - start + 1).toString(),
-      "Content-Range": `bytes ${start}-${end}/${size}`,
+      // HTTP content headers are zero-indexed - these subtractions are important!
+      // Firefox will send repeated end-end range requests if they're excluded
+      "Content-Length": (end - start - 1).toString(),
+      "Content-Range": `bytes ${start}-${end}/${size - 1}`,
       "Content-Type": mimeType,
     };
+    console.log({ start, end, size });
+    const status = end < size ? HTTP_PARTIAL : HTTP_SUCCESS;
     res.status(status).headers(headers);
     return { start, end };
+  }
+
+  private getRange(
+    req: HttpRequest,
+    size: number,
+  ): [start: number, end: number] {
+    const tokens = req.headers.range?.slice("bytes=".length).split("-") ?? [];
+    let start = Number(tokens[0]);
+    let end = tokens[1] ? Number(tokens[1]) : NaN;
+    if (isNaN(start)) {
+      start = 0;
+    }
+    if (isNaN(end)) {
+      // If this -1 is removed, Firefox will fail to seek anywhere near the end of a video
+      end = Math.min(size - 1, start + CONTENT_LENGTH);
+    }
+    return [start, end];
   }
 
   /**
