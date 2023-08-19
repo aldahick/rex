@@ -89,7 +89,6 @@ export class MzkManager {
       args.push(`file://${hostPath}`);
       const scriptPath = path.resolve(process.cwd(), dir, "main.py");
       args.splice(0, 0, scriptPath);
-      console.log(args);
       const python = spawn("python3", args);
       await new Promise<void>((resolve, reject) => {
         python.stdout.on("data", (chunk) => console.log(chunk.toString()));

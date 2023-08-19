@@ -92,7 +92,6 @@ export class MediaController {
       "Content-Range": `bytes ${start}-${end}/${size - 1}`,
       "Content-Type": mimeType,
     };
-    console.log({ start, end, size });
     const status = end < size ? HTTP_PARTIAL : HTTP_SUCCESS;
     res.status(status).headers(headers);
     return { start, end };

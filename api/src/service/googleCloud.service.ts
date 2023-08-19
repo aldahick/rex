@@ -36,7 +36,6 @@ export class GoogleCloudService {
     args,
     env = [],
   }: CreateJobParams): Promise<void> {
-    console.log("creating job", { name, image, args });
     const [operation] = await this.jobs.createJob({
       job: {
         name,
@@ -54,20 +53,15 @@ export class GoogleCloudService {
       },
     });
     await operation.promise();
-    console.log("created job", name);
   }
 
   private async runJob(name: string): Promise<void> {
-    console.log("running job", name);
     const [operation] = await this.jobs.runJob({ name });
     const [] = await operation.promise();
-    console.log("ran job", name);
   }
 
   private async deleteJob(name: string): Promise<void> {
-    console.log("deleting job", name);
     const [operation] = await this.jobs.deleteJob({ name });
     await operation.promise();
-    console.log("deleted job", name);
   }
 }
