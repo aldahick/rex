@@ -22,9 +22,8 @@ export class SteamPlayerManager {
     if (!player) {
       throw new Error(`Steam player ${steamId64} not found`);
     }
-    const ownedGameIds = await this.steamService.getPlayerOwnedGameIds(
-      steamId64,
-    );
+    const ownedGameIds =
+      await this.steamService.getPlayerOwnedGameIds(steamId64);
     const ownedGames = ownedGameIds
       ? await this.steamGameManager.getMany(ownedGameIds)
       : [];
@@ -67,9 +66,8 @@ export class SteamPlayerManager {
   async resolveUsernames(identifiers: string[]): Promise<string[]> {
     return Promise.all(
       identifiers.map(async (identifier) => {
-        const steamId = await this.steamService.getSteamId64FromUsername(
-          identifier,
-        );
+        const steamId =
+          await this.steamService.getSteamId64FromUsername(identifier);
         return steamId ?? identifier;
       }),
     );

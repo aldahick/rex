@@ -60,9 +60,8 @@ export class SteamResolver {
     root: never,
     { steamId64 }: IQuerySteamPlayerArgs,
   ): Promise<IQuery["steamPlayer"]> {
-    const { player, ownedGames = [] } = await this.steamPlayerManager.get(
-      steamId64,
-    );
+    const { player, ownedGames = [] } =
+      await this.steamPlayerManager.get(steamId64);
     return this.makeGql(player, ownedGames);
   }
 

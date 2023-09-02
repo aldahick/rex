@@ -31,9 +31,8 @@ export class SteamGamesCommand implements DiscordCommand {
     if (!identifiers.length) {
       return `Usage: ${command} <steam usernames or ids...>`;
     }
-    const steamIds = await this.steamPlayerManager.resolveUsernames(
-      identifiers,
-    );
+    const steamIds =
+      await this.steamPlayerManager.resolveUsernames(identifiers);
     let players: SteamPlayerWithGames[];
     const res = await message.reply("Gimme a second to think about it...");
     try {
