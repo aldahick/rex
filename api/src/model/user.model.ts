@@ -1,8 +1,10 @@
+import { Selectable } from "orchid-orm";
+
 import { BaseTable } from "./base.table.js";
 import { UserNoteTable } from "./userNote.model.js";
 import { UserRoleTable } from "./userRole.model.js";
 
-export type UserModel = UserTable["columns"]["type"];
+export type UserModel = Selectable<UserTable>;
 export class UserTable extends BaseTable {
   table = "users";
   columns = this.setColumns((t) => ({

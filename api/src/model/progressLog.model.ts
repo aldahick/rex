@@ -1,7 +1,9 @@
+import { Selectable } from "orchid-orm";
+
 import { BaseTable } from "./base.table.js";
 import { ProgressTable } from "./progress.model.js";
 
-export type ProgressLogModel = ProgressLogTable["columns"]["type"];
+export type ProgressLogModel = Selectable<ProgressLogTable>;
 export class ProgressLogTable extends BaseTable {
   table = "progress_logs";
   columns = this.setColumns((t) => ({

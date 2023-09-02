@@ -1,4 +1,5 @@
 import { injectable } from "@athenajs/core";
+import { compact } from "@athenajs/utils";
 
 import { IAuthPermission } from "../../graphql.js";
 import { RoleModel } from "../../model/role.model.js";
@@ -63,10 +64,11 @@ export class UserManager {
 
   async fetchRolesByUser(userId: string): Promise<RoleModel[]> {
     const userRoles = await this.db.userRoles
-      .join("role")
-      .select("role.*")
+      .select({
+        role: (q) => q.role.join(),
+      })
       .where({ userId });
-    return userRoles.map((ur) => ur.role);
+    return compact(userRoles.map((ur) => ur.role));
   }
 
   /**
@@ -77,12 +79,17 @@ export class UserManager {
   ): Promise<Map<string, RoleModel[]>> {
     const userRoles = await this.db.userRoles
       .join("role")
-      .select("role.*", "userId")
+      .select("userId", {
+        role: (q) => q.role.join(),
+      })
       .whereIn("userId", userIds);
     const roleMap = new Map<string, RoleModel[]>();
     for (const { userId, role } of userRoles) {
       const mappedRoles = roleMap.get(userId);
-      roleMap.set(userId, (mappedRoles ?? []).concat([role]));
+      if (role) {
+        mappedRoles?.push(role);
+      }
+      roleMap.set(userId, mappedRoles ?? []);
     }
     return roleMap;
   }
@@ -116,9 +123,9 @@ export class UserManager {
   }
 
   whereEmailOrUsername(email: string, username?: string) {
-    let query = this.db.users.where({ email }).or({ username: email });
+    let query = this.db.users.where({ email }).orWhere({ username: email });
     if (username?.length) {
-      query = query.or({ username }).or({ email: username });
+      query = query.orWhere({ username }).orWhere({ email: username });
     }
     return query;
   }

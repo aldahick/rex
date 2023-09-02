@@ -1,8 +1,10 @@
+import { Selectable } from "orchid-orm";
+
 import { ITranscriptionStatus } from "../graphql.js";
 import { BaseTable } from "./base.table.js";
 import { UserTable } from "./user.model.js";
 
-export type TranscriptionModel = TranscriptionTable["columns"]["type"];
+export type TranscriptionModel = Selectable<TranscriptionTable>;
 export class TranscriptionTable extends BaseTable {
   table = "transcriptions";
   columns = this.setColumns((t) => ({
