@@ -64,8 +64,9 @@ export class UserManager {
 
   async fetchRolesByUser(userId: string): Promise<RoleModel[]> {
     const userRoles = await this.db.userRoles
+      .join("role")
       .select({
-        role: (q) => q.role.join(),
+        role: "role.*",
       })
       .where({ userId });
     return compact(userRoles.map((ur) => ur.role));
@@ -80,16 +81,16 @@ export class UserManager {
     const userRoles = await this.db.userRoles
       .join("role")
       .select("userId", {
-        role: (q) => q.role.join(),
+        role: "role.*",
       })
       .whereIn("userId", userIds);
     const roleMap = new Map<string, RoleModel[]>();
     for (const { userId, role } of userRoles) {
-      const mappedRoles = roleMap.get(userId);
+      const mappedRoles = roleMap.get(userId) ?? [];
       if (role) {
-        mappedRoles?.push(role);
+        mappedRoles.push(role);
       }
-      roleMap.set(userId, mappedRoles ?? []);
+      roleMap.set(userId, mappedRoles);
     }
     return roleMap;
   }
