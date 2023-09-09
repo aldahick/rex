@@ -1,24 +1,9 @@
-const optional = (key: string): string | undefined => {
-  const envKey = `VITE_${key}`;
-  const attribute = `env-${key.split("_").join("-").toLowerCase()}`;
-  const envValue = import.meta.env[envKey];
-  const attrValue = document.body.getAttribute(attribute);
-  if (!attrValue) {
-    document.body.removeAttribute(attribute);
-  }
-  return envValue ?? attrValue;
-};
+import { getConfigFromAttributes } from "@athenajs/react-utils";
 
-const required = (key: string): string => {
-  const value = optional(key);
-  if (!value) {
-    throw new Error(`Missing required config variable ${key}`);
-  }
-  return value;
-};
+const athenaConfig = getConfigFromAttributes();
 
 export const config = {
-  apiUrl: required("API_URL"),
-  basePath: required("BASE_PATH"),
-  googleClientId: optional("GOOGLE_CLIENT_ID"),
+  apiUrl: athenaConfig.API_URL,
+  basePath: athenaConfig.BASE_PATH,
+  googleClientId: athenaConfig.GOOGLE_CLIENT_ID,
 };
