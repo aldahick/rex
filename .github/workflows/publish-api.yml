@@ -10,6 +10,7 @@ jobs:
     with:
       copySchema: true
       directory: api
+      dockerfile: api/Dockerfile
       imageName: ghcr.io/aldahick/rex-api
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}

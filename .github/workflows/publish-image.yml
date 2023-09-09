@@ -7,8 +7,7 @@ on:
         default: false
         type: boolean
       dockerfile:
-        required: false
-        default: Dockerfile
+        required: true
         type: string
       imageName:
         required: true
