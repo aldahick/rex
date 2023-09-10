@@ -28,7 +28,7 @@ export class MediaController {
     req: HttpRequest,
     res: HttpResponse,
     context: RexContext,
-  ): Promise<void> {
+  ): Promise<HttpResponse> {
     const { key } = req.query as Record<string, string>;
     if (typeof key !== "string") {
       throw new Error("Missing required query parameter `key`");

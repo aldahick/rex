@@ -11,5 +11,6 @@ jobs:
       directory: web
       dockerfile: node_modules/@athenajs/react-utils/Dockerfile
       imageName: ghcr.io/aldahick/rex-web
+      installReactUtils: true
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
