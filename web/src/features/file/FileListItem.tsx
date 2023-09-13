@@ -1,5 +1,4 @@
 import AudioIcon from "@mui/icons-material/AudioFile";
-import DeleteIcon from "@mui/icons-material/Delete";
 import FolderIcon from "@mui/icons-material/Folder";
 import ImageIcon from "@mui/icons-material/Image";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
@@ -8,6 +7,7 @@ import { Grid, IconButton, styled, Typography } from "@mui/material";
 import mime from "mime";
 import React, { useState } from "react";
 
+import { FileDeleteButton } from "./FileDeleteButton";
 import { FileTreeEntry } from "./FileTreeEntry";
 
 export const PathTypography = styled(Typography)({
@@ -61,9 +61,6 @@ export const FileListItem: React.FC<FileListItemProps> = ({
       onFileOpen(entry);
     }
   };
-  const handleDelete = () => {
-    onDelete(entry);
-  };
   const handleMouseEnter = () => {
     setHover(true);
   };
@@ -95,9 +92,7 @@ export const FileListItem: React.FC<FileListItemProps> = ({
             <MusicNoteIcon />
           </IconButton>
         ) : null}
-        <IconButton onClick={handleDelete}>
-          <DeleteIcon color="error" />
-        </IconButton>
+        <FileDeleteButton entry={entry} onDelete={onDelete} />
       </Grid>
     </Grid>
   );
