@@ -44,7 +44,7 @@ export type IAuthToken = {
 export type IConfig = {
   __typename?: 'Config';
   createAnonymousUsers: Scalars['Boolean']['output'];
-  mediaDataLimit: Scalars['Int']['output'];
+  mediaDataLimit?: Maybe<Scalars['Int']['output']>;
 };
 
 export type IMediaItem = {

@@ -3,8 +3,8 @@ extend type Query {
 }
 
 type Config {
-  # whether unauthenticated users can register a user account or not
+  # Whether unauthenticated users can register a user account or not.
   createAnonymousUsers: Boolean!
-  # per-user total media limit in bytes
-  mediaDataLimit: Int!
+  # Per-user total media limit in bytes. If null, this user cannot upload media.
+  mediaDataLimit: Int
 }

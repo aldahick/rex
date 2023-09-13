@@ -33,7 +33,7 @@ export class RexConfig extends BaseConfig {
   };
 
   readonly media = {
-    dataLimit: stringToBytes(this.required("MEDIA_DATA_LIMIT")),
+    dataLimit: stringToBytes(this.optional("MEDIA_DATA_LIMIT")),
     dir: this.optional("MEDIA_DIR"),
   };
 

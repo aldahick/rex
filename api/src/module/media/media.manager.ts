@@ -41,11 +41,13 @@ export class MediaManager {
     const { data: stream, headers } = await axios.get<Readable>(url, {
       responseType: "stream",
     });
-    const totalSize = Number(headers["content-length"]);
+    const totalSize = Number(
+      headers["content-length"] ?? headers["Content-Length"],
+    );
     let fetchedSize = 0;
     const loggedPercents = [0];
     const onLogError = (err: Error): void => {
-      this.logger.error("downloadMedia.logComplete", err, {
+      this.logger.error("failed to download media", err, {
         destinationKey,
         progressId,
         url,
@@ -54,6 +56,9 @@ export class MediaManager {
     };
     stream.pause();
     stream.on("data", (chunk: Buffer) => {
+      if (isNaN(totalSize)) {
+        return;
+      }
       const percentComplete = Math.floor((fetchedSize / totalSize) * 100);
       fetchedSize += chunk.byteLength;
       if (
@@ -97,7 +102,13 @@ export class MediaManager {
   async delete(email: string, key: string): Promise<void> {
     const path = this.toFilename({ email }, key);
     const stats = await fs.stat(path);
-    await fs.rm(path, { recursive: stats.isDirectory() });
+    if (stats.isDirectory()) {
+      const children = await fs.readdir(path);
+      if (children.length) {
+        throw new Error("Cannot delete directory unless it's empty");
+      }
+    }
+    await fs.rm(path);
   }
 
   async list(
@@ -162,6 +173,9 @@ export class MediaManager {
    */
   async getRemainingSpace(user: Pick<UserModel, "email">): Promise<number> {
     const max = this.config.media.dataLimit;
+    if (typeof max !== "number") {
+      throw new Error("Cannot upload files: no data limit is configured");
+    }
     return max - (await this.getUsedSpace(user));
   }
 
