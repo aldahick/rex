@@ -86,10 +86,8 @@ export class MediaController {
     const [start, end] = this.getRange(req, size);
     const headers = {
       "Accept-Range": "bytes",
-      // HTTP content headers are zero-indexed - these subtractions are important!
-      // Firefox will send repeated end-end range requests if they're excluded
-      "Content-Length": (end - start - 1).toString(),
-      "Content-Range": `bytes ${start}-${end}/${size - 1}`,
+      "Content-Length": (end - start + 1).toString(),
+      "Content-Range": `bytes ${start}-${end}/${size}`,
       "Content-Type": mimeType,
     };
     const status = end < size ? HTTP_PARTIAL : HTTP_SUCCESS;
@@ -108,7 +106,7 @@ export class MediaController {
       start = 0;
     }
     if (isNaN(end)) {
-      // If this -1 is removed, Firefox will fail to seek anywhere near the end of a video
+      // Content-Range is zero-indexed, so without -1 browsers will expect one more byte than we have
       end = Math.min(size - 1, start + CONTENT_LENGTH);
     }
     return [start, end];
