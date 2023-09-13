@@ -33,6 +33,8 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
   ({ primaryBackground = BLUE, secondaryBackground = YELLOW }) => {
     const { authStore } = useStores();
     const theme = useTheme();
+    const authSuffix = authStore.isAuthenticated ? "Out" : "In";
+
     return (
       <HexSelect>
         {{
@@ -82,11 +84,19 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
               justifyContent="center"
               sx={{ bgcolor: secondaryBackground }}
             >
-              <RexLink to="/login" title="Log in">
+              <RexLink
+                to={`/log${authSuffix.toLowerCase()}`}
+                title={`Log ${authSuffix}`}
+              >
                 <Typography
                   textAlign="center"
                   variant="h1"
-                  style={{ cursor: "pointer" }}
+                  style={{
+                    cursor: "pointer",
+                    ...(authStore.isAuthenticated
+                      ? { transform: "scale(-1, 1)" }
+                      : {}),
+                  }}
                 >
                   👋
                 </Typography>
