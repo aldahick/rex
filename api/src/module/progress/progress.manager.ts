@@ -1,4 +1,4 @@
-import { injectable } from "@athenajs/core";
+import { injectable, Logger } from "@athenajs/core";
 
 import { IProgressStatus } from "../../graphql.js";
 import { ProgressModel } from "../../model/index.js";
@@ -6,7 +6,10 @@ import { DatabaseService } from "../../service/database.service.js";
 
 @injectable()
 export class ProgressManager {
-  constructor(private readonly db: DatabaseService) {}
+  constructor(
+    private readonly db: DatabaseService,
+    private readonly logger: Logger,
+  ) {}
 
   async fetch(id: string): Promise<ProgressModel> {
     const progress = await this.db.progress.find(id).selectAll();
@@ -35,6 +38,7 @@ export class ProgressManager {
   ): Promise<void> {
     await this.db.progressLogs.createMany(
       (logs instanceof Array ? logs : [logs]).map((text) => ({
+        progressId: id,
         text,
         createdAt: new Date(),
       })),
@@ -47,10 +51,19 @@ export class ProgressManager {
   resolveSafe(progressId: string, promise: Promise<void>): void {
     promise.catch(async (err: unknown) => {
       const errorMessage = err instanceof Error ? err.message : (err as string);
-      await this.addLogs(
-        progressId,
-        `An unexpected error occurred: ${errorMessage}`,
-      );
+      try {
+        await this.addLogs(
+          progressId,
+          `An unexpected error occurred: ${errorMessage}`,
+        );
+      } catch (saveErr) {
+        const saveErrorMessage =
+          err instanceof Error ? err.message : (err as string);
+        this.logger.error(
+          `Failed to save progress log for ID ${progressId}: ${saveErrorMessage}`,
+        );
+        this.logger.error(`Original error: ${errorMessage}`);
+      }
     });
   }
 }

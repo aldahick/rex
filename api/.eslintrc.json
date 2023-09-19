@@ -21,7 +21,7 @@
   "ignorePatterns": [
     "*.js",
     "dist",
-    "src/types/graphql.ts"
+    "src/graphql.ts"
   ],
   "rules": {
     "simple-import-sort/imports": "warn",
