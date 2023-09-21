@@ -145,7 +145,7 @@ export const MediaBrowser: React.FC = observer(() => {
   };
 
   useEffect(() => {
-    changeDir("");
+    changeDir("").catch(status.error);
   }, []);
 
   return (
