@@ -16,6 +16,15 @@ const HTTP_SUCCESS = 200;
 const HTTP_PARTIAL = 206;
 const CONTENT_LENGTH = 10 * 1024 ** 2; // 10mb
 
+interface ContentDetails {
+  headers: Record<string, string>;
+  status: number;
+  range: {
+    start: number;
+    end: number;
+  };
+}
+
 @controller()
 export class MediaController {
   constructor(
@@ -44,12 +53,9 @@ export class MediaController {
       throw new Error(`Media "${key}" not found`);
     }
 
-    const { start, end } = await this.sendContentHeaders(req, res, key, stats);
-    const stream = this.mediaManager.createReadStream(user, key, {
-      start,
-      end,
-    });
-    return res.send(stream);
+    const content = await this.getContentDetails(req, key, stats);
+    const stream = this.mediaManager.createReadStream(user, key, content.range);
+    return res.status(content.status).headers(content.headers).send(stream);
   }
 
   @post("/v1/media/content")
@@ -76,14 +82,13 @@ export class MediaController {
     return { ok: true };
   }
 
-  private async sendContentHeaders(
+  private async getContentDetails(
     req: HttpRequest,
-    res: HttpResponse,
     key: string,
     { size }: MediaStats,
-  ): Promise<{ start: number; end: number }> {
+  ): Promise<ContentDetails> {
     const mimeType = mime.getType(key) ?? "text/plain";
-    const [start, end] = this.getRange(req, size);
+    const { start, end } = this.getRange(req, size);
     const headers = {
       "Accept-Range": "bytes",
       "Content-Length": (end - start + 1).toString(),
@@ -91,14 +96,14 @@ export class MediaController {
       "Content-Type": mimeType,
     };
     const status = end < size ? HTTP_PARTIAL : HTTP_SUCCESS;
-    res.status(status).headers(headers);
-    return { start, end };
+    return {
+      headers,
+      status,
+      range: { start, end },
+    };
   }
 
-  private getRange(
-    req: HttpRequest,
-    size: number,
-  ): [start: number, end: number] {
+  private getRange(req: HttpRequest, size: number): ContentDetails["range"] {
     const tokens = req.headers.range?.slice("bytes=".length).split("-") ?? [];
     let start = Number(tokens[0]);
     let end = tokens[1] ? Number(tokens[1]) : NaN;
@@ -109,7 +114,7 @@ export class MediaController {
       // Content-Range is zero-indexed, so without -1 browsers will expect one more byte than we have
       end = Math.min(size - 1, start + CONTENT_LENGTH);
     }
-    return [start, end];
+    return { start, end };
   }
 
   /**

@@ -60,11 +60,11 @@ export class DiscordService {
     this.logger.info("discord.connected");
   }
 
-  close(): void {
+  async close(): Promise<void> {
     if (this.config.discord.token === undefined) {
       return;
     }
-    this.client.destroy();
+    await this.client.destroy();
     this.logger.info("discord.disconnected");
   }
 
