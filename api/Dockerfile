@@ -17,4 +17,4 @@ RUN pnpm install --prod --frozen-lockfile
 COPY --from=builder dist dist
 COPY gql /gql
 ENV GRAPHQL_SCHEMA_DIRS=/gql
-CMD node dist/main.js
+CMD node --enable-source-maps dist/main.js
