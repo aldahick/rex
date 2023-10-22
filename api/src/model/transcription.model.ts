@@ -15,13 +15,7 @@ export class TranscriptionTable extends BaseTable {
     filename: t.varchar(),
     inputKey: t.varchar(),
     outputKey: t.varchar(),
-    status: t.enum(
-      "transcription_status",
-      Object.values(ITranscriptionStatus) as [
-        ITranscriptionStatus,
-        ...ITranscriptionStatus[],
-      ],
-    ),
+    status: t.tsEnum("transcription_status", ITranscriptionStatus),
   }));
   relations = {
     user: this.hasOne(() => UserTable, {

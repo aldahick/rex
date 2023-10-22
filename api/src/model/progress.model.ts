@@ -11,10 +11,7 @@ export class ProgressTable extends BaseTable {
     id: t.uuid().primaryKey(),
     action: t.varchar(),
     createdAt: t.timestamp(),
-    status: t.enum(
-      "progress_status",
-      Object.values(IProgressStatus) as [IProgressStatus, ...IProgressStatus[]],
-    ),
+    status: t.tsEnum("progress_status", IProgressStatus),
   }));
   relations = {
     logs: this.hasMany(() => ProgressLogTable, {

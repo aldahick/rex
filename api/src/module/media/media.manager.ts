@@ -107,8 +107,10 @@ export class MediaManager {
       if (children.length) {
         throw new Error("Cannot delete directory unless it's empty");
       }
+      await fs.rmdir(path);
+    } else {
+      await fs.rm(path);
     }
-    await fs.rm(path);
   }
 
   async list(

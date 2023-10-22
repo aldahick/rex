@@ -40,7 +40,7 @@ export class RexConfig extends BaseConfig {
   readonly mzk = {
     runner: {
       dir: this.optional("MZK_RUNNER_DIR"),
-      image: this.required("MZK_RUNNER_IMAGE"),
+      image: this.optional("MZK_RUNNER_IMAGE"),
       platform: this.required("MZK_RUNNER_PLATFORM"),
     },
   };
