@@ -1,17 +1,18 @@
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS base
 
 RUN npm i -g pnpm
 COPY package.json pnpm-lock.yaml ./
+
+FROM base AS builder
+
 RUN pnpm install --frozen-lockfile
 
 COPY tsconfig.json ./
 COPY src src
 RUN pnpm build
 
-FROM node:18-alpine AS server
+FROM base AS server
 
-RUN npm i -g pnpm
-COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --prod --frozen-lockfile
 
 COPY --from=builder dist dist

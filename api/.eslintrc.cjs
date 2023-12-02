@@ -9,11 +9,11 @@ module.exports = {
   },
   plugins: [
     "@typescript-eslint/eslint-plugin",
+    "prettier",
     "simple-import-sort"
   ],
   extends: [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
+    "plugin:@typescript-eslint/recommended"
   ],
   root: true,
   env: {

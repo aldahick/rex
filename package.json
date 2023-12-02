@@ -9,5 +9,8 @@
     "build:api": "cd api && pnpm build",
     "build:mzk": "docker build -t ghcr.io/aldahick/mzk-runner:local docker/mzk",
     "build:web": "cd web && pnpm build"
+  },
+  "engines": {
+    "node": "^20.10"
   }
 }

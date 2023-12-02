@@ -12,12 +12,13 @@ export interface CreateJobParams {
 
 @injectable()
 export class GoogleCloudService {
-  constructor(private readonly config: RexConfig) {}
-
-  readonly jobs = new JobsClient({
-    projectId: this.config.googleCloud.projectId,
-    keyFilename: this.config.googleCloud.credentialsPath,
-  });
+  readonly jobs;
+  constructor(private readonly config: RexConfig) {
+    this.jobs = new JobsClient({
+      projectId: this.config.googleCloud.projectId,
+      keyFilename: this.config.googleCloud.credentialsPath,
+    });
+  }
 
   /**
    * Jobs are paramless on execution, but for simplicity's sake (avoiding major state management),
