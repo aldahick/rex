@@ -58,15 +58,13 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
             />
           </Grid>
           <Grid item flexGrow={1}>
-            {root.fetched ? (
-              <FileListBrowser
-                dir={dir}
-                root={root}
-                onDirChange={onDirChange}
-                onUploadStart={onUploadStart}
-                {...browserProps}
-              />
-            ) : null}
+            <FileListBrowser
+              dir={dir}
+              root={root}
+              onDirChange={onDirChange}
+              onUploadStart={onUploadStart}
+              {...browserProps}
+            />
           </Grid>
         </Grid>
       </Grid>

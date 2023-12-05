@@ -55,7 +55,7 @@ const routes: RouteObject[] = [
         element: <CatRoute />,
       },
       {
-        path: "/media",
+        path: "/media/:dir?",
         element: (
           <AuthGuard permissions={[IAuthPermission.Media]}>
             <MediaRoute />

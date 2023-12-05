@@ -35,6 +35,7 @@ export const FileListBrowser: React.FC<FileListBrowserProps> = ({
   onUploadStart,
   ...callbacks
 }) => {
+  console.log(root);
   const [children, setChildren] = useState<FileTreeEntry[]>(
     sortBy(root.children, sortFileEntries),
   );

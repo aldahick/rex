@@ -1,5 +1,5 @@
 import { styled, Typography } from "@mui/material";
-import * as mime from "mime";
+import mime from "mime";
 import React from "react";
 
 import { config } from "../../config";
@@ -32,12 +32,14 @@ export const MediaContentView: React.FC<MediaContentViewProps> = ({
   const key = entry.path ?? "";
   const mimeType = mime.getType(key);
   const params = new URLSearchParams({ key, token });
-  const contentUrl = config.apiUrl + "v1/media/content?" + params.toString();
+  const contentUrl = `${config.apiUrl}v1/media/content?${params.toString()}`;
 
   switch (mimeType) {
     case "audio/mp4":
     case "audio/mpeg":
+      // biome-ignore lint/a11y/useMediaCaption: nope
       return <audio controls autoPlay src={contentUrl} />;
+    case "application/mp4":
     case "video/mp4":
     case "video/quicktime":
       return <MaxWidthVideo playsInline controls autoPlay src={contentUrl} />;
@@ -57,6 +59,7 @@ export const MediaContentView: React.FC<MediaContentViewProps> = ({
         <FetchUrl url={contentUrl}>
           {(text) =>
             mimeType === "text/html" ? (
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: what do you even want
               <Typography dangerouslySetInnerHTML={{ __html: text }} />
             ) : (
               <WrappedText>{text}</WrappedText>
