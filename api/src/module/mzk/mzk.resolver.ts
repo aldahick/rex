@@ -1,5 +1,5 @@
-import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
 import path from "path";
+import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
 
 import {
   IAuthPermission,

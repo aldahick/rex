@@ -1,5 +1,5 @@
-import "typeface-open-sans";
 import "@emotion/react";
+import "typeface-open-sans";
 
 import React from "react";
 import { createRoot } from "react-dom/client";

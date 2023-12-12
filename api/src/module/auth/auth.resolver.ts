@@ -86,9 +86,8 @@ export class AuthResolver {
     }
     if (await this.userManager.exists(userId)) {
       return this.getAuthToken(userId);
-    } else {
-      throw new Error(`User ${userId} not found`);
     }
+    throw new Error(`User ${userId} not found`);
   }
 
   @resolveField("AuthToken.user", true)

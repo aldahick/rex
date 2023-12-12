@@ -24,13 +24,13 @@ export const CatCanvas: React.FC<CatCanvasProps> = ({ settings }) => {
     const newGame = new CatGame(canvas, settings);
     newGame.start();
     setGame(newGame);
-  }, []);
+  }, [game, settings]);
 
   useEffect(() => {
     if (game) {
       game.setSettings(settings);
     }
-  }, [settings]);
+  }, [settings, game]);
 
   return (
     <canvas

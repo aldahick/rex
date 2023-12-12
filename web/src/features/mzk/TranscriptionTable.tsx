@@ -18,7 +18,7 @@ export const TranscriptionTable: React.FC = () => {
       status.warn("You haven't started any transcriptions!");
       navigate("/media");
     }
-  }, [transcriptionsRes]);
+  }, [transcriptionsRes, status, navigate]);
 
   if (transcriptionsRes.error) {
     return status.error(

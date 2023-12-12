@@ -3,10 +3,10 @@ This is the entrypoint for `pnpm db`, so it assumes very little and should not b
 */
 import "reflect-metadata";
 
-import { container } from "@athenajs/core";
 import { resolve as resolvePath } from "path";
-import { rakeDb } from "rake-db";
 import { pathToFileURL } from "url";
+import { container } from "@athenajs/core";
+import { rakeDb } from "rake-db";
 
 import { RexConfig } from "../config.js";
 import { BaseTable } from "../model/base.table.js";

@@ -132,7 +132,7 @@ export const EditNoteForm: React.FC<{
   if (!isKeyValid) {
     attemptDecryptBody();
   }
-  useEffect(attemptDecryptBody, [key]);
+  useEffect(attemptDecryptBody, []);
 
   return (
     <Grid container direction="column">

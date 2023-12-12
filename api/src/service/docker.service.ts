@@ -44,6 +44,7 @@ export class DockerService {
       }
       throw err;
     }
-    return (this.client = client);
+    this.client = client;
+    return client;
   }
 }

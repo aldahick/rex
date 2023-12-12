@@ -21,7 +21,7 @@ export const SvgLinePath: React.FC<SvgLinePathProps> = ({ paths }) => {
 
   useEffect(() => {
     setPath(paths.map((p) => toSvgPath(p)).join(""));
-  }, []);
+  }, [paths]);
 
   if (!path) {
     return null;

@@ -8,7 +8,7 @@
     "start": "node --enable-source-maps dist/main",
     "dev": "tsc-watch --onSuccess \"node --enable-source-maps dist/main\"",
     "build": "tsc",
-    "lint": "eslint src",
+    "lint": "biome check src",
     "generate": "graphql-codegen --config codegen.graphql.yml",
     "db": "ts-node --esm src/util/orchid.ts",
     "test": "node --enable-source-maps --test dist"
@@ -46,6 +46,7 @@
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.4.1",
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/typescript": "^4.0.1",
     "@graphql-codegen/typescript-operations": "^4.0.1",
@@ -57,12 +58,6 @@
     "@types/node": "^20.10.2",
     "@types/pg": "^8.10.9",
     "@types/pluralize": "^0.0.33",
-    "@typescript-eslint/eslint-plugin": "^6.13.1",
-    "@typescript-eslint/parser": "^6.13.1",
-    "eslint": "^8.55.0",
-    "eslint-plugin-prettier": "^5.0.1",
-    "eslint-plugin-simple-import-sort": "^10.0.0",
-    "prettier": "^3.1.0",
     "rake-db": "^2.11.0",
     "ts-node": "^10.9.1",
     "tsc-watch": "^6.0.4",

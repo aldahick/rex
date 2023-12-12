@@ -1,14 +1,14 @@
-import { injectable, Logger } from "@athenajs/core";
-import axios from "axios";
 import {
+  Dirent,
+  Stats,
   createReadStream,
   createWriteStream,
-  Dirent,
   promises as fs,
-  Stats,
 } from "fs";
 import path from "path";
 import { Readable } from "stream";
+import { Logger, injectable } from "@athenajs/core";
+import axios from "axios";
 
 import { RexConfig } from "../../config.js";
 import { IMediaItem, IMediaItemType, IProgressStatus } from "../../graphql.js";
@@ -56,7 +56,7 @@ export class MediaManager {
     };
     stream.pause();
     stream.on("data", (chunk: Buffer) => {
-      if (isNaN(totalSize)) {
+      if (Number.isNaN(totalSize)) {
         return;
       }
       const percentComplete = Math.floor((fetchedSize / totalSize) * 100);

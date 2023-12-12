@@ -1,8 +1,8 @@
 import {
-  controller,
-  get,
   HttpRequest,
   HttpResponse,
+  controller,
+  get,
   post,
 } from "@athenajs/core";
 import mime from "mime";
@@ -107,10 +107,10 @@ export class MediaController {
     const tokens = req.headers.range?.slice("bytes=".length).split("-") ?? [];
     let start = Number(tokens[0]);
     let end = tokens[1] ? Number(tokens[1]) : NaN;
-    if (isNaN(start)) {
+    if (Number.isNaN(start)) {
       start = 0;
     }
-    if (isNaN(end)) {
+    if (Number.isNaN(end)) {
       // Content-Range is zero-indexed, so without -1 browsers will expect one more byte than we have
       end = Math.min(size - 1, start + CONTENT_LENGTH);
     }

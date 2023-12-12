@@ -1,10 +1,10 @@
 import UploadIcon from "@mui/icons-material/Upload";
-import { Grid, IconButton, styled, Typography } from "@mui/material";
+import { Grid, IconButton, Typography, styled } from "@mui/material";
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 import { RexLink } from "../utils/RexLink";
-import { getFileEntryType, PathTypography } from "./FileListItem";
+import { PathTypography, getFileEntryType } from "./FileListItem";
 
 const DropAreaDiv = styled("div")({
   minHeight: "50vh",

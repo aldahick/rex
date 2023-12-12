@@ -1,4 +1,4 @@
-import { injectable, Logger, makeRegistryDecorator } from "@athenajs/core";
+import { Logger, injectable, makeRegistryDecorator } from "@athenajs/core";
 import { injectAll } from "@athenajs/core/dist/container.js";
 import { Client, GatewayIntentBits, Message } from "discord.js";
 
@@ -14,7 +14,7 @@ export interface DiscordCommand {
     message: Message,
     args: string[],
     command: string,
-  ): Promise<void | undefined | string>;
+  ): Promise<string | undefined>;
 }
 export const discordCommand = makeRegistryDecorator(commandToken);
 
@@ -47,7 +47,7 @@ export class DiscordService {
       }
     }
     this.init().catch((err) => {
-      this.logger.error("failed to start Discord bot: " + err);
+      this.logger.error(`failed to start Discord bot: ${err}`);
     });
   }
 

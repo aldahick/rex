@@ -12,7 +12,7 @@ export const LogoutRoute: React.FC = observer(() => {
   useEffect(() => {
     authStore.removeAuth();
     navigate("/");
-  }, []);
+  }, [authStore, navigate]);
 
   return <Typography>Logging out and redirecting...</Typography>;
 });

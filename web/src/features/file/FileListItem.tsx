@@ -3,7 +3,7 @@ import FolderIcon from "@mui/icons-material/Folder";
 import ImageIcon from "@mui/icons-material/Image";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import VideoIcon from "@mui/icons-material/VideoFile";
-import { Grid, IconButton, styled, Typography } from "@mui/material";
+import { Grid, IconButton, Typography, styled } from "@mui/material";
 import mime from "mime";
 import React, { useState } from "react";
 
@@ -26,9 +26,11 @@ export const getFileEntryType = (
   const type = mime.getType(entry.path);
   if (type?.startsWith("image/")) {
     return [ImageIcon, type];
-  } else if (type?.startsWith("audio/")) {
+  }
+  if (type?.startsWith("audio/")) {
     return [AudioIcon, type];
-  } else if (type?.startsWith("video/")) {
+  }
+  if (type?.startsWith("video/")) {
     return [VideoIcon, type];
   }
   return [IconPlaceholder, type ?? undefined];

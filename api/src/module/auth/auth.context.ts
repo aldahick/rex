@@ -1,7 +1,7 @@
 import {
   ContextGenerator,
-  contextGenerator,
   ContextRequest,
+  contextGenerator,
 } from "@athenajs/core";
 
 import { IAuthPermission } from "../../graphql.js";
@@ -49,7 +49,7 @@ export class AuthContextGenerator implements ContextGenerator {
     if (query.token) {
       return query.token;
     }
-    const auth = headers["authorization"];
+    const auth = headers.authorization;
     if (!auth) {
       return undefined;
     }

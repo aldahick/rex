@@ -1,11 +1,11 @@
 import {
-  styled,
   Table as MaterialTable,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
   Typography,
+  styled,
 } from "@mui/material";
 import React, { PropsWithChildren } from "react";
 

@@ -1,4 +1,4 @@
-import { styled, Typography } from "@mui/material";
+import { Typography, styled } from "@mui/material";
 import React, { PropsWithChildren } from "react";
 
 const Container = styled("div")({

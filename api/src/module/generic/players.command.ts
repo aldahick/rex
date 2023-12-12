@@ -39,7 +39,7 @@ export class PlayersCommand implements DiscordCommand {
     try {
       players = (await Gamedig.query(query)).players;
     } catch (err) {
-      this.logger.error("failed to query server for players command: " + err);
+      this.logger.error(`failed to query server for players command: ${err}`);
       await res.edit(err instanceof Error ? err.message : (err as string));
       return;
     }

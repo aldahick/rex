@@ -1,9 +1,9 @@
 import {
   ApolloClient,
   ApolloProvider,
-  createHttpLink,
   InMemoryCache,
   NormalizedCacheObject,
+  createHttpLink,
 } from "@apollo/client";
 import { observer } from "mobx-react-lite";
 import { SnackbarProvider } from "notistack";

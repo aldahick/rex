@@ -2,10 +2,10 @@ import { Grid, Link, Typography, TypographyProps } from "@mui/material";
 import React from "react";
 
 export interface SocialBadgeProps {
-  label?: React.ReactNode;
+  label: string;
   imageUrl: string;
   url?: string;
-  imageProps?: Partial<React.ImgHTMLAttributes<HTMLImageElement>>;
+  imageProps?: Partial<Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'alt'>>;
   textColor?: TypographyProps["color"];
   size?: number;
 }
@@ -21,7 +21,7 @@ export const SocialBadge: React.FC<SocialBadgeProps> = ({
   <Link href={url}>
     <Grid container alignItems="center" direction="column">
       <Grid item>
-        <img src={imageUrl} height={size ?? 32} {...imageProps} />
+        <img src={imageUrl} height={size ?? 32} {...imageProps} alt={label} />
       </Grid>
       {typeof label === "string" ? (
         <Grid item>

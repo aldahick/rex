@@ -1,8 +1,8 @@
 import {
-  createTheme,
   CssBaseline,
-  responsiveFontSizes,
   ThemeProvider as MuiThemeProvider,
+  createTheme,
+  responsiveFontSizes,
 } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import React from "react";

@@ -1,8 +1,8 @@
-import { injectable } from "@athenajs/core";
 import { spawn } from "child_process";
 import { createHash } from "crypto";
 import { promises as fs } from "fs";
 import path from "path";
+import { injectable } from "@athenajs/core";
 
 import { RexConfig } from "../../config.js";
 import { ITranscriptionStatus } from "../../graphql.js";
@@ -98,7 +98,7 @@ export class MzkManager {
     const { image } = this.config.mzk.runner;
     if (!image) {
       throw new Error(
-        `Missing MZK_RUNNER_IMAGE with MZK_RUNNER_PLATFORM=docker`,
+        "Missing MZK_RUNNER_IMAGE with MZK_RUNNER_PLATFORM=docker",
       );
     }
     const containerOutputPath = "/output";
@@ -137,7 +137,7 @@ export class MzkManager {
     const { image } = this.config.mzk.runner;
     if (!image) {
       throw new Error(
-        `Missing MZK_RUNNER_IMAGE with MZK_RUNNER_PLATFORM=docker`,
+        "Missing MZK_RUNNER_IMAGE with MZK_RUNNER_PLATFORM=docker",
       );
     }
     const args = ["--audio-url", audioUrl, "--output-url", outputUrl];
@@ -145,7 +145,7 @@ export class MzkManager {
     const name = `${transcription.userId}:${transcription.outputKey}`;
     await this.googleCloud.createAndRun({
       image,
-      name: "mzk-" + createHash("md5").update(name).digest("hex"),
+      name: `mzk-${createHash("md5").update(name).digest("hex")}`,
       args,
     });
   }
@@ -157,7 +157,7 @@ export class MzkManager {
   ) {
     const { dir } = this.config.mzk.runner;
     if (!dir) {
-      throw new Error(`Missing MZK_RUNNER_DIR with MKZ_RUNNER_PLATFORM=spawn`);
+      throw new Error("Missing MZK_RUNNER_DIR with MKZ_RUNNER_PLATFORM=spawn");
     }
     const scriptPath = path.resolve(process.cwd(), dir, "main.py");
     const args = [

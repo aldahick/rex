@@ -1,4 +1,4 @@
-import { Grid, styled, Typography } from "@mui/material";
+import { Grid, Typography, styled } from "@mui/material";
 import React from "react";
 
 import { FileAddressBar } from "./FileAddressBar";

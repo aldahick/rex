@@ -1,4 +1,4 @@
-import { injectable, Logger } from "@athenajs/core";
+import { Logger, injectable } from "@athenajs/core";
 
 import { IProgressStatus } from "../../graphql.js";
 import { ProgressModel } from "../../model/index.js";
@@ -37,7 +37,7 @@ export class ProgressManager {
     status?: IProgressStatus,
   ): Promise<void> {
     await this.db.progressLogs.createMany(
-      (logs instanceof Array ? logs : [logs]).map((text) => ({
+      (Array.isArray(logs) ? logs : [logs]).map((text) => ({
         progressId: id,
         text,
         createdAt: new Date(),

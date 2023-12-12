@@ -1,8 +1,8 @@
 import { RexConfig } from "../../config.js";
 import {
   DiscordCommand,
-  discordCommand,
   DiscordService,
+  discordCommand,
 } from "../../service/discord.service.js";
 
 @discordCommand()
@@ -25,7 +25,7 @@ export class HelpCommand implements DiscordCommand {
     return `**Commands:**\n${Array.from(this.discordService.commands.values())
       .map(
         ({ command, helpText }) =>
-          `${(command instanceof Array ? command : [command])
+          `${(Array.isArray(command) ? command : [command])
             .map(
               (command) => `\`${this.config.discord.commandPrefix}${command}\``,
             )

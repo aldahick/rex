@@ -26,7 +26,7 @@ export const FileAddressBar: React.FC<FileAddressBarProps> = ({
     <TextField
       fullWidth
       label="Directory"
-      value={"/" + value}
+      value={`/${value}`}
       onChange={handleChange}
       onKeyDown={handleKeyDown}
     />

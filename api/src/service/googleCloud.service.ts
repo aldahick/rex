@@ -58,7 +58,7 @@ export class GoogleCloudService {
 
   private async runJob(name: string): Promise<void> {
     const [operation] = await this.jobs.runJob({ name });
-    const [] = await operation.promise();
+    await operation.promise();
   }
 
   private async deleteJob(name: string): Promise<void> {
