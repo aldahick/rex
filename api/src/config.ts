@@ -35,6 +35,8 @@ export class RexConfig extends BaseConfig {
   readonly media = {
     dataLimit: stringToBytes(this.optional("MEDIA_DATA_LIMIT")),
     dir: this.optional("MEDIA_DIR"),
+    sharexUrl:
+      this.optional("MEDIA_SHAREX_URL") ?? `${this.http.url}/v1/sharex`,
   };
 
   readonly mzk = {

@@ -154,9 +154,9 @@ export class MediaManager {
   createReadStream(
     user: Pick<UserModel, "email">,
     key: string,
-    { start, end }: { start: number; end: number },
+    options?: { start: number; end: number },
   ): Readable {
-    return createReadStream(this.toFilename(user, key), { start, end });
+    return createReadStream(this.toFilename(user, key), options);
   }
 
   async stat(
@@ -203,6 +203,13 @@ export class MediaManager {
       }
     }
     return total;
+  }
+
+  /**
+   * @returns all emails of users who have media
+   */
+  async getAllEmails(): Promise<string[]> {
+    return fs.readdir(this.root);
   }
 
   toFilename(user: Pick<UserModel, "email">, key: string): string {

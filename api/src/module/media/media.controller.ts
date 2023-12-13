@@ -53,7 +53,7 @@ export class MediaController {
       throw new Error(`Media "${key}" not found`);
     }
 
-    const content = await this.getContentDetails(req, key, stats);
+    const content = this.getContentDetails(req, key, stats);
     const stream = this.mediaManager.createReadStream(user, key, content.range);
     return res.status(content.status).headers(content.headers).send(stream);
   }
@@ -82,11 +82,11 @@ export class MediaController {
     return { ok: true };
   }
 
-  private async getContentDetails(
+  getContentDetails(
     req: HttpRequest,
     key: string,
     { size }: MediaStats,
-  ): Promise<ContentDetails> {
+  ): ContentDetails {
     const mimeType = mime.getType(key) ?? "text/plain";
     const { start, end } = this.getRange(req, size);
     const headers = {
