@@ -8,9 +8,6 @@ dependencies:
   '@apollo/client':
     specifier: ^3.8.8
     version: 3.8.8(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)
-  '@athenajs/react-utils':
-    specifier: ^0.2.0
-    version: 0.2.0
   '@emotion/react':
     specifier: ^11.11.1
     version: 11.11.1(@types/react@18.2.43)(react@18.2.0)
@@ -70,6 +67,9 @@ dependencies:
     version: 0.9.0(immer@10.0.2)(react@18.2.0)
 
 devDependencies:
+  '@athenajs/react-utils':
+    specifier: ^0.2.1
+    version: 0.2.1
   '@biomejs/biome':
     specifier: ^1.4.1
     version: 1.4.1
@@ -196,10 +196,10 @@ packages:
       - encoding
     dev: true
 
-  /@athenajs/react-utils@0.2.0:
-    resolution: {integrity: sha512-DyLFjkk9dGKFmmOVnj+tEKDPnxk9m6Rhxu5uVpkn+9/FSINvD01z2JzL2gXgPxwNm3iBFPkpZd3ZVy3+pzGiHA==}
+  /@athenajs/react-utils@0.2.1:
+    resolution: {integrity: sha512-pMYDh/vs9GP8GzeJD/CkgItfDrOiQN3CJgfpoqcR58jfpDC0AQaNreFKlb5bAm8HIRdHcUuxlXi5PfH1Y/HN/w==}
     engines: {node: ^20.10}
-    dev: false
+    dev: true
 
   /@babel/code-frame@7.22.13:
     resolution: {integrity: sha512-XktuhWlJ5g+3TJXc5upd9Ks1HutSArik6jf2eAjYFyIOf4ej3RN+184cZbzDvbPnuTJIUhPKKJE3cIsYTiAT3w==}
