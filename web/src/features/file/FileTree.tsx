@@ -41,7 +41,7 @@ export const FileTree: React.FC<FileTreeProps> = ({
       setOpen(true);
       onExpand(entry.path);
     }
-  }, [dir]);
+  }, [dir, entry, onExpand]);
 
   const dirChildren = entry.children.filter((c) => c.type === "directory");
 

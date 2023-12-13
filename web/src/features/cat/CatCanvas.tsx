@@ -13,18 +13,21 @@ export interface CatCanvasProps {
 export const CatCanvas: React.FC<CatCanvasProps> = ({ settings }) => {
   const [game, setGame] = useState<CatGame>();
 
-  const handleRef = useCallback((canvas: HTMLCanvasElement) => {
-    if (!canvas) {
-      if (game) {
-        game.stop();
-        setGame(undefined);
+  const handleRef = useCallback(
+    (canvas: HTMLCanvasElement) => {
+      if (!canvas) {
+        if (game) {
+          game.stop();
+          setGame(undefined);
+        }
+        return;
       }
-      return;
-    }
-    const newGame = new CatGame(canvas, settings);
-    newGame.start();
-    setGame(newGame);
-  }, [game, settings]);
+      const newGame = new CatGame(canvas, settings);
+      newGame.start();
+      setGame(newGame);
+    },
+    [game, settings],
+  );
 
   useEffect(() => {
     if (game) {

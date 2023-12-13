@@ -60,20 +60,19 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = observer(
     const navigate = useNavigate();
 
     useEffect(() => {
-      console.log(mediaItemsResult);
       const mediaItems = mediaItemsResult.data?.mediaItems;
       if (mediaItems) {
         setRoot((root) => {
           const entry = getFileEntryAt(root, dir, true);
-          entry.children = mediaItems.map((i) =>
-            cloneDeep(mediaItemToEntry(i, dir)),
-          );
+          entry.children = mediaItems
+            .filter((i) => !i.key.startsWith("."))
+            .map((i) => cloneDeep(mediaItemToEntry(i, dir)));
           entry.fetched = true;
         });
       } else if (mediaItemsResult.error) {
         status.error(mediaItemsResult.error);
       }
-    }, [mediaItemsResult]);
+    }, [mediaItemsResult, dir, status, setRoot]);
 
     const changeDir = async (newDir: string) => {
       navigate(`/media/${encodeURIComponent(newDir)}`);

@@ -27,7 +27,7 @@ export class CatGame {
   }
 
   start() {
-    range(this.settings.count).forEach(() => this.dots.push(this.randomDot()));
+    this.dots.push(...range(this.settings.count).map(() => this.randomDot()));
     this.startInterval();
   }
 
@@ -78,7 +78,7 @@ export class CatGame {
     const { count } = this.settings;
     const diff = count - this.dots.length;
     if (diff > 0) {
-      range(diff).forEach(() => this.dots.push(this.randomDot()));
+      this.dots.push(...range(diff).map(() => this.randomDot()));
     } else if (diff < 0) {
       this.dots.splice(count, -diff);
     }

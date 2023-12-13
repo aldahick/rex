@@ -93,19 +93,19 @@ export const HexSelect: React.FC<HexSelectProps> = ({ children }) => {
       },
     };
 
-    Object.values(segments).forEach((segment) => {
+    for (const segment of Object.values(segments)) {
       segment.left += containerLeft;
       segment.top += containerTop ?? 0;
-    });
+    }
     setSegments(segments);
-  }, [containerRef, sideLength, halfHeight]);
+  }, [sideLength, halfHeight]);
 
   useEffect(() => {
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [handleResize]);
 
   return (
     <div

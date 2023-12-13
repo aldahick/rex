@@ -5,7 +5,7 @@ export interface SocialBadgeProps {
   label: string;
   imageUrl: string;
   url?: string;
-  imageProps?: Partial<Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'alt'>>;
+  imageProps?: Partial<Omit<React.ImgHTMLAttributes<HTMLImageElement>, "alt">>;
   textColor?: TypographyProps["color"];
   size?: number;
 }
