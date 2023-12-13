@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - api/**
+    branches: '*'
 jobs:
   build-api:
     uses: ./.github/workflows/build-package.yml

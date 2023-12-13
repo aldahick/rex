@@ -40,7 +40,7 @@ export class SharexController {
     private readonly userManager: UserManager,
   ) {}
 
-  @post("/v1/sharex")
+  @post("/v1/sharex/upload")
   async upload(
     req: HttpRequest,
     res: HttpResponse,
@@ -81,7 +81,6 @@ export class SharexController {
     for (const email of await this.mediaManager.getAllEmails()) {
       const stats = await this.mediaManager.stat({ email }, key);
       if (stats) {
-        const contentType = mime.getType(filename);
         const content = this.mediaController.getContentDetails(req, key, stats);
         const stream = this.mediaManager.createReadStream({ email }, key);
         return res.status(content.status).headers(content.headers).send(stream);

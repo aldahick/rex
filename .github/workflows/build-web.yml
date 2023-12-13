@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - web/**
+    branches: '*'
 jobs:
   build-web:
     uses: ./.github/workflows/build-package.yml
