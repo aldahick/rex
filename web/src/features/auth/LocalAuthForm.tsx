@@ -59,7 +59,7 @@ export const LocalAuthForm: React.FC<LocalAuthFormProps> = ({
   const handleKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
     if (evt.key.toLowerCase() === "enter") {
       // should never catch
-      handleSubmit().catch(console.error);
+      handleSubmit().catch(status.error);
     }
   };
 

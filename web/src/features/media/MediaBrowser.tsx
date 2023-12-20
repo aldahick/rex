@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { cloneDeep } from "lodash";
 import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { useImmer } from "use-immer";
 
@@ -36,22 +36,17 @@ const EMPTY_ROOT: FileTreeEntry = {
 };
 
 interface MediaBrowserProps {
-  dir?: string;
+  dir: string;
 }
 
 /**
  * Wraps a {@link FileBrowser} with Rex media-related operations
  */
 export const MediaBrowser: React.FC<MediaBrowserProps> = observer(
-  ({ dir = "" }) => {
+  ({ dir }) => {
     // no preceding "/"
     const [root, setRoot] = useImmer(cloneDeep(EMPTY_ROOT));
     const [selected, setSelected] = useState<FileTreeEntry>();
-    const mediaItemsResult = useMediaItemsQuery({
-      variables: {
-        dir,
-      },
-    });
     const [createMediaUpload] = useCreateMediaUploadMutation();
     const [deleteMedia] = useDeleteMediaMutation();
     const [startTranscription] = useStartTranscriptionMutation();
@@ -59,9 +54,11 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = observer(
     const { authStore } = useStores();
     const navigate = useNavigate();
 
-    useEffect(() => {
-      const mediaItems = mediaItemsResult.data?.mediaItems;
-      if (mediaItems) {
+    useMediaItemsQuery({
+      variables: {
+        dir,
+      },
+      onCompleted: ({ mediaItems }) => {
         setRoot((root) => {
           const entry = getFileEntryAt(root, dir, true);
           entry.children = mediaItems
@@ -69,10 +66,11 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = observer(
             .map((i) => cloneDeep(mediaItemToEntry(i, dir)));
           entry.fetched = true;
         });
-      } else if (mediaItemsResult.error) {
-        status.error(mediaItemsResult.error);
-      }
-    }, [mediaItemsResult, dir, status, setRoot]);
+      },
+      onError: (err) => {
+        status.error(err);
+      },
+    });
 
     const changeDir = async (newDir: string) => {
       navigate(`/media/${encodeURIComponent(newDir)}`);
@@ -103,13 +101,13 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = observer(
       if (res.errors || !res.data) {
         throw res.errors?.[0] ?? new Error("No upload URL returned from API");
       }
-      const { uploadUrl: url } = res.data;
+      const { uploadUrl } = res.data;
       status.info(
         `Uploading file ${key}... (${(file.size / 1024 ** 2).toFixed(2)} MB)`,
       );
       const form = new FormData();
       form.append("file", file);
-      const uploadRes = await fetch(url, {
+      const uploadRes = await fetch(uploadUrl, {
         method: "POST",
         body: form,
         headers: {

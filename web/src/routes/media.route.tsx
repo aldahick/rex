@@ -5,9 +5,6 @@ import { MediaBrowser } from "../features/media/MediaBrowser";
 
 export const MediaRoute: React.FC = () => {
   const match = useMatch("/media/:dir?");
-  let dir = match?.params.dir;
-  if (dir) {
-    dir = decodeURIComponent(dir);
-  }
+  const dir = decodeURIComponent(match?.params.dir ?? "");
   return <MediaBrowser dir={dir} />;
 };

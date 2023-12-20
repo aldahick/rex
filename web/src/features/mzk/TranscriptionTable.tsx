@@ -1,6 +1,6 @@
 import DownloadIcon from "@mui/icons-material/Download";
 import { IconButton, TableCell, TableRow, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useTranscriptionsQuery } from "../../graphql";
@@ -8,23 +8,19 @@ import { useStatus } from "../../hooks";
 import { Table } from "../utils/Table";
 
 export const TranscriptionTable: React.FC = () => {
-  const transcriptionsRes = useTranscriptionsQuery();
   const navigate = useNavigate();
   const status = useStatus();
-
-  useEffect(() => {
-    const count = transcriptionsRes.data?.transcriptions.length;
-    if (count === 0) {
-      status.warn("You haven't started any transcriptions!");
-      navigate("/media");
-    }
-  }, [transcriptionsRes, status, navigate]);
-
-  if (transcriptionsRes.error) {
-    return status.error(
-      transcriptionsRes.error ?? "Failed to load your transcriptions",
-    );
-  }
+  const transcriptionsRes = useTranscriptionsQuery({
+    onCompleted: ({ transcriptions }) => {
+      if (transcriptions.length === 0) {
+        status.warn("You haven't started any transcriptions!");
+        navigate("/media");
+      }
+    },
+    onError: (err) => {
+      status.error(err);
+    },
+  });
 
   const transcriptions = transcriptionsRes.data?.transcriptions;
   if (!transcriptions) {

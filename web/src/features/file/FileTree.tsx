@@ -10,7 +10,7 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { FileTreeEntry } from "./FileTreeEntry";
 
@@ -35,13 +35,6 @@ export const FileTree: React.FC<FileTreeProps> = ({
   const [open, setOpen] = useState(
     !entry.path && window.innerWidth > theme.breakpoints.values.md,
   );
-
-  useEffect(() => {
-    if (entry.path && dir.startsWith(entry.path) && !entry.fetched) {
-      setOpen(true);
-      onExpand(entry.path);
-    }
-  }, [dir, entry, onExpand]);
 
   const dirChildren = entry.children.filter((c) => c.type === "directory");
 

@@ -10,31 +10,33 @@ type Dot = XYCoord & {
 };
 
 export class CatGame {
-  private readonly context: CanvasRenderingContext2D;
   private readonly dots: Dot[] = [];
 
   private interval?: NodeJS.Timeout;
 
-  constructor(
-    private readonly canvas: HTMLCanvasElement,
-    private settings: CatSettings,
-  ) {
+  constructor(private settings: CatSettings) {}
+
+  start(canvas: HTMLCanvasElement) {
+    if (!this.settings) {
+      return;
+    }
     const context = canvas.getContext("2d");
     if (!context) {
       throw new Error("literally can't render anything. neat");
     }
-    this.context = context;
+    this.dots.push(
+      ...range(this.settings.count).map(() => this.randomDot(canvas)),
+    );
+    this.startInterval(context);
   }
 
-  start() {
-    this.dots.push(...range(this.settings.count).map(() => this.randomDot()));
-    this.startInterval();
-  }
-
-  startInterval() {
+  startInterval(context: CanvasRenderingContext2D) {
+    if (!this.settings) {
+      return;
+    }
     this.interval = setInterval(() => {
-      this.update();
-      this.render();
+      this.update(context.canvas);
+      this.render(context);
     }, 1000 / this.settings.frameRate);
   }
 
@@ -47,48 +49,25 @@ export class CatGame {
     clearInterval(this.interval);
   }
 
-  setSettings(value: CatSettings) {
-    const old = this.settings;
-    this.settings = value;
-    if (old.count !== value.count) {
-      this.updateDots();
-    }
-    if (old.frameRate !== value.frameRate) {
-      this.stopInterval();
-      this.startInterval();
-    }
-  }
-
   swapPalette() {
     const newBackground = this.settings.color;
     this.settings.color = this.settings.backgroundColor;
     this.settings.backgroundColor = newBackground;
   }
 
-  randomDot(): Dot {
+  randomDot(canvas: HTMLCanvasElement): Dot {
     return {
-      x: random(this.canvas.width),
-      y: random(this.canvas.height),
+      x: random(canvas.width),
+      y: random(canvas.height),
       theta: startAngles[random(startAngles.length)],
     };
   }
 
-  /** runs whenever some settings (e.g. count) are changed, to adjust dots without resetting them all */
-  updateDots() {
-    const { count } = this.settings;
-    const diff = count - this.dots.length;
-    if (diff > 0) {
-      this.dots.push(...range(diff).map(() => this.randomDot()));
-    } else if (diff < 0) {
-      this.dots.splice(count, -diff);
-    }
-  }
-
   /** runs every frame to change dot positions based on velocity and walls */
-  update() {
+  update(canvas: HTMLCanvasElement) {
     const { speed, radius } = this.settings;
-    const maxX = this.canvas.width - radius;
-    const maxY = this.canvas.height - radius;
+    const maxX = canvas.width - radius;
+    const maxY = canvas.height - radius;
     for (const dot of this.dots) {
       dot.x += speed * Math.cos(dot.theta);
       dot.y += speed * Math.sin(dot.theta);
@@ -114,14 +93,14 @@ export class CatGame {
   }
 
   /** runs every frame to draw dots (and background) to canvas */
-  render() {
-    const { canvas, context } = this;
+  render(context: CanvasRenderingContext2D) {
     const { backgroundColor, color, radius } = this.settings;
+    const { width, height } = context.canvas;
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.clearRect(0, 0, width, height);
     context.beginPath();
     context.fillStyle = backgroundColor;
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillRect(0, 0, width, height);
     context.closePath();
 
     context.fillStyle = color;

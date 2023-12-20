@@ -1,39 +1,43 @@
 import React, { useCallback, useEffect, useState } from "react";
 
+import { useStores } from "../../hooks";
+import { ThemeSetting } from "../../store/settings.store";
 import { CatGame } from "./CatGame";
 import { CatSettings } from "./CatSettings";
 
-export interface CatCanvasProps {
-  settings: CatSettings;
-}
+const getCatColors = (theme?: ThemeSetting) =>
+  theme === ThemeSetting.Light || !theme
+    ? {
+        color: "#121212",
+        backgroundColor: "white",
+      }
+    : {
+        color: "white",
+        backgroundColor: "#121212",
+      };
 
 /**
  * Displays a moving dot, because that's all it takes to entertain my cat
  */
-export const CatCanvas: React.FC<CatCanvasProps> = ({ settings }) => {
-  const [game, setGame] = useState<CatGame>();
-
-  const handleRef = useCallback(
-    (canvas: HTMLCanvasElement) => {
-      if (!canvas) {
-        if (game) {
-          game.stop();
-          setGame(undefined);
-        }
-        return;
-      }
-      const newGame = new CatGame(canvas, settings);
-      newGame.start();
-      setGame(newGame);
-    },
-    [game, settings],
+export const CatCanvas: React.FC = () => {
+  const { settingsStore } = useStores();
+  const [game] = useState(
+    new CatGame({
+      ...getCatColors(settingsStore.get("theme")),
+      speed: 5,
+      radius: 16,
+      count: 3,
+      frameRate: 60,
+    }),
   );
 
-  useEffect(() => {
-    if (game) {
-      game.setSettings(settings);
+  const handleRef = (canvas: HTMLCanvasElement | null) => {
+    if (canvas) {
+      game.start(canvas);
+    } else {
+      game.stop();
     }
-  }, [settings, game]);
+  };
 
   return (
     <canvas

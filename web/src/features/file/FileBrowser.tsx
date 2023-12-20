@@ -1,11 +1,16 @@
 import { Grid, Typography, styled } from "@mui/material";
 import React from "react";
 
+import { sortBy } from "lodash";
 import { FileAddressBar } from "./FileAddressBar";
 import { FileListBrowser, FileListBrowserProps } from "./FileListBrowser";
 import { FileListItemCallbacks } from "./FileListItem";
 import { FileTree } from "./FileTree";
-import { FileTreeEntry } from "./FileTreeEntry";
+import {
+  FileTreeEntry,
+  getFileEntryAt,
+  sortFileEntries,
+} from "./FileTreeEntry";
 
 const TitleBoxGrid = styled(Grid)(({ theme }) => ({
   backgroundColor: theme.palette.grey[900],
@@ -33,6 +38,9 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
   onDirChange,
   ...browserProps
 }) => {
+  const entry = getFileEntryAt(root, dir, false);
+  const entries = entry?.fetched && sortBy(entry.children, sortFileEntries);
+
   return (
     <Grid container marginTop="1em">
       <Grid item xs={12}>
@@ -58,13 +66,14 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
             />
           </Grid>
           <Grid item flexGrow={1}>
-            <FileListBrowser
-              dir={dir}
-              root={root}
-              onDirChange={onDirChange}
-              onUploadStart={onUploadStart}
-              {...browserProps}
-            />
+            {entries && (
+              <FileListBrowser
+                entries={entries}
+                onDirChange={onDirChange}
+                onUploadStart={onUploadStart}
+                {...browserProps}
+              />
+            )}
           </Grid>
         </Grid>
       </Grid>
