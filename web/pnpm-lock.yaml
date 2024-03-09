@@ -59,12 +59,18 @@ dependencies:
   react-router-dom:
     specifier: ^6.20.1
     version: 6.20.1(react-dom@18.2.0)(react@18.2.0)
+  romans:
+    specifier: ^2.0.15
+    version: 2.0.15
   typeface-open-sans:
     specifier: ^1.1.13
     version: 1.1.13
   use-immer:
     specifier: ^0.9.0
     version: 0.9.0(immer@10.0.2)(react@18.2.0)
+  web-audio-daw:
+    specifier: ^4.13.2
+    version: 4.13.2
 
 devDependencies:
   '@athenajs/react-utils':
@@ -4095,6 +4101,10 @@ packages:
       fsevents: 2.3.3
     dev: true
 
+  /romans@2.0.15:
+    resolution: {integrity: sha512-/0/Wdz+Q948fkUlBt+JUgkxdYAmlBStLoSIqpBxaEDg9NGORrGaMCu9iYk8eRsiwRe2cLWflJswZP6g9vGIE1w==}
+    dev: false
+
   /run-async@2.4.1:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}
     engines: {node: '>=0.12.0'}
@@ -4327,6 +4337,10 @@ packages:
   /tslib@2.6.0:
     resolution: {integrity: sha512-7At1WUettjcSRHXCyYtTselblcHl9PJFFVKiCAy/bY97+BPZXSQ2wbq0P9s8tK2G7dFQfNnlJnPAiArVBVBsfA==}
 
+  /tunajs@1.0.15:
+    resolution: {integrity: sha512-es0bgyTHP8ftyWEot7YqLlLH30yZqHUTT6K5TKFhVqIB1Y6Cuu8WvBunfTVQSmzrpuhz15PQjyen7uuwi4gjdw==}
+    dev: false
+
   /type-fest@0.21.3:
     resolution: {integrity: sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==}
     engines: {node: '>=10'}
@@ -4461,6 +4475,13 @@ packages:
     dependencies:
       defaults: 1.0.4
     dev: true
+
+  /web-audio-daw@4.13.2:
+    resolution: {integrity: sha512-PdcqFXZemxlJtUT1/eROxcMZ6UB6Mu9g73DOORBcWbRdlISTvOObZToEYMf2M/lGyo+eOGqFPYtVsYmW3RrvcA==}
+    dependencies:
+      lodash: 4.17.21
+      tunajs: 1.0.15
+    dev: false
 
   /web-streams-polyfill@3.2.1:
     resolution: {integrity: sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==}

@@ -1,4 +1,5 @@
 import AudioIcon from "@mui/icons-material/AudioFile";
+import SeriesIcon from "@mui/icons-material/Collections";
 import FolderIcon from "@mui/icons-material/Folder";
 import ImageIcon from "@mui/icons-material/Image";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
@@ -22,6 +23,9 @@ export const getFileEntryType = (
 ): [typeof IconPlaceholder | typeof ImageIcon, string | undefined] => {
   if (entry.type === "directory" || !entry.path) {
     return [FolderIcon, undefined];
+  }
+  if (entry.type === "series") {
+    return [SeriesIcon, undefined];
   }
   const type = mime.getType(entry.path);
   if (type?.startsWith("image/")) {

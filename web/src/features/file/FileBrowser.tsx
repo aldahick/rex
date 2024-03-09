@@ -39,7 +39,10 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
   ...browserProps
 }) => {
   const entry = getFileEntryAt(root, dir, false);
-  const entries = entry?.fetched && sortBy(entry.children, sortFileEntries);
+  const entries =
+    entry?.fetched &&
+    entry?.type !== "series" &&
+    entry.children.toSorted(sortFileEntries);
 
   return (
     <Grid container marginTop="1em">

@@ -18,13 +18,19 @@ import { FileBrowser } from "../file/FileBrowser";
 import { FileTreeEntry, getFileEntryAt } from "../file/FileTreeEntry";
 import { RexLink } from "../utils/RexLink";
 import { MediaContentView } from "./MediaContentView";
+import { MediaSeries } from "./MediaSeries";
 
-const mediaItemToEntry = (
+export const mediaItemToEntry = (
   { key, type }: IMediaItem,
   dir: string,
 ): FileTreeEntry => ({
   fetched: type === IMediaItemType.File,
-  type: type === IMediaItemType.File ? "file" : "directory",
+  type:
+    type === IMediaItemType.File
+      ? "file"
+      : type === IMediaItemType.Series
+        ? "series"
+        : "directory",
   path: `${dir}${dir === "" ? "" : "/"}${key}`,
   children: [],
 });
@@ -160,7 +166,11 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = observer(
         root={root}
         content={
           selected && authStore.token ? (
-            <MediaContentView entry={selected} token={authStore.token} />
+            selected.type === "series" ? (
+              <MediaSeries entry={selected} />
+            ) : (
+              <MediaContentView entry={selected} token={authStore.token} />
+            )
           ) : undefined
         }
         onDelete={(entry) => deleteFile(entry).catch(status.error)}
