@@ -1,12 +1,12 @@
 import {
+  promises as fs,
   Dirent,
   Stats,
   createReadStream,
   createWriteStream,
-  promises as fs,
-} from "fs";
-import path from "path";
-import { Readable } from "stream";
+} from "node:fs";
+import path from "node:path";
+import { Readable } from "node:stream";
 import { Logger, injectable } from "@athenajs/core";
 import axios from "axios";
 
@@ -34,7 +34,7 @@ export class MediaManager {
     user: Pick<UserModel, "id" | "email">;
     url: string;
     destinationKey: string;
-    progressId: string;
+    progressId?: string;
   }): Promise<void> {
     const filename = this.toFilename(user, destinationKey);
     await fs.mkdir(path.dirname(filename), { recursive: true });
@@ -62,6 +62,7 @@ export class MediaManager {
       const percentComplete = Math.floor((fetchedSize / totalSize) * 100);
       fetchedSize += chunk.byteLength;
       if (
+        progressId &&
         percentComplete % 10 === 0 &&
         !loggedPercents.includes(percentComplete)
       ) {
@@ -73,20 +74,30 @@ export class MediaManager {
     });
     stream.pipe(createWriteStream(filename));
     stream.on("end", () => {
-      this.progressManager
-        .addLogs(
-          progressId,
-          `Finished downloading ${url} to ${destinationKey}`,
-          IProgressStatus.Complete,
-        )
-        .catch(onLogError);
+      if (progressId) {
+        this.progressManager
+          .addLogs(
+            progressId,
+            `Finished downloading ${url} to ${destinationKey}`,
+            IProgressStatus.Complete,
+          )
+          .catch(onLogError);
+      }
     });
-    await this.progressManager.addLogs(
-      progressId,
-      "Started download",
-      IProgressStatus.InProgress,
+    if (progressId) {
+      await this.progressManager.addLogs(
+        progressId,
+        "Started download",
+        IProgressStatus.InProgress,
+      );
+    }
+    const completion = new Promise<void>((resolve) =>
+      stream.on("end", resolve),
     );
     stream.resume();
+    if (!progressId) {
+      return completion;
+    }
   }
 
   async create(
@@ -134,18 +145,9 @@ export class MediaManager {
     }
     return Promise.all(
       entries.map(async (entry) => {
-        let type = IMediaItemType.File;
-        if (entry.isDirectory()) {
-          const seriesStats = await fs
-            .stat(path.resolve(baseDir, entry.name, ".series"))
-            .catch(() => undefined);
-          type = seriesStats?.isFile()
-            ? IMediaItemType.Series
-            : IMediaItemType.Directory;
-        }
         return {
-          key: entry.name,
-          type,
+          key: path.join(dir, entry.name).replace(/\\/g, "/"),
+          type: await this.getType(entry, path.resolve(baseDir, entry.name)),
         };
       }),
     );
@@ -168,6 +170,31 @@ export class MediaManager {
     } catch {
       return undefined;
     }
+  }
+
+  async get(user: Pick<UserModel, "email">, key: string) {
+    const stats = await this.stat(user, key);
+    if (!stats) {
+      return undefined;
+    }
+
+    return {
+      key,
+      type: await this.getType(stats, this.toFilename(user, key)),
+    };
+  }
+
+  async getType(
+    stats: Dirent | Stats,
+    filePath: string,
+  ): Promise<IMediaItemType> {
+    if (!stats.isDirectory()) {
+      return IMediaItemType.File;
+    }
+    const series = await fs
+      .stat(path.resolve(filePath, ".series"))
+      .catch(() => undefined);
+    return series?.isFile() ? IMediaItemType.Series : IMediaItemType.Directory;
   }
 
   /**

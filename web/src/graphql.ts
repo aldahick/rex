@@ -49,6 +49,7 @@ export type IConfig = {
 
 export type IMediaItem = {
   __typename?: 'MediaItem';
+  children?: Maybe<Array<IMediaItem>>;
   key: Scalars['String']['output'];
   type: IMediaItemType;
 };
@@ -216,7 +217,7 @@ export enum IProgressStatus {
 export type IQuery = {
   __typename?: 'Query';
   config: IConfig;
-  mediaItems: Array<IMediaItem>;
+  mediaItem?: Maybe<IMediaItem>;
   note: INote;
   notes: Array<INote>;
   progress: IProgress;
@@ -231,8 +232,8 @@ export type IQuery = {
 };
 
 
-export type IQueryMediaItemsArgs = {
-  dir: Scalars['String']['input'];
+export type IQueryMediaItemArgs = {
+  key: Scalars['String']['input'];
 };
 
 
@@ -349,12 +350,12 @@ export type ICreateUserMutationVariables = Exact<{
 
 export type ICreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string } };
 
-export type IMediaItemsQueryVariables = Exact<{
-  dir: Scalars['String']['input'];
+export type IMediaItemQueryVariables = Exact<{
+  key: Scalars['String']['input'];
 }>;
 
 
-export type IMediaItemsQuery = { __typename?: 'Query', mediaItems: Array<{ __typename?: 'MediaItem', key: string, type: IMediaItemType }> };
+export type IMediaItemQuery = { __typename?: 'Query', mediaItem?: { __typename?: 'MediaItem', key: string, type: IMediaItemType, children?: Array<{ __typename?: 'MediaItem', key: string, type: IMediaItemType }> | undefined } | undefined };
 
 export type ICreateMediaUploadMutationVariables = Exact<{
   key: Scalars['String']['input'];
@@ -544,8 +545,13 @@ export function useConfigLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ICo
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<IConfigQuery, IConfigQueryVariables>(ConfigDocument, options);
         }
+export function useConfigSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<IConfigQuery, IConfigQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<IConfigQuery, IConfigQueryVariables>(ConfigDocument, options);
+        }
 export type ConfigQueryHookResult = ReturnType<typeof useConfigQuery>;
 export type ConfigLazyQueryHookResult = ReturnType<typeof useConfigLazyQuery>;
+export type ConfigSuspenseQueryHookResult = ReturnType<typeof useConfigSuspenseQuery>;
 export type ConfigQueryResult = Apollo.QueryResult<IConfigQuery, IConfigQueryVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($email: String!, $username: String!, $password: String!) {
@@ -582,42 +588,51 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<I
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<ICreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<ICreateUserMutation, ICreateUserMutationVariables>;
-export const MediaItemsDocument = gql`
-    query MediaItems($dir: String!) {
-  mediaItems(dir: $dir) {
+export const MediaItemDocument = gql`
+    query MediaItem($key: String!) {
+  mediaItem(key: $key) {
     key
     type
+    children {
+      key
+      type
+    }
   }
 }
     `;
 
 /**
- * __useMediaItemsQuery__
+ * __useMediaItemQuery__
  *
- * To run a query within a React component, call `useMediaItemsQuery` and pass it any options that fit your needs.
- * When your component renders, `useMediaItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useMediaItemQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMediaItemQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useMediaItemsQuery({
+ * const { data, loading, error } = useMediaItemQuery({
  *   variables: {
- *      dir: // value for 'dir'
+ *      key: // value for 'key'
  *   },
  * });
  */
-export function useMediaItemsQuery(baseOptions: Apollo.QueryHookOptions<IMediaItemsQuery, IMediaItemsQueryVariables>) {
+export function useMediaItemQuery(baseOptions: Apollo.QueryHookOptions<IMediaItemQuery, IMediaItemQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<IMediaItemsQuery, IMediaItemsQueryVariables>(MediaItemsDocument, options);
+        return Apollo.useQuery<IMediaItemQuery, IMediaItemQueryVariables>(MediaItemDocument, options);
       }
-export function useMediaItemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IMediaItemsQuery, IMediaItemsQueryVariables>) {
+export function useMediaItemLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IMediaItemQuery, IMediaItemQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<IMediaItemsQuery, IMediaItemsQueryVariables>(MediaItemsDocument, options);
+          return Apollo.useLazyQuery<IMediaItemQuery, IMediaItemQueryVariables>(MediaItemDocument, options);
         }
-export type MediaItemsQueryHookResult = ReturnType<typeof useMediaItemsQuery>;
-export type MediaItemsLazyQueryHookResult = ReturnType<typeof useMediaItemsLazyQuery>;
-export type MediaItemsQueryResult = Apollo.QueryResult<IMediaItemsQuery, IMediaItemsQueryVariables>;
+export function useMediaItemSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<IMediaItemQuery, IMediaItemQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<IMediaItemQuery, IMediaItemQueryVariables>(MediaItemDocument, options);
+        }
+export type MediaItemQueryHookResult = ReturnType<typeof useMediaItemQuery>;
+export type MediaItemLazyQueryHookResult = ReturnType<typeof useMediaItemLazyQuery>;
+export type MediaItemSuspenseQueryHookResult = ReturnType<typeof useMediaItemSuspenseQuery>;
+export type MediaItemQueryResult = Apollo.QueryResult<IMediaItemQuery, IMediaItemQueryVariables>;
 export const CreateMediaUploadDocument = gql`
     mutation CreateMediaUpload($key: String!) {
   uploadUrl: createMediaUpload(key: $key)
@@ -716,8 +731,13 @@ export function useTranscriptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ITranscriptionsQuery, ITranscriptionsQueryVariables>(TranscriptionsDocument, options);
         }
+export function useTranscriptionsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ITranscriptionsQuery, ITranscriptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ITranscriptionsQuery, ITranscriptionsQueryVariables>(TranscriptionsDocument, options);
+        }
 export type TranscriptionsQueryHookResult = ReturnType<typeof useTranscriptionsQuery>;
 export type TranscriptionsLazyQueryHookResult = ReturnType<typeof useTranscriptionsLazyQuery>;
+export type TranscriptionsSuspenseQueryHookResult = ReturnType<typeof useTranscriptionsSuspenseQuery>;
 export type TranscriptionsQueryResult = Apollo.QueryResult<ITranscriptionsQuery, ITranscriptionsQueryVariables>;
 export const StartTranscriptionDocument = gql`
     mutation StartTranscription($key: String!) {
@@ -881,8 +901,13 @@ export function useNoteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<INote
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<INoteQuery, INoteQueryVariables>(NoteDocument, options);
         }
+export function useNoteSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<INoteQuery, INoteQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<INoteQuery, INoteQueryVariables>(NoteDocument, options);
+        }
 export type NoteQueryHookResult = ReturnType<typeof useNoteQuery>;
 export type NoteLazyQueryHookResult = ReturnType<typeof useNoteLazyQuery>;
+export type NoteSuspenseQueryHookResult = ReturnType<typeof useNoteSuspenseQuery>;
 export type NoteQueryResult = Apollo.QueryResult<INoteQuery, INoteQueryVariables>;
 export const NotesDocument = gql`
     query Notes {
@@ -915,8 +940,13 @@ export function useNotesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<INot
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<INotesQuery, INotesQueryVariables>(NotesDocument, options);
         }
+export function useNotesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<INotesQuery, INotesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<INotesQuery, INotesQueryVariables>(NotesDocument, options);
+        }
 export type NotesQueryHookResult = ReturnType<typeof useNotesQuery>;
 export type NotesLazyQueryHookResult = ReturnType<typeof useNotesLazyQuery>;
+export type NotesSuspenseQueryHookResult = ReturnType<typeof useNotesSuspenseQuery>;
 export type NotesQueryResult = Apollo.QueryResult<INotesQuery, INotesQueryVariables>;
 export const ProgressDocument = gql`
     query Progress($id: ID!) {
@@ -957,6 +987,11 @@ export function useProgressLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<I
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<IProgressQuery, IProgressQueryVariables>(ProgressDocument, options);
         }
+export function useProgressSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<IProgressQuery, IProgressQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<IProgressQuery, IProgressQueryVariables>(ProgressDocument, options);
+        }
 export type ProgressQueryHookResult = ReturnType<typeof useProgressQuery>;
 export type ProgressLazyQueryHookResult = ReturnType<typeof useProgressLazyQuery>;
+export type ProgressSuspenseQueryHookResult = ReturnType<typeof useProgressSuspenseQuery>;
 export type ProgressQueryResult = Apollo.QueryResult<IProgressQuery, IProgressQueryVariables>;

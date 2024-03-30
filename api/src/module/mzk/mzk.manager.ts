@@ -1,7 +1,7 @@
-import { spawn } from "child_process";
-import { createHash } from "crypto";
-import { promises as fs } from "fs";
-import path from "path";
+import { spawn } from "node:child_process";
+import { createHash } from "node:crypto";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 import { injectable } from "@athenajs/core";
 
 import { RexConfig } from "../../config.js";

@@ -1,4 +1,4 @@
-import { resolve as resolveUrl } from "url";
+import { resolve as resolveUrl } from "node:url";
 import { injectable } from "@athenajs/core";
 import axios from "axios";
 
@@ -30,7 +30,9 @@ export class SteamService {
   async getPlayerSummary(steamId64: string): Promise<SteamPlayer | undefined> {
     const url = resolveUrl(BASE_URL, "/ISteamUser/GetPlayerSummaries/v2/?");
     const {
-      data: { response: { players } },
+      data: {
+        response: { players },
+      },
     } = await axios.get<GetPlayerSummaries>(
       url +
         new URLSearchParams({
@@ -58,7 +60,9 @@ export class SteamService {
   ): Promise<number[] | undefined> {
     const url = resolveUrl(BASE_URL, "/IPlayerService/GetOwnedGames/v0001/?");
     const {
-      data: { response: { games } },
+      data: {
+        response: { games },
+      },
     } = await axios.get<GetOwnedGames>(
       url +
         new URLSearchParams({
@@ -74,7 +78,9 @@ export class SteamService {
   ): Promise<string | undefined> {
     const url = resolveUrl(BASE_URL, "/ISteamUser/ResolveVanityURL/v0001/?");
     const {
-      data: { response: { steamid } },
+      data: {
+        response: { steamid },
+      },
     } = await axios.get<ResolveVanityUrl>(
       url +
         new URLSearchParams({

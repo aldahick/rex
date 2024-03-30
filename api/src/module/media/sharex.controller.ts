@@ -1,5 +1,5 @@
-import { randomBytes } from "crypto";
-import path from "path";
+import { randomBytes } from "node:crypto";
+import path from "node:path";
 import {
   HttpMethod,
   HttpRequest,

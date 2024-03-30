@@ -46,6 +46,7 @@ export type IConfig = {
 
 export type IMediaItem = {
   __typename?: 'MediaItem';
+  children?: Maybe<Array<IMediaItem>>;
   key: Scalars['String']['output'];
   type: IMediaItemType;
 };
@@ -82,6 +83,7 @@ export type IMutation = {
 
 export type IMutationAddMediaDownloadArgs = {
   destinationKey: Scalars['String']['input'];
+  sync?: InputMaybe<Scalars['Boolean']['input']>;
   url: Scalars['String']['input'];
 };
 
@@ -213,7 +215,7 @@ export enum IProgressStatus {
 export type IQuery = {
   __typename?: 'Query';
   config: IConfig;
-  mediaItems: Array<IMediaItem>;
+  mediaItem?: Maybe<IMediaItem>;
   note: INote;
   notes: Array<INote>;
   progress: IProgress;
@@ -228,8 +230,8 @@ export type IQuery = {
 };
 
 
-export type IQueryMediaItemsArgs = {
-  dir: Scalars['String']['input'];
+export type IQueryMediaItemArgs = {
+  key: Scalars['String']['input'];
 };
 
 

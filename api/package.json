@@ -43,10 +43,11 @@
     "pg": "^8.11.3",
     "pluralize": "^8.0.0",
     "pqb": "^0.20.1",
-    "reflect-metadata": "^0.1.14"
+    "reflect-metadata": "^0.1.14",
+    "remeda": "^1.56.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.4.1",
+    "@biomejs/biome": "^1.6.3",
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/typescript": "^4.0.1",
     "@graphql-codegen/typescript-operations": "^4.0.1",

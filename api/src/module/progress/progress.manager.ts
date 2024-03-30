@@ -1,5 +1,5 @@
 import { Logger, injectable } from "@athenajs/core";
-
+import { uniqueBy } from "remeda";
 import { IProgressStatus } from "../../graphql.js";
 import { ProgressModel } from "../../model/index.js";
 import { DatabaseService } from "../../service/database.service.js";
@@ -36,16 +36,21 @@ export class ProgressManager {
     logs: string | string[],
     status?: IProgressStatus,
   ): Promise<void> {
+    const rows = (Array.isArray(logs) ? logs : [logs]).map((text) => ({
+      progressId: id,
+      text,
+      createdAt: new Date(),
+    }));
     await this.db.progressLogs.createMany(
-      (Array.isArray(logs) ? logs : [logs]).map((text) => ({
-        progressId: id,
-        text,
-        createdAt: new Date(),
-      })),
+      uniqueBy(rows, (r) => r.progressId + r.createdAt.getTime()),
     );
     if (status) {
-      await this.db.progress.where({ id }).update({ status });
+      await this.updateStatus(id, status);
     }
+  }
+
+  async updateStatus(id: string, status: IProgressStatus) {
+    await this.db.progress.where({ id }).update({ status });
   }
 
   resolveSafe(progressId: string, promise: Promise<void>): void {

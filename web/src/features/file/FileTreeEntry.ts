@@ -52,7 +52,7 @@ const getPathIndex = (path: string): number => {
     const deromanized = romans.deromanize(prefix);
     return deromanized;
   } catch {
-    return parseInt(prefix);
+    return Number.parseInt(prefix);
   }
 };
 

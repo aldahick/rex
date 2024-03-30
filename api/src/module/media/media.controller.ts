@@ -106,7 +106,7 @@ export class MediaController {
   private getRange(req: HttpRequest, size: number): ContentDetails["range"] {
     const tokens = req.headers.range?.slice("bytes=".length).split("-") ?? [];
     let start = Number(tokens[0]);
-    let end = tokens[1] ? Number(tokens[1]) : NaN;
+    let end = tokens[1] ? Number(tokens[1]) : Number.NaN;
     if (Number.isNaN(start)) {
       start = 0;
     }

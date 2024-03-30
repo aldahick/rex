@@ -1,7 +1,11 @@
-query MediaItems($dir: String!) {
-  mediaItems(dir: $dir) {
+query MediaItem($key: String!) {
+  mediaItem(key: $key) {
     key
     type
+    children {
+      key
+      type
+    }
   }
 }
 

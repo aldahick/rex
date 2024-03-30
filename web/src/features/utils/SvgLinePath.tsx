@@ -13,7 +13,7 @@ const toSvgPath = (path: [number, number][]): string => {
     const pos = path[i].join(" ");
     pathStr += `L${pos}M${pos}`;
   }
-  return pathStr + `L${firstPos}`;
+  return `${pathStr}L${firstPos}`;
 };
 
 export const SvgLinePath: React.FC<SvgLinePathProps> = ({ paths }) => {

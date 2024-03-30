@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.4.0/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.6.3/schema.json",
   "files": {
     "ignore": [
       "**/graphql.ts"
@@ -14,7 +14,16 @@
     "indentStyle": "space"
   },
   "linter": {
-    "enabled": true
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "noUselessConstructor": "off"
+      },
+      "style": {
+        "useImportType": "off"
+      }
+    }
   },
   "javascript": {
     "parser": {

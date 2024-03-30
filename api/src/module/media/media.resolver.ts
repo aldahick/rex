@@ -1,15 +1,22 @@
-import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
+import {
+  resolveField,
+  resolveMutation,
+  resolveQuery,
+  resolver,
+} from "@athenajs/core";
 
 import { RexConfig } from "../../config.js";
 import {
   IAuthPermission,
+  IMediaItem,
   IMutation,
   IMutationAddMediaDownloadArgs,
   IMutationCreateMediaArgs,
   IMutationCreateMediaUploadArgs,
   IMutationDeleteMediaArgs,
+  IProgressStatus,
   IQuery,
-  IQueryMediaItemsArgs,
+  IQueryMediaItemArgs,
 } from "../../graphql.js";
 import { UserModel } from "../../model/index.js";
 import { RexContext } from "../auth/index.js";
@@ -28,32 +35,45 @@ export class MediaResolver {
   ) {}
 
   @resolveQuery()
-  async mediaItems(
+  async mediaItem(
     root: never,
-    { dir }: IQueryMediaItemsArgs,
+    { key }: IQueryMediaItemArgs,
     context: RexContext,
-  ): Promise<IQuery["mediaItems"]> {
+  ): Promise<IQuery["mediaItem"]> {
     const user = await this.fetchUser(context);
-    return this.mediaManager.list(user, dir);
+    return this.mediaManager.get(user, key);
   }
 
   @resolveMutation()
   async addMediaDownload(
     root: never,
-    { url, destinationKey }: IMutationAddMediaDownloadArgs,
+    { url, destinationKey, sync }: IMutationAddMediaDownloadArgs,
     context: RexContext,
   ): Promise<IMutation["addMediaDownload"]> {
     const user = await this.fetchUser(context);
     const progress = await this.progressManager.create("addMediaDownload");
-    this.progressManager.resolveSafe(
-      progress.id,
-      this.mediaManager.download({
+    if (sync) {
+      await this.mediaManager.download({
         user,
         url,
         destinationKey,
-        progressId: progress.id,
-      }),
-    );
+      });
+      await this.progressManager.updateStatus(
+        progress.id,
+        IProgressStatus.Complete,
+      );
+      progress.status = IProgressStatus.Complete;
+    } else {
+      this.progressManager.resolveSafe(
+        progress.id,
+        this.mediaManager.download({
+          user,
+          url,
+          destinationKey,
+          progressId: progress.id,
+        }),
+      );
+    }
     return this.progressResolver.makeGql(progress);
   }
 
@@ -89,6 +109,18 @@ export class MediaResolver {
     const user = await this.fetchUser(context);
     await this.mediaManager.delete(user.email, key);
     return true;
+  }
+
+  @resolveField("MediaItem.children", true)
+  async children(
+    parents: IMediaItem[],
+    args: never,
+    context: RexContext,
+  ): Promise<IMediaItem["children"][]> {
+    const user = await this.fetchUser(context);
+    return Promise.all(
+      parents.map((parent) => this.mediaManager.list(user, parent.key)),
+    );
   }
 
   private async fetchUser(

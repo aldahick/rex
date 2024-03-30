@@ -32,6 +32,11 @@ export class RexConfig extends BaseConfig {
     url: this.required("HTTP_URL"),
   };
 
+  readonly log = {
+    level: this.optional("LOG_LEVEL") ?? "debug",
+    pretty: !!this.optional("LOG_PRETTY"),
+  };
+
   readonly media = {
     dataLimit: stringToBytes(this.optional("MEDIA_DATA_LIMIT")),
     dir: this.optional("MEDIA_DIR"),

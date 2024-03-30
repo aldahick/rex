@@ -1,5 +1,5 @@
 extend type Mutation {
-  addMediaDownload(url: String!, destinationKey: String!): Progress!
+  addMediaDownload(url: String!, destinationKey: String!, sync: Boolean): Progress!
   createMedia(key: String!, data: String!): Boolean!
   # returns a URL - POST the file body to it
   createMediaUpload(key: String!): String!
@@ -7,12 +7,13 @@ extend type Mutation {
 }
 
 extend type Query {
-  mediaItems(dir: String!): [MediaItem!]!
+  mediaItem(key: String!): MediaItem
 }
 
 type MediaItem {
   key: String!
   type: MediaItemType!
+  children: [MediaItem!]
 }
 
 enum MediaItemType {

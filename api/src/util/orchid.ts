@@ -3,8 +3,8 @@ This is the entrypoint for `pnpm db`, so it assumes very little and should not b
 */
 import "reflect-metadata";
 
-import { resolve as resolvePath } from "path";
-import { pathToFileURL } from "url";
+import { resolve as resolvePath } from "node:path";
+import { pathToFileURL } from "node:url";
 import { container } from "@athenajs/core";
 import { rakeDb } from "rake-db";
 

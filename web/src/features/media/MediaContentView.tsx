@@ -1,9 +1,9 @@
 import { Typography, styled } from "@mui/material";
 import mime from "mime";
-import React from "react";
+import type React from "react";
 
 import { config } from "../../config";
-import { FileTreeEntry } from "../file/FileTreeEntry";
+import type { FileTreeEntry } from "../file/FileTreeEntry";
 import { FetchUrl } from "../utils/FetchUrl";
 
 const WrappedText = styled(Typography)({
@@ -46,6 +46,7 @@ export const MediaContentView: React.FC<MediaContentViewProps> = ({
     case "image/jpg":
     case "image/jpeg":
     case "image/png":
+    case "image/gif":
       return (
         <MaxWidthImage
           alt={key}
