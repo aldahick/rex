@@ -1,8 +1,8 @@
 import { Grid, Typography, styled } from "@mui/material";
 import React from "react";
 
-import { sortBy } from "lodash";
 import { FileAddressBar } from "./FileAddressBar";
+import { FileContentSeries } from "./FileContentSeries";
 import { FileListBrowser, FileListBrowserProps } from "./FileListBrowser";
 import { FileListItemCallbacks } from "./FileListItem";
 import { FileTree } from "./FileTree";
@@ -41,8 +41,18 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
   const entry = getFileEntryAt(root, dir, false);
   const entries =
     entry?.fetched &&
-    entry?.type !== "series" &&
+    entry.type !== "series" &&
     entry.children.toSorted(sortFileEntries);
+
+  if (entry?.type === "series") {
+    return (
+      <Grid container>
+        <Grid item xs={12}>
+          <FileContentSeries entry={entry} />
+        </Grid>
+      </Grid>
+    );
+  }
 
   return (
     <Grid container marginTop="1em">

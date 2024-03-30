@@ -61,7 +61,7 @@ export const FileListItem: React.FC<FileListItemProps> = ({
   const [hover, setHover] = useState(false);
 
   const handleClick = () => {
-    if (entry.type === "directory") {
+    if (entry.type !== "file") {
       onDirChange(entry.path ?? "");
     } else {
       onFileOpen(entry);
@@ -83,7 +83,7 @@ export const FileListItem: React.FC<FileListItemProps> = ({
     <Grid
       container
       alignItems="center"
-      sx={entry.type === "directory" ? { cursor: "pointer" } : {}}
+      sx={entry.type !== "file" ? { cursor: "pointer" } : {}}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

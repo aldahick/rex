@@ -18,7 +18,6 @@ import { FileBrowser } from "../file/FileBrowser";
 import { FileTreeEntry, getFileEntryAt } from "../file/FileTreeEntry";
 import { RexLink } from "../utils/RexLink";
 import { MediaContentView } from "./MediaContentView";
-import { MediaSeries } from "./MediaSeries";
 
 export const mediaItemToEntry = ({ key, type }: IMediaItem): FileTreeEntry => ({
   fetched: type === IMediaItemType.File,
@@ -67,6 +66,9 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = observer(({ dir }) => {
           throw new Error(`Key ${dir} does not exist`);
         }
         const entry = getFileEntryAt(root, dir, true);
+        if (mediaItem.type === IMediaItemType.Series) {
+          entry.type = "series";
+        }
         entry.children = children
           ?.filter((i) => !i.key.startsWith("."))
           .map((i) => cloneDeep(mediaItemToEntry(i)));
@@ -165,13 +167,10 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = observer(({ dir }) => {
       dir={dir}
       root={root}
       content={
-        selected && authStore.token ? (
-          selected.type === "series" ? (
-            <MediaSeries entry={selected} />
-          ) : (
-            <MediaContentView entry={selected} token={authStore.token} />
-          )
-        ) : undefined
+        selected &&
+        authStore.token && (
+          <MediaContentView entry={selected} token={authStore.token} />
+        )
       }
       onDelete={(entry) => deleteFile(entry).catch(status.error)}
       onDirChange={changeDir}
