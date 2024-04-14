@@ -74,8 +74,8 @@ dependencies:
 
 devDependencies:
   '@athenajs/react-utils':
-    specifier: ^0.2.1
-    version: 0.2.1
+    specifier: ^0.2.3
+    version: 0.2.3
   '@biomejs/biome':
     specifier: ^1.6.3
     version: 1.6.3
@@ -202,8 +202,8 @@ packages:
       - encoding
     dev: true
 
-  /@athenajs/react-utils@0.2.1:
-    resolution: {integrity: sha512-pMYDh/vs9GP8GzeJD/CkgItfDrOiQN3CJgfpoqcR58jfpDC0AQaNreFKlb5bAm8HIRdHcUuxlXi5PfH1Y/HN/w==}
+  /@athenajs/react-utils@0.2.3:
+    resolution: {integrity: sha512-i6tbf9fVxyOEHLCwU8gvLSAeLNQpFXJuAuMd23NVQImO0ZKpKUrCaqWRriDCd2rbjnjcy5TVDmFGkDWwoErtkg==}
     engines: {node: ^20.10}
     dev: true
 

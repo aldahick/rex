@@ -27,8 +27,8 @@
   },
   "homepage": "https://github.com/aldahick/rex#readme",
   "dependencies": {
-    "@athenajs/core": "^1.1.0",
-    "@athenajs/utils": "^1.1.0",
+    "@athenajs/core": "^1.1.2",
+    "@athenajs/utils": "^1.1.2",
     "@google-cloud/run": "^1.0.2",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",

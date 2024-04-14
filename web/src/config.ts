@@ -1,6 +1,6 @@
 import { getConfigFromAttributes } from "@athenajs/react-utils";
 
-const athenaConfig = getConfigFromAttributes();
+const athenaConfig = getConfigFromAttributes(import.meta.env);
 
 export const config = {
   apiUrl: athenaConfig.API_URL,
