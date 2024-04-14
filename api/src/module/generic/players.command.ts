@@ -1,6 +1,6 @@
 import { Logger } from "@athenajs/core";
 import { Message } from "discord.js";
-import Gamedig from "gamedig";
+import * as Gamedig from "gamedig";
 import pluralize from "pluralize";
 
 import {
@@ -27,7 +27,7 @@ export class PlayersCommand implements DiscordCommand {
     try {
       const { protocol, hostname, port } = new URL(serverUrl);
       query = {
-        type: protocol.replace(/\:$/, "") as Gamedig.Type,
+        type: protocol.replace(/\:$/, ""),
         host: hostname,
         port: Number(port),
       };
@@ -37,7 +37,7 @@ export class PlayersCommand implements DiscordCommand {
     const res = await message.reply("Gimme a second to think about it...");
     let players: Gamedig.QueryResult["players"];
     try {
-      players = (await Gamedig.query(query)).players;
+      players = (await Gamedig.GameDig.query(query)).players;
     } catch (err) {
       this.logger.error(`failed to query server for players command: ${err}`);
       await res.edit(err instanceof Error ? err.message : (err as string));

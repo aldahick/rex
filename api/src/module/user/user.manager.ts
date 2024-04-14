@@ -83,7 +83,7 @@ export class UserManager {
       .select("userId", {
         role: "role.*",
       })
-      .whereIn("userId", userIds);
+      .where({ userId: { in: userIds } });
     const roleMap = new Map<string, RoleModel[]>();
     for (const { userId, role } of userRoles) {
       const mappedRoles = roleMap.get(userId) ?? [];

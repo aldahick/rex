@@ -5,7 +5,7 @@ export interface SocialBadgeProps {
   label: string;
   imageUrl: string;
   url?: string;
-  imageProps?: Partial<Omit<React.ImgHTMLAttributes<HTMLImageElement>, "alt">>;
+  imageProps?: Partial<React.ImgHTMLAttributes<HTMLImageElement>>;
   textColor?: TypographyProps["color"];
   size?: number;
 }
@@ -21,7 +21,12 @@ export const SocialBadge: React.FC<SocialBadgeProps> = ({
   <Link href={url}>
     <Grid container alignItems="center" direction="column">
       <Grid item>
-        <img src={imageUrl} height={size ?? 32} {...imageProps} alt={label} />
+        <img
+          src={imageUrl}
+          height={size ?? 32}
+          {...imageProps}
+          alt={imageProps?.alt ?? label}
+        />
       </Grid>
       {typeof label === "string" ? (
         <Grid item>

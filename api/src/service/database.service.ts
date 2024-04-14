@@ -21,13 +21,14 @@ const tables = {
   userNotes: UserNoteTable,
   userRoles: UserRoleTable,
 };
+type Client = OrchidORM<typeof tables>;
 type DbTables = {
-  [Key in keyof typeof tables]: DbTable<(typeof tables)[Key]>;
+  [Key in keyof typeof tables]: Client[Key];
 };
 
 @injectable()
 export class DatabaseService implements DbTables {
-  readonly orm: OrchidORM<typeof tables>;
+  readonly orm: Client;
 
   readonly progress: DbTables["progress"];
   readonly progressLogs: DbTables["progressLogs"];
