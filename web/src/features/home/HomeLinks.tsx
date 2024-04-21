@@ -30,16 +30,16 @@ export interface HomeLinksProps {
 }
 
 export const HomeLinks: React.FC<HomeLinksProps> = observer(
-  ({ primaryBackground = BLUE, secondaryBackground = YELLOW }) => {
+  ({ primaryBackground = YELLOW, secondaryBackground = BLUE }) => {
     const { authStore } = useStores();
     const theme = useTheme();
     const authSuffix = authStore.isAuthenticated ? "Out" : "In";
 
     return (
-      <HexSelect>
+      <HexSelect background={[primaryBackground, secondaryBackground]}>
         {{
           topLeft: {
-            styles: { backgroundColor: primaryBackground, paddingTop: "33%" },
+            styles: { paddingTop: "33%" },
             element: (
               <>
                 <SocialBadge
@@ -70,7 +70,6 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
             ),
           },
           topCenter: {
-            styles: { backgroundColor: secondaryBackground },
             element: (
               <RexLink
                 to={`/log${authSuffix.toLowerCase()}`}
@@ -92,7 +91,7 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
             ),
           },
           topRight: {
-            styles: { backgroundColor: primaryBackground, paddingTop: "25%" },
+            styles: { paddingTop: "25%" },
             element: (
               <>
                 <SocialBadge
@@ -114,23 +113,8 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
               </>
             ),
           },
-          bottomLeft: {
-            styles: { backgroundColor: secondaryBackground },
-            element: (
-              <Link
-                href="https://google.com/?q=local+library+hours"
-                style={{
-                  textDecoration: "none",
-                  cursor: "default",
-                  color: "rgba(255, 221, 0, 0.04)",
-                }}
-              >
-                Put your eyes to better use
-              </Link>
-            ),
-          },
           bottomCenter: {
-            styles: { backgroundColor: primaryBackground, paddingTop: "25%" },
+            styles: { paddingTop: "25%" },
             element: (
               <RexLink to="/cat" textAlign="center">
                 <Typography variant="h3">🐈</Typography>
@@ -139,7 +123,6 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
             ),
           },
           bottomRight: {
-            styles: { backgroundColor: secondaryBackground },
             element: (
               <>
                 {authStore.isAuthorized(IAuthPermission.Transcriptions) ? (

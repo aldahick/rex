@@ -15,22 +15,28 @@ const DownSegment = styled("div")({
 interface HexSegment {
   left: number;
   top: number;
-  styles?: React.CSSProperties;
 }
 
 interface HexSelectSegment {
   styles?: React.CSSProperties;
+  /**
+   * Rendered inside a div with:
+   *   display: flex
+   *   align-items: center
+   *   justify-content: center
+   *   flex-direction: column
+   */
   element: React.ReactNode;
 }
-export interface HexSelectSegments {
+export type HexSelectSegments = Partial<{
   topLeft: HexSelectSegment;
   topCenter: HexSelectSegment;
   topRight: HexSelectSegment;
   bottomLeft: HexSelectSegment;
   bottomCenter: HexSelectSegment;
   bottomRight: HexSelectSegment;
-}
-type HexSegmentsState = Record<keyof HexSelectSegments, HexSegment>;
+}>;
+type HexSegmentsState = { [key in keyof HexSelectSegments]?: HexSegment };
 
 const getSideLength = () =>
   Math.min(
@@ -54,35 +60,29 @@ const getSegments = (
 
   const bottomTop = halfHeight - 4;
   const segments: HexSegmentsState = {
-    bottomLeft: {
-      left: 0,
-      top: bottomTop,
-      styles: children.bottomLeft.styles,
-    },
-    bottomCenter: {
-      left: 0.5 * sideLength,
-      top: bottomTop,
-      styles: children.bottomCenter.styles,
-    },
-    bottomRight: {
-      left: sideLength,
-      top: bottomTop,
-      styles: children.bottomRight.styles,
-    },
     topLeft: {
       left: 0,
       top: 0,
-      styles: children.topLeft.styles,
     },
     topCenter: {
       left: 0.5 * sideLength,
       top: 0,
-      styles: children.topCenter.styles,
     },
     topRight: {
       left: sideLength,
       top: 0,
-      styles: children.topRight.styles,
+    },
+    bottomLeft: {
+      left: 0,
+      top: bottomTop,
+    },
+    bottomCenter: {
+      left: 0.5 * sideLength,
+      top: bottomTop,
+    },
+    bottomRight: {
+      left: sideLength,
+      top: bottomTop,
     },
   };
 
@@ -97,47 +97,80 @@ const renderSegments = (
   segments: HexSegmentsState,
   children: HexSelectSegments,
   sideLength: number,
+  background: HexSelectProps["background"],
 ) =>
-  Object.entries(segments).map(([key, { left, top, styles }], index) => {
-    const isUp = index % 2 === 1;
-    const Segment = isUp ? UpSegment : DownSegment;
-    const child = children[key as keyof HexSelectSegments];
-    const sizeStyles: CSSProperties = {
-      minWidth: `${sideLength}px`,
-      minHeight: `${sideLength}px`,
-    };
-    const positionStyles: CSSProperties = {
-      position: "fixed",
-      left: `${left}px`,
-      top: `${top}px`,
-    };
-    console.log(key, styles);
-    return (
-      <Segment
-        key={key}
-        style={{
-          ...sizeStyles,
-          ...positionStyles,
-        }}
-      >
-        <Grid
-          container
-          alignItems="center"
-          justifyContent="center"
-          direction="column"
-          sx={{ ...sizeStyles, ...(styles ?? {}) }}
+  Object.entries(segments)
+    .filter(([key]) => sideLength >= 350 || key in children)
+    .map(([key, { left, top }], index) => {
+      const isUp = ["topLeft", "topRight", "bottomCenter"].includes(key);
+      const child = children[key as keyof HexSelectSegments];
+
+      if (sideLength < 350) {
+        console.log(key, index, !!child?.element);
+        if (!child?.element) return null;
+        return (
+          <Grid
+            key={key}
+            container
+            alignItems="center"
+            justifyContent="center"
+            direction="column"
+            style={{
+              backgroundColor: background[(index + 1) % 2],
+              ...child.styles,
+              paddingTop: "1em",
+              paddingBottom: "1em",
+            }}
+          >
+            {child.element}
+          </Grid>
+        );
+      }
+
+      const Segment = isUp ? UpSegment : DownSegment;
+      const sizeStyles: CSSProperties = {
+        minWidth: `${sideLength}px`,
+        minHeight: `${sideLength}px`,
+      };
+      const positionStyles: CSSProperties = {
+        position: "fixed",
+        left: `${left}px`,
+        top: `${top}px`,
+      };
+      return (
+        <Segment
+          key={key}
+          style={{
+            ...sizeStyles,
+            ...positionStyles,
+          }}
         >
-          {child.element}
-        </Grid>
-      </Segment>
-    );
-  });
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="center"
+            direction="column"
+            sx={{
+              backgroundColor: background[Number(isUp)],
+              ...sizeStyles,
+              ...(child?.styles ?? {}),
+            }}
+          >
+            {child?.element}
+          </Grid>
+        </Segment>
+      );
+    });
 
 export interface HexSelectProps {
+  background: [string, string];
   children: HexSelectSegments;
 }
 
-export const HexSelect: React.FC<HexSelectProps> = ({ children }) => {
+export const HexSelect: React.FC<HexSelectProps> = ({
+  background,
+  children,
+}) => {
   const [sideLength, setSideLength] = useState(getSideLength());
   const [halfHeight, setHalfHeight] = useState(getHalfHeight(sideLength));
 
@@ -173,7 +206,9 @@ export const HexSelect: React.FC<HexSelectProps> = ({ children }) => {
       ref={containerRef}
       style={{ minHeight: halfHeight * 2, minWidth: sideLength * 2 }}
     >
-      {segments ? renderSegments(segments, children, sideLength) : null}
+      {segments
+        ? renderSegments(segments, children, sideLength, background)
+        : null}
     </div>
   );
 };
