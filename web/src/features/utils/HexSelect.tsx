@@ -106,7 +106,6 @@ const renderSegments = (
       const child = children[key as keyof HexSelectSegments];
 
       if (sideLength < 350) {
-        console.log(key, index, !!child?.element);
         if (!child?.element) return null;
         return (
           <Grid
