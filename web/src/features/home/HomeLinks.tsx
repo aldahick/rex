@@ -38,52 +38,40 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
     return (
       <HexSelect>
         {{
-          topLeft: ({ style }) => (
-            <Grid
-              style={style}
-              container
-              direction="column"
-              alignItems="center"
-              justifyContent="center"
-              sx={{
-                bgcolor: primaryBackground,
-                paddingTop: `calc(${style.minHeight} / 3)`,
-              }}
-            >
-              <SocialBadge
-                imageUrl={
-                  theme.palette.mode === "dark"
-                    ? githubDarkLogoUrl
-                    : githubLightLogoUrl
-                }
-                url="https://github.com/aldahick"
-                label="@aldahick"
-                textColor="textPrimary"
-                imageProps={{ alt: "GitHub logo" }}
-              />
-              {repositories.map(({ repo, icon: Icon }) => (
-                <Grid key={repo} item sx={{ marginTop: "1em" }}>
-                  <Link
-                    href={`https://github.com/aldahick/${repo}`}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <Grid container alignContent="center">
-                      <Icon />
-                      <Typography component="span">&nbsp;{repo}</Typography>
-                    </Grid>
-                  </Link>
-                </Grid>
-              ))}
-            </Grid>
-          ),
-          topCenter: ({ style }) => (
-            <Grid
-              style={style}
-              container
-              alignItems="center"
-              justifyContent="center"
-              sx={{ bgcolor: secondaryBackground }}
-            >
+          topLeft: {
+            styles: { backgroundColor: primaryBackground, paddingTop: "33%" },
+            element: (
+              <>
+                <SocialBadge
+                  imageUrl={
+                    theme.palette.mode === "dark"
+                      ? githubDarkLogoUrl
+                      : githubLightLogoUrl
+                  }
+                  url="https://github.com/aldahick"
+                  label="@aldahick"
+                  textColor="textPrimary"
+                  imageProps={{ alt: "GitHub logo" }}
+                />
+                {repositories.map(({ repo, icon: Icon }) => (
+                  <Grid key={repo} item sx={{ marginTop: "1em" }}>
+                    <Link
+                      href={`https://github.com/aldahick/${repo}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Grid container alignContent="center">
+                        <Icon />
+                        <Typography component="span">&nbsp;{repo}</Typography>
+                      </Grid>
+                    </Link>
+                  </Grid>
+                ))}
+              </>
+            ),
+          },
+          topCenter: {
+            styles: { backgroundColor: secondaryBackground },
+            element: (
               <RexLink
                 to={`/log${authSuffix.toLowerCase()}`}
                 title={`Log ${authSuffix}`}
@@ -101,46 +89,34 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
                   👋
                 </Typography>
               </RexLink>
-            </Grid>
-          ),
-          topRight: ({ style }) => (
-            <Grid
-              style={style}
-              container
-              direction="column"
-              alignItems="center"
-              justifyContent="center"
-              sx={{
-                bgcolor: primaryBackground,
-                paddingTop: `calc(${style.minHeight} / 4)`,
-              }}
-            >
-              <SocialBadge
-                imageUrl={linkedInLogoUrl}
-                url="https://linkedin.com/in/aldahick"
-                label="@aldahick"
-                textColor="textPrimary"
-                imageProps={{ alt: "LinkedIn logo" }}
-              />
-              <div style={{ marginTop: "1em" }}>
+            ),
+          },
+          topRight: {
+            styles: { backgroundColor: primaryBackground, paddingTop: "25%" },
+            element: (
+              <>
                 <SocialBadge
-                  imageUrl={stravaLogoUrl}
-                  url="https://strava.com/athletes/aldahick"
+                  imageUrl={linkedInLogoUrl}
+                  url="https://linkedin.com/in/aldahick"
                   label="@aldahick"
                   textColor="textPrimary"
-                  imageProps={{ alt: "Strava logo" }}
+                  imageProps={{ alt: "LinkedIn logo" }}
                 />
-              </div>
-            </Grid>
-          ),
-          bottomLeft: ({ style }) => (
-            <Grid
-              style={style}
-              container
-              alignItems="center"
-              justifyContent="center"
-              sx={{ bgcolor: secondaryBackground }}
-            >
+                <div style={{ marginTop: "1em" }}>
+                  <SocialBadge
+                    imageUrl={stravaLogoUrl}
+                    url="https://strava.com/athletes/aldahick"
+                    label="@aldahick"
+                    textColor="textPrimary"
+                    imageProps={{ alt: "Strava logo" }}
+                  />
+                </div>
+              </>
+            ),
+          },
+          bottomLeft: {
+            styles: { backgroundColor: secondaryBackground },
+            element: (
               <Link
                 href="https://google.com/?q=local+library+hours"
                 style={{
@@ -151,34 +127,21 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
               >
                 Put your eyes to better use
               </Link>
-            </Grid>
-          ),
-          bottomCenter: ({ style }) => (
-            <Grid
-              style={style}
-              container
-              alignItems="center"
-              justifyContent="center"
-              sx={{
-                bgcolor: primaryBackground,
-                paddingTop: `calc(${style.minHeight} / 4)`,
-              }}
-            >
+            ),
+          },
+          bottomCenter: {
+            styles: { backgroundColor: primaryBackground, paddingTop: "25%" },
+            element: (
               <RexLink to="/cat" textAlign="center">
                 <Typography variant="h3">🐈</Typography>
                 <Typography>The cat game!</Typography>
               </RexLink>
-            </Grid>
-          ),
-          bottomRight: ({ style }) => (
-            <Grid
-              style={style}
-              container
-              alignItems="center"
-              justifyContent="center"
-              sx={{ bgcolor: secondaryBackground }}
-            >
-              <div>
+            ),
+          },
+          bottomRight: {
+            styles: { backgroundColor: secondaryBackground },
+            element: (
+              <>
                 {authStore.isAuthorized(IAuthPermission.Transcriptions) ? (
                   <RexLink to="/mzk" textAlign="center">
                     <Typography variant="h3">🎼</Typography>
@@ -191,9 +154,9 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
                     <Typography>Manage media</Typography>
                   </RexLink>
                 ) : null}
-              </div>
-            </Grid>
-          ),
+              </>
+            ),
+          },
         }}
       </HexSelect>
     );

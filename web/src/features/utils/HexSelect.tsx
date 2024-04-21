@@ -1,4 +1,4 @@
-import { styled } from "@mui/material";
+import { Grid, styled } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { CSSProperties } from "react";
 
@@ -15,18 +15,20 @@ const DownSegment = styled("div")({
 interface HexSegment {
   left: number;
   top: number;
+  styles?: React.CSSProperties;
 }
 
-export interface HexSelectSegmentProps {
-  style: React.CSSProperties;
+interface HexSelectSegment {
+  styles?: React.CSSProperties;
+  element: React.ReactNode;
 }
-export interface HexSelectSegments<Props = HexSelectSegmentProps> {
-  topLeft?: React.FC<Props>;
-  topCenter?: React.FC<Props>;
-  topRight?: React.FC<Props>;
-  bottomLeft?: React.FC<Props>;
-  bottomCenter?: React.FC<Props>;
-  bottomRight?: React.FC<Props>;
+export interface HexSelectSegments {
+  topLeft: HexSelectSegment;
+  topCenter: HexSelectSegment;
+  topRight: HexSelectSegment;
+  bottomLeft: HexSelectSegment;
+  bottomCenter: HexSelectSegment;
+  bottomRight: HexSelectSegment;
 }
 type HexSegmentsState = Record<keyof HexSelectSegments, HexSegment>;
 
@@ -43,6 +45,7 @@ const getSegments = (
   container: HTMLDivElement,
   sideLength: number,
   halfHeight: number,
+  children: HexSelectSegments,
 ) => {
   const containerLeft = container.offsetLeft;
   let containerTop = container.offsetTop;
@@ -54,26 +57,32 @@ const getSegments = (
     bottomLeft: {
       left: 0,
       top: bottomTop,
+      styles: children.bottomLeft.styles,
     },
     bottomCenter: {
       left: 0.5 * sideLength,
       top: bottomTop,
+      styles: children.bottomCenter.styles,
     },
     bottomRight: {
       left: sideLength,
       top: bottomTop,
+      styles: children.bottomRight.styles,
     },
     topLeft: {
       left: 0,
       top: 0,
+      styles: children.topLeft.styles,
     },
     topCenter: {
       left: 0.5 * sideLength,
       top: 0,
+      styles: children.topCenter.styles,
     },
     topRight: {
       left: sideLength,
       top: 0,
+      styles: children.topRight.styles,
     },
   };
 
@@ -89,10 +98,10 @@ const renderSegments = (
   children: HexSelectSegments,
   sideLength: number,
 ) =>
-  Object.entries(segments).map(([key, { left, top }], index) => {
+  Object.entries(segments).map(([key, { left, top, styles }], index) => {
     const isUp = index % 2 === 1;
     const Segment = isUp ? UpSegment : DownSegment;
-    const Child = children[key as keyof HexSelectSegments];
+    const child = children[key as keyof HexSelectSegments];
     const sizeStyles: CSSProperties = {
       minWidth: `${sideLength}px`,
       minHeight: `${sideLength}px`,
@@ -102,6 +111,7 @@ const renderSegments = (
       left: `${left}px`,
       top: `${top}px`,
     };
+    console.log(key, styles);
     return (
       <Segment
         key={key}
@@ -110,16 +120,15 @@ const renderSegments = (
           ...positionStyles,
         }}
       >
-        {Child ? (
-          <div
-            style={{
-              ...sizeStyles,
-              ...positionStyles,
-            }}
-          >
-            <Child style={{ ...sizeStyles }} />
-          </div>
-        ) : null}
+        <Grid
+          container
+          alignItems="center"
+          justifyContent="center"
+          direction="column"
+          sx={{ ...sizeStyles, ...(styles ?? {}) }}
+        >
+          {child.element}
+        </Grid>
       </Segment>
     );
   });
@@ -154,8 +163,10 @@ export const HexSelect: React.FC<HexSelectProps> = ({ children }) => {
     if (!containerRef.current) {
       return;
     }
-    setSegments(getSegments(containerRef.current, sideLength, halfHeight));
-  }, [sideLength, halfHeight]);
+    setSegments(
+      getSegments(containerRef.current, sideLength, halfHeight, children),
+    );
+  }, [sideLength, halfHeight, children]);
 
   return (
     <div
