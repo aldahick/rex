@@ -78,14 +78,16 @@ export class UserManager {
   async fetchRolesByUsers(
     userIds: string[],
   ): Promise<Map<string, RoleModel[]>> {
-    const userRoles = await this.db.userRoles
-      .join("role")
-      .select("userId", {
-        role: "role.*",
-      })
-      .where({ userId: { in: userIds } });
+    const roles = await this.db.roles
+      .join("users")
+      .select("*", "users.userId")
+      .where({
+        "users.userId": {
+          in: userIds,
+        },
+      });
     const roleMap = new Map<string, RoleModel[]>();
-    for (const { userId, role } of userRoles) {
+    for (const { userId, ...role } of roles) {
       const mappedRoles = roleMap.get(userId) ?? [];
       if (role) {
         mappedRoles.push(role);

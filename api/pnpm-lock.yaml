@@ -51,8 +51,8 @@ dependencies:
     specifier: ^4.0.1
     version: 4.0.1
   orchid-orm:
-    specifier: ^1.24.2
-    version: 1.24.2(typescript@5.4.5)
+    specifier: ^1.24.4
+    version: 1.24.4(typescript@5.4.5)
   pg:
     specifier: ^8.11.5
     version: 8.11.5
@@ -60,8 +60,8 @@ dependencies:
     specifier: ^8.0.0
     version: 8.0.0
   pqb:
-    specifier: ^0.27.1
-    version: 0.27.1
+    specifier: ^0.27.3
+    version: 0.27.3
   reflect-metadata:
     specifier: ^0.2.2
     version: 0.2.2
@@ -104,8 +104,8 @@ devDependencies:
     specifier: ^0.0.33
     version: 0.0.33
   rake-db:
-    specifier: ^2.17.3
-    version: 2.17.3
+    specifier: ^2.17.5
+    version: 2.17.5
   ts-node:
     specifier: ^10.9.2
     version: 10.9.2(@types/node@20.12.7)(typescript@5.4.5)
@@ -2294,7 +2294,7 @@ packages:
     resolution: {integrity: sha512-2xMjVviMxneZHDHX5p5S6tsRRs7TpDHeeK7kTTMe/kAC/mRRNjWHjZg0rkiY+e17jXSZV3zJYDxXV8Cy72/Vuw==}
     dependencies:
       '@types/node': 20.12.7
-      pg-protocol: 1.6.0
+      pg-protocol: 1.6.1
       pg-types: 4.0.1
 
   /@types/pluralize@0.0.33:
@@ -4973,17 +4973,17 @@ packages:
       wcwidth: 1.0.1
     dev: true
 
-  /orchid-core@0.13.0:
-    resolution: {integrity: sha512-+OzJxJrUnXpW80kbk+FQyayr8UgeBZfb68PSXiPgX8J3640pNA2rx+vEQjyhq6PPbf9u0YrRP7ExCGv6NMBhQQ==}
+  /orchid-core@0.13.2:
+    resolution: {integrity: sha512-WNSkmiNUOaCTreWRMHsdQDzOsrPqU69WDS7UGWkvIbRjFfQ44XjU3odtD+AHU6L8NtcFdL7N6Js+OuEkw7atwQ==}
 
-  /orchid-orm@1.24.2(typescript@5.4.5):
-    resolution: {integrity: sha512-CZdharR5VpmveElLxmzcyz1NeiASD2XY0qRQObOqhK2Rb7X0msoEQOnHmeNmvAoamg9YwSuLKu5RzPK66UD1mA==}
+  /orchid-orm@1.24.4(typescript@5.4.5):
+    resolution: {integrity: sha512-JU6JLUZCd6HHlKMEJhl0r8+ZnWtlAUk73gCrMxo+q6D37l5w2FmuFnUwgjj3acWnkuF0HjhWMHY4EnX3TNTykg==}
     peerDependencies:
       typescript: '*'
     dependencies:
       inflection: 2.0.1
-      orchid-core: 0.13.0
-      pqb: 0.27.1
+      orchid-core: 0.13.2
+      pqb: 0.27.3
       prompts: 2.4.2
       typescript: 5.4.5
     transitivePeerDependencies:
@@ -5169,9 +5169,6 @@ packages:
     dependencies:
       pg: 8.11.5
 
-  /pg-protocol@1.6.0:
-    resolution: {integrity: sha512-M+PDm637OY5WM307051+bsDia5Xej6d9IR4GwJse1qA1DIhiKlksvrneZOYQq42OM+spubpcNYEo2FcKQrDk+Q==}
-
   /pg-protocol@1.6.1:
     resolution: {integrity: sha512-jPIlvgoD63hrEuihvIg+tJhoGjUsLPn6poJY9N5CnlPd91c2T18T/9zBtLxZSb1EhYxBRoZJtzScCaWlYLtktg==}
 
@@ -5300,11 +5297,11 @@ packages:
   /postgres-range@1.1.3:
     resolution: {integrity: sha512-VdlZoocy5lCP0c/t66xAfclglEapXPCIVhqqJRncYpvbCgImF0w67aPKfbqUMr72tO2k5q0TdTZwCLjPTI6C9g==}
 
-  /pqb@0.27.1:
-    resolution: {integrity: sha512-Aaa46+qy0hCdJcE+zGCtNZ3RcFGcM6SQj26O7W631bHWtaSWO6PqKryov9teVzVJzSyLVQdWf/vzPLmvt1M4Gw==}
+  /pqb@0.27.3:
+    resolution: {integrity: sha512-OUy79w4w2zvOFpbIqPfjyMt2ro1ytgWKfTxHYusNulGpmrQolsdoAhZG5snWqlKdgxjuojkOXyY89haEhe0D3g==}
     dependencies:
       '@types/pg': 8.11.5
-      orchid-core: 0.13.0
+      orchid-core: 0.13.2
       pg: 8.11.5
     transitivePeerDependencies:
       - pg-native
@@ -5439,11 +5436,11 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /rake-db@2.17.3:
-    resolution: {integrity: sha512-x636gP+qKPLVRykzwU2f8KmWD9G5r+hsThPH+V4V5zP/XLTDxGRZkGzrVhBsdPPjL4ltFhF10/68MGA2kiKbTw==}
+  /rake-db@2.17.5:
+    resolution: {integrity: sha512-34NXI/joGLpQrZKGVUptIUX6pYNgtsIsulu3PhtfqpEAl8IeU27hUfL3o1QoPJWhe20MFVWiBf6989NPNMOOzg==}
     dependencies:
-      orchid-core: 0.13.0
-      pqb: 0.27.1
+      orchid-core: 0.13.2
+      pqb: 0.27.3
       prompts: 2.4.2
     transitivePeerDependencies:
       - pg-native

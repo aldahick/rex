@@ -43,7 +43,7 @@ export class DatabaseService implements DbTables {
     this.orm = orchidORM(
       {
         databaseURL: config.postgresUrl,
-        log: false,
+        log: config.log.database,
       },
       tables,
     );

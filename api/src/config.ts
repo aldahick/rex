@@ -33,6 +33,7 @@ export class RexConfig extends BaseConfig {
   };
 
   readonly log = {
+    database: this.optional("LOG_DATABASE") === "true",
     level: this.optional("LOG_LEVEL") ?? "debug",
     pretty: !!this.optional("LOG_PRETTY"),
   };

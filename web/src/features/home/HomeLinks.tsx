@@ -182,13 +182,13 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
                 {authStore.isAuthorized(IAuthPermission.Transcriptions) ? (
                   <RexLink to="/mzk" textAlign="center">
                     <Typography variant="h3">🎼</Typography>
-                    <Typography>Transcribe sheet music with AI!</Typography>
+                    <Typography>Transcribe sheet music</Typography>
                   </RexLink>
                 ) : null}
                 {authStore.isAuthorized(IAuthPermission.Media) ? (
                   <RexLink to="/media" textAlign="center">
                     <Typography variant="h3">📁</Typography>
-                    <Typography>Manage your uploaded media</Typography>
+                    <Typography>Manage media</Typography>
                   </RexLink>
                 ) : null}
               </div>
