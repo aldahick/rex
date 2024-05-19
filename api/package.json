@@ -14,7 +14,7 @@
     "test": "node --enable-source-maps --test dist"
   },
   "engines": {
-    "node": "^20.10"
+    "node": "^20.13"
   },
   "repository": {
     "type": "git",
