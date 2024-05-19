@@ -3,7 +3,7 @@ import { compact } from "@athenajs/utils";
 import { IAuthPermission } from "../../graphql.js";
 import { RoleModel } from "../../model/role.model.js";
 import { UserModel } from "../../model/user.model.js";
-import { DatabaseService } from "../../service/database.service.js";
+import { DatabaseService } from "../../service/database/database.service.js";
 import { AuthManager } from "../auth/auth.manager.js";
 
 @injectable()

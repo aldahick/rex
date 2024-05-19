@@ -2,7 +2,7 @@ import { Logger, injectable } from "@athenajs/core";
 import { uniqueBy } from "remeda";
 import { IProgressStatus } from "../../graphql.js";
 import { ProgressModel } from "../../model/index.js";
-import { DatabaseService } from "../../service/database.service.js";
+import { DatabaseService } from "../../service/database/database.service.js";
 
 @injectable()
 export class ProgressManager {

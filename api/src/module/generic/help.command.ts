@@ -3,7 +3,7 @@ import {
   DiscordCommand,
   DiscordService,
   discordCommand,
-} from "../../service/discord.service.js";
+} from "../../service/discord/discord.service.js";
 
 @discordCommand()
 export class HelpCommand implements DiscordCommand {

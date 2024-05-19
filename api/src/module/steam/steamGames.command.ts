@@ -4,8 +4,8 @@ import { Message } from "discord.js";
 import {
   DiscordCommand,
   discordCommand,
-} from "../../service/discord.service.js";
-import { HastebinService } from "../../service/hastebin.service.js";
+} from "../../service/discord/discord.service.js";
+import { HastebinService } from "../../service/hastebin/hastebin.service.js";
 import {
   SteamPlayerManager,
   SteamPlayerWithGames,

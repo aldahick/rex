@@ -1,14 +1,14 @@
 import { injectable } from "@athenajs/core";
 import { OrchidORM, orchidORM } from "orchid-orm";
-import { RexConfig } from "../config.js";
-import { ProgressTable } from "../model/progress.model.js";
-import { ProgressLogTable } from "../model/progressLog.model.js";
-import { RoleTable } from "../model/role.model.js";
-import { SteamGameTable } from "../model/steamGame.model.js";
-import { TranscriptionTable } from "../model/transcription.model.js";
-import { UserTable } from "../model/user.model.js";
-import { UserNoteTable } from "../model/userNote.model.js";
-import { UserRoleTable } from "../model/userRole.model.js";
+import { RexConfig } from "../../config.js";
+import { ProgressTable } from "../../model/progress.model.js";
+import { ProgressLogTable } from "../../model/progressLog.model.js";
+import { RoleTable } from "../../model/role.model.js";
+import { SteamGameTable } from "../../model/steamGame.model.js";
+import { TranscriptionTable } from "../../model/transcription.model.js";
+import { UserTable } from "../../model/user.model.js";
+import { UserNoteTable } from "../../model/userNote.model.js";
+import { UserRoleTable } from "../../model/userRole.model.js";
 
 const tables = {
   progress: ProgressTable,

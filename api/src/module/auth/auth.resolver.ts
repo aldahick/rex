@@ -9,8 +9,8 @@ import {
   IMutationCreateAuthTokenGoogleArgs,
   IMutationCreateAuthTokenLocalArgs,
 } from "../../graphql.js";
-import { DatabaseService } from "../../service/database.service.js";
-import { GoogleAuthService } from "../../service/googleAuth.service.js";
+import { DatabaseService } from "../../service/database/database.service.js";
+import { GoogleAuthService } from "../../service/google/google-auth.service.js";
 import { UserManager, UserResolver } from "../user/index.js";
 import { RexContext } from "./auth.context.js";
 import { AuthManager } from "./auth.manager.js";

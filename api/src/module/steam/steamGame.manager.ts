@@ -2,7 +2,7 @@ import { injectable } from "@athenajs/core";
 import { chunk } from "@athenajs/utils";
 import { IProgressStatus } from "../../graphql.js";
 import { SteamGameModel } from "../../model/index.js";
-import { DatabaseService } from "../../service/database.service.js";
+import { DatabaseService } from "../../service/database/database.service.js";
 import { SteamService } from "../../service/steam/index.js";
 import { ProgressManager } from "../progress/index.js";
 

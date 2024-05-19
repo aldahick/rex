@@ -1,6 +1,6 @@
 import { injectable } from "@athenajs/core";
 import { UserNoteModel } from "../../model/index.js";
-import { DatabaseService } from "../../service/database.service.js";
+import { DatabaseService } from "../../service/database/database.service.js";
 
 @injectable()
 export class NoteManager {

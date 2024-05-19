@@ -6,9 +6,9 @@ import { injectable } from "@athenajs/core";
 import { RexConfig } from "../../config.js";
 import { ITranscriptionStatus } from "../../graphql.js";
 import { TranscriptionModel, UserModel } from "../../model/index.js";
-import { DatabaseService } from "../../service/database.service.js";
-import { DockerService } from "../../service/docker.service.js";
-import { GoogleCloudService } from "../../service/googleCloud.service.js";
+import { DatabaseService } from "../../service/database/database.service.js";
+import { DockerService } from "../../service/docker/docker.service.js";
+import { GoogleCloudService } from "../../service/google/google-cloud.service.js";
 import { AuthManager } from "../auth/auth.manager.js";
 import { MediaManager } from "../media/media.manager.js";
 
