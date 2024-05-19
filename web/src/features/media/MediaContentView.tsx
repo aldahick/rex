@@ -1,7 +1,6 @@
 import { Typography, styled } from "@mui/material";
 import mime from "mime";
 import type React from "react";
-
 import { config } from "../../config";
 import type { FileTreeEntry } from "../file/FileTreeEntry";
 import { FetchUrl } from "../utils/FetchUrl";

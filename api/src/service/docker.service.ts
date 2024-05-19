@@ -1,6 +1,5 @@
 import { injectable } from "@athenajs/core";
 import Docker from "dockerode";
-
 import { RexConfig } from "../config.js";
 
 export interface DockerRunParams {

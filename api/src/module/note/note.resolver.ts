@@ -1,5 +1,4 @@
 import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
-
 import {
   IAuthPermission,
   IMutation,
@@ -87,8 +86,10 @@ export class NoteResolver {
 
   private async fetchUserId(context: RexContext): Promise<string> {
     if (
-      !context.userId ||
-      !(await context.isAuthorized(IAuthPermission.AdminNotes))
+      !(
+        context.userId &&
+        (await context.isAuthorized(IAuthPermission.AdminNotes))
+      )
     ) {
       throw new Error("Forbidden");
     }

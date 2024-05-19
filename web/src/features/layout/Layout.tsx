@@ -8,7 +8,6 @@ import {
 import { observer } from "mobx-react-lite";
 import { SnackbarProvider } from "notistack";
 import React, { useEffect, useState } from "react";
-
 import { config } from "../../config";
 import { useStores } from "../../hooks";
 import { ThemeProvider } from "./ThemeProvider";

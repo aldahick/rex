@@ -3,7 +3,6 @@ import { createHash } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { injectable } from "@athenajs/core";
-
 import { RexConfig } from "../../config.js";
 import { ITranscriptionStatus } from "../../graphql.js";
 import { TranscriptionModel, UserModel } from "../../model/index.js";
@@ -25,11 +24,11 @@ export class MzkManager {
   ) {}
 
   async fetchMany(userId: string): Promise<TranscriptionModel[]> {
-    return this.db.transcriptions.where({ userId }).selectAll();
+    return await this.db.transcriptions.where({ userId }).selectAll();
   }
 
   async fetchOne(id: string): Promise<TranscriptionModel> {
-    return this.db.transcriptions.findBy({ id });
+    return await this.db.transcriptions.findBy({ id });
   }
 
   async create(
@@ -37,7 +36,7 @@ export class MzkManager {
     inputKey: string,
     filename: string,
   ): Promise<TranscriptionModel> {
-    return this.db.transcriptions.create({
+    return await this.db.transcriptions.create({
       userId,
       filename,
       inputKey,

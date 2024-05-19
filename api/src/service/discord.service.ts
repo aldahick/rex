@@ -1,7 +1,6 @@
 import { Logger, injectable, makeRegistryDecorator } from "@athenajs/core";
 import { injectAll } from "@athenajs/core/dist/container.js";
 import { Client, GatewayIntentBits, Message } from "discord.js";
-
 import { RexConfig } from "../config.js";
 
 const commandToken = Symbol("DiscordCommand");

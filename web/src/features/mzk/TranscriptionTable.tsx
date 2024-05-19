@@ -2,7 +2,6 @@ import DownloadIcon from "@mui/icons-material/Download";
 import { IconButton, TableCell, TableRow, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
 import { useTranscriptionsQuery } from "../../graphql";
 import { useStatus } from "../../hooks";
 import { Table } from "../utils/Table";

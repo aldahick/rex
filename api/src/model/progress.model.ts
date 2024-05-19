@@ -1,5 +1,4 @@
 import { Selectable } from "orchid-orm";
-
 import { IProgressStatus } from "../graphql.js";
 import { BaseTable } from "./base.table.js";
 import { ProgressLogTable } from "./progressLog.model.js";

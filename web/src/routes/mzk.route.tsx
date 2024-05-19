@@ -1,7 +1,6 @@
 import FolderIcon from "@mui/icons-material/Folder";
 import { Grid, IconButton, Typography } from "@mui/material";
 import React from "react";
-
 import { TranscriptionTable } from "../features/mzk/TranscriptionTable";
 import { RexLink } from "../features/utils/RexLink";
 

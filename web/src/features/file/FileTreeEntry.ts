@@ -58,8 +58,12 @@ const getPathIndex = (path: string): number => {
 
 const typeSorts = ["directory", "series", "file"] as const;
 export const sortFileEntries = (a: FileTreeEntry, b: FileTreeEntry): number => {
-  if (!a.path) return -1;
-  if (!b.path) return 1;
+  if (!a.path) {
+    return -1;
+  }
+  if (!b.path) {
+    return 1;
+  }
   const aIndex = getPathIndex(a.path);
   const bIndex = getPathIndex(b.path);
   if (!Number.isNaN(aIndex)) {

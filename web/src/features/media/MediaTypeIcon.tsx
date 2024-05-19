@@ -1,7 +1,6 @@
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import FolderIcon from "@mui/icons-material/Folder";
 import React from "react";
-
 import { IMediaItemType } from "../../graphql";
 
 export interface MediaTypeIconProps {

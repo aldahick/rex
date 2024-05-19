@@ -1,6 +1,5 @@
 import { injectable } from "@athenajs/core";
 import * as google from "googleapis";
-
 import { RexConfig } from "../config.js";
 
 export interface GoogleTokenPayload {

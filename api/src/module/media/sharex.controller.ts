@@ -47,7 +47,7 @@ export class SharexController {
     context: RexContext,
   ): Promise<UploadResponse> {
     const { userId } = context;
-    if (!userId || !(await context.isAuthorized(IAuthPermission.Media))) {
+    if (!(userId && (await context.isAuthorized(IAuthPermission.Media)))) {
       res.status(403);
       return {
         error: "Unauthorized",
@@ -92,7 +92,7 @@ export class SharexController {
   @httpRoute(HttpMethod.GET, "/v1/sharex/:filename/delete")
   async delete(req: HttpRequest, res: HttpResponse, context: RexContext) {
     const { userId } = context;
-    if (!userId || !(await context.isAuthorized(IAuthPermission.Media))) {
+    if (!(userId && (await context.isAuthorized(IAuthPermission.Media)))) {
       return res.status(403).send("Unauthorized");
     }
     const email = await this.userManager.fetchEmail(userId);

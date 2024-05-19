@@ -1,6 +1,5 @@
 import { injectable } from "@athenajs/core";
-import { DbTable, OrchidORM, orchidORM } from "orchid-orm";
-
+import { OrchidORM, orchidORM } from "orchid-orm";
 import { RexConfig } from "../config.js";
 import { ProgressTable } from "../model/progress.model.js";
 import { ProgressLogTable } from "../model/progressLog.model.js";

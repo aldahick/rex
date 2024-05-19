@@ -4,7 +4,6 @@ import {
   resolveQuery,
   resolver,
 } from "@athenajs/core";
-
 import { RexConfig } from "../../config.js";
 import {
   IAuthPermission,
@@ -66,8 +65,10 @@ export class UserResolver {
     context: RexContext,
   ): Promise<IMutation["addRoleToUser"]> {
     if (
-      !(await context.isAuthorized(IAuthPermission.AdminUsers)) ||
-      !(await context.isAuthorized(IAuthPermission.AdminRoles))
+      !(await context.isAuthorized(
+        IAuthPermission.AdminUsers,
+        IAuthPermission.AdminRoles,
+      ))
     ) {
       throw new Error("Forbidden");
     }
@@ -82,8 +83,10 @@ export class UserResolver {
     context: RexContext,
   ): Promise<IMutation["createUser"]> {
     if (
-      !this.config.userRegistration &&
-      !(await context.isAuthorized(IAuthPermission.AdminUsers))
+      !(
+        this.config.userRegistration ||
+        (await context.isAuthorized(IAuthPermission.AdminUsers))
+      )
     ) {
       throw new Error("Forbidden");
     }

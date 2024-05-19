@@ -1,5 +1,4 @@
 import { BaseConfig, config } from "@athenajs/core";
-
 import { stringToBytes } from "./util/byte.js";
 
 @config()

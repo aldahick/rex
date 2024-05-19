@@ -1,6 +1,5 @@
 import { Button } from "@mui/material";
 import React from "react";
-
 import { RexLink } from "../utils/RexLink";
 
 export const LoginButton: React.FC = () => {

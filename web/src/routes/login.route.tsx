@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router";
-
 import { LoginForm } from "../features/auth/LoginForm";
 
 export const LoginRoute: React.FC = () => {

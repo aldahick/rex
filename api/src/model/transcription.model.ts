@@ -1,5 +1,4 @@
 import { Selectable } from "orchid-orm";
-
 import { ITranscriptionStatus } from "../graphql.js";
 import { BaseTable } from "./base.table.js";
 import { UserTable } from "./user.model.js";

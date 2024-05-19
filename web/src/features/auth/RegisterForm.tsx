@@ -1,7 +1,6 @@
 import { Grid, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router";
-
 import { CreateUserForm } from "./CreateUserForm";
 
 export interface RegisterFormProps {

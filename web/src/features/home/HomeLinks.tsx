@@ -3,7 +3,6 @@ import PublicIcon from "@mui/icons-material/Public";
 import { Grid, Link, Typography, useTheme } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import React from "react";
-
 import { IAuthPermission } from "../../graphql";
 import { useStores } from "../../hooks";
 import githubDarkLogoUrl from "../../images/logos/github-dark.png";

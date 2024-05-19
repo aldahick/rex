@@ -4,7 +4,6 @@ import {
   resolveQuery,
   resolver,
 } from "@athenajs/core";
-
 import { RexConfig } from "../../config.js";
 import {
   IAuthPermission,
@@ -127,8 +126,7 @@ export class MediaResolver {
     context: RexContext,
   ): Promise<Pick<UserModel, "id" | "email">> {
     if (
-      !context.userId ||
-      !(await context.isAuthorized(IAuthPermission.Media))
+      !(context.userId && (await context.isAuthorized(IAuthPermission.Media)))
     ) {
       throw new Error("Forbidden");
     }

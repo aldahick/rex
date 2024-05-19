@@ -1,6 +1,5 @@
 import { injectable } from "@athenajs/core";
 import { compact } from "@athenajs/utils";
-
 import { IAuthPermission } from "../../graphql.js";
 import { RoleModel } from "../../model/role.model.js";
 import { UserModel } from "../../model/user.model.js";
@@ -50,7 +49,7 @@ export class UserManager {
   }
 
   async fetchAll(): Promise<UserModel[]> {
-    return this.db.users.where().selectAll();
+    return await this.db.users.where().selectAll();
   }
 
   async getSafe(id: string): Promise<UserModel | undefined> {

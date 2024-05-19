@@ -1,6 +1,5 @@
 import { injectable } from "@athenajs/core";
 import { compact } from "@athenajs/utils";
-
 import { SteamGameModel } from "../../model/index.js";
 import { SteamPlayer, SteamService } from "../../service/steam/index.js";
 import { SteamGameManager } from "./steamGame.manager.js";
@@ -64,7 +63,7 @@ export class SteamPlayerManager {
   }
 
   async resolveUsernames(identifiers: string[]): Promise<string[]> {
-    return Promise.all(
+    return await Promise.all(
       identifiers.map(async (identifier) => {
         const steamId =
           await this.steamService.getSteamId64FromUsername(identifier);

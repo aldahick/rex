@@ -1,8 +1,6 @@
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { Grid, IconButton, Typography } from "@mui/material";
-import * as _ from "lodash";
 import React from "react";
-
 import { useProgressQuery } from "../../graphql";
 import { useStatus } from "../../hooks";
 
@@ -23,14 +21,14 @@ export const LiveProgress: React.FC<LiveProgressProps> = ({ progressId }) => {
     <Grid container direction="column">
       <Grid item>
         <Typography variant="subtitle1">
-          Progress: {_.startCase(progress.action)}
+          Progress: {progress.action.toLocaleLowerCase()}
         </Typography>
         <IconButton onClick={() => progressResult.refetch({ id: progressId })}>
           <RefreshIcon />
         </IconButton>
       </Grid>
       <Grid item>
-        <Typography>Status: {_.startCase(progress.status)}</Typography>
+        <Typography>Status: {progress.status.toLocaleLowerCase()}</Typography>
       </Grid>
       {progress.logs.map((log) => (
         <Grid item key={new Date(log.createdAt).toISOString()}>

@@ -1,6 +1,5 @@
 import { Button, Grid, TextField } from "@mui/material";
 import React, { useState } from "react";
-
 import { useCreateNoteMutation } from "../../graphql";
 import { useStatus } from "../../hooks";
 

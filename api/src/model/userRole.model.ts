@@ -1,5 +1,4 @@
 import { Selectable } from "orchid-orm";
-
 import { BaseTable } from "./base.table.js";
 import { RoleTable } from "./role.model.js";
 import { UserTable } from "./user.model.js";

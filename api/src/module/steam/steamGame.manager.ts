@@ -1,6 +1,5 @@
 import { injectable } from "@athenajs/core";
 import { chunk } from "@athenajs/utils";
-
 import { IProgressStatus } from "../../graphql.js";
 import { SteamGameModel } from "../../model/index.js";
 import { DatabaseService } from "../../service/database.service.js";
@@ -18,7 +17,7 @@ export class SteamGameManager {
   ) {}
 
   async getMany(ids: number[]): Promise<SteamGameModel[]> {
-    return this.db.steamGames.whereIn("id", ids).selectAll();
+    return await this.db.steamGames.whereIn("id", ids).selectAll();
   }
 
   async fetchAll(progressId: string): Promise<void> {
@@ -53,7 +52,7 @@ export class SteamGameManager {
     text: string,
     { offset, limit }: { offset: number; limit: number },
   ): Promise<SteamGameModel[]> {
-    return this.db.steamGames
+    return await this.db.steamGames
       .where({
         name: {
           contains: text,

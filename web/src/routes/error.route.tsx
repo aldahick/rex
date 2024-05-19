@@ -1,7 +1,6 @@
 import { Typography } from "@mui/material";
 import React from "react";
 import { useRouteError } from "react-router";
-
 import { Layout } from "../features/layout/Layout";
 
 export const ErrorRoute: React.FC = () => {

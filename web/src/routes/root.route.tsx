@@ -1,6 +1,5 @@
 import { Grid } from "@mui/material";
 import React from "react";
-
 import { HomeLinks } from "../features/home/HomeLinks";
 
 export const RootRoute: React.FC = () => {

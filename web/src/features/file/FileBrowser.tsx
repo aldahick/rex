@@ -1,6 +1,5 @@
 import { Grid, Typography, styled } from "@mui/material";
 import React from "react";
-
 import { FileAddressBar } from "./FileAddressBar";
 import { FileContentSeries } from "./FileContentSeries";
 import { FileListBrowser, FileListBrowserProps } from "./FileListBrowser";

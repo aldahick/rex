@@ -1,7 +1,6 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import React from "react";
-
 import { useRemoveNoteMutation } from "../../graphql";
 import { useStatus } from "../../hooks";
 

@@ -1,6 +1,5 @@
 import { Button, Grid, TextField } from "@mui/material";
 import React, { useState } from "react";
-
 import { useCreateUserMutation } from "../../graphql";
 import { useStatus } from "../../hooks";
 
@@ -24,13 +23,13 @@ export const CreateUserForm: React.FC<CreateUserFormProps> = ({
   const status = useStatus();
 
   const handleSubmit = async () => {
-    if (!email || !emailRegex.test(email)) {
+    if (!(email && emailRegex.test(email))) {
       return status.warn("Please enter a valid email address.");
     }
     if (!username) {
       return status.warn("You can't register without a username!");
     }
-    if (!password1 || !password2 || password1 !== password2) {
+    if (!(password1 && password2) || password1 !== password2) {
       return status.warn(
         "Enter the same, non-empty password in both fields, please.",
       );

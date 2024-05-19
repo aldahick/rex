@@ -1,6 +1,5 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
 import React from "react";
-
 import { SvgLinePath } from "../utils/SvgLinePath";
 
 const paths: [number, number][][] = [

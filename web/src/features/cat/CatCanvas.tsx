@@ -1,9 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
-
+import React, { useState } from "react";
 import { useStores } from "../../hooks";
 import { ThemeSetting } from "../../store/settings.store";
 import { CatGame } from "./CatGame";
-import { CatSettings } from "./CatSettings";
 
 const getCatColors = (theme?: ThemeSetting) =>
   theme === ThemeSetting.Light || !theme

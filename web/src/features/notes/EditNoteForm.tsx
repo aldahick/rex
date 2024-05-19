@@ -1,6 +1,5 @@
 import { Button, Checkbox, Grid, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
-
 import { INote, useUpdateNoteBodyMutation } from "../../graphql";
 import { useStatus } from "../../hooks";
 

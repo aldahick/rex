@@ -6,7 +6,6 @@ import {
   post,
 } from "@athenajs/core";
 import mime from "mime";
-
 import { IAuthPermission } from "../../graphql.js";
 import { RexContext } from "../auth/index.js";
 import { UserManager } from "../user/index.js";

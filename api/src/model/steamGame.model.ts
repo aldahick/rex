@@ -1,5 +1,4 @@
 import { Selectable } from "orchid-orm";
-
 import { BaseTable } from "./base.table.js";
 
 export type SteamGameModel = Selectable<SteamGameTable>;

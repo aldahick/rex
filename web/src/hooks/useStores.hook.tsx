@@ -1,5 +1,4 @@
 import React, { PropsWithChildren, createContext, useContext } from "react";
-
 import { AuthStore } from "../store/auth.store";
 import { SettingsStore } from "../store/settings.store";
 import { SidebarStore } from "../store/sidebar.store";

@@ -9,7 +9,6 @@ import path from "node:path";
 import { Readable } from "node:stream";
 import { Logger, injectable } from "@athenajs/core";
 import axios from "axios";
-
 import { RexConfig } from "../../config.js";
 import { IMediaItem, IMediaItemType, IProgressStatus } from "../../graphql.js";
 import { UserModel } from "../../model/index.js";
@@ -236,7 +235,7 @@ export class MediaManager {
    * @returns all emails of users who have media
    */
   async getAllEmails(): Promise<string[]> {
-    return fs.readdir(this.root);
+    return await fs.readdir(this.root);
   }
 
   toFilename(user: Pick<UserModel, "email">, key: string): string {

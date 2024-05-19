@@ -1,5 +1,4 @@
 import { Selectable } from "orchid-orm";
-
 import { BaseTable } from "./base.table.js";
 import { ProgressTable } from "./progress.model.js";
 

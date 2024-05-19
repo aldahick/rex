@@ -2,7 +2,6 @@ import ConfirmIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import React, { useState } from "react";
-
 import { FileTreeEntry } from "./FileTreeEntry";
 
 export interface FileDeleteButtonProps {

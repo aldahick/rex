@@ -1,6 +1,5 @@
 import { Grid, styled } from "@mui/material";
 import React from "react";
-
 import { FileListItem, FileListItemCallbacks } from "./FileListItem";
 import { FileTreeEntry } from "./FileTreeEntry";
 import { FileUploadArea } from "./FileUploadArea";

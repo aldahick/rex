@@ -1,7 +1,6 @@
 import { injectable } from "@athenajs/core";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
 import { RexConfig } from "../../config.js";
 
 @injectable()

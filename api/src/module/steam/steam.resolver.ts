@@ -1,5 +1,4 @@
 import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
-
 import {
   IAuthPermission,
   IMutation,
@@ -49,7 +48,7 @@ export class SteamResolver {
     root: never,
     { page, search }: IQuerySteamGamesArgs,
   ): Promise<IQuery["steamGames"]> {
-    return this.steamGameManager.search(search, {
+    return await this.steamGameManager.search(search, {
       offset: page * SEARCH_PAGE_SIZE,
       limit: SEARCH_PAGE_SIZE,
     });

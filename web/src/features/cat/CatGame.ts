@@ -1,5 +1,5 @@
-import { clamp, random, range } from "lodash";
-
+import { randomInt } from "node:crypto";
+import { clamp, range } from "remeda";
 import { XYCoord } from "../utils/XYCoord";
 import { CatSettings } from "./CatSettings";
 
@@ -25,7 +25,7 @@ export class CatGame {
       throw new Error("literally can't render anything. neat");
     }
     this.dots.push(
-      ...range(this.settings.count).map(() => this.randomDot(canvas)),
+      ...range(0, this.settings.count).map(() => this.randomDot(canvas)),
     );
     this.startInterval(context);
   }
@@ -57,9 +57,9 @@ export class CatGame {
 
   randomDot(canvas: HTMLCanvasElement): Dot {
     return {
-      x: random(canvas.width),
-      y: random(canvas.height),
-      theta: startAngles[random(startAngles.length)],
+      x: randomInt(0, canvas.width),
+      y: randomInt(0, canvas.height),
+      theta: startAngles[randomInt(0, startAngles.length)],
     };
   }
 
@@ -76,8 +76,8 @@ export class CatGame {
         (dot.theta >= 0 && dot.theta < Math.PI / 2) ||
         (dot.theta >= Math.PI && dot.theta <= (3 / 2) * Math.PI);
       const clamped = {
-        x: clamp(dot.x, radius, maxX),
-        y: clamp(dot.y, radius, maxY),
+        x: clamp(dot.x, { min: radius, max: maxX }),
+        y: clamp(dot.y, { min: radius, max: maxY }),
       };
       if (clamped.x !== dot.x) {
         dot.x = clamped.x;

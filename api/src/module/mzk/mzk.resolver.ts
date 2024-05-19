@@ -1,6 +1,5 @@
 import path from "node:path";
 import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
-
 import {
   IAuthPermission,
   IMediaItemType,

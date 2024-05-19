@@ -1,6 +1,5 @@
 import { Grid, TableCell, TableRow } from "@mui/material";
 import React from "react";
-
 import { useNotesQuery } from "../../graphql";
 import { useStatus } from "../../hooks";
 import { RexLink } from "../utils/RexLink";

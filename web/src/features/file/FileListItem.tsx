@@ -7,7 +7,6 @@ import VideoIcon from "@mui/icons-material/VideoFile";
 import { Grid, IconButton, Typography, styled } from "@mui/material";
 import mime from "mime";
 import React, { useState } from "react";
-
 import { FileDeleteButton } from "./FileDeleteButton";
 import { FileTreeEntry } from "./FileTreeEntry";
 

@@ -14,7 +14,7 @@ export const FileContentSeries: React.FC<FileContentSeriesProps> = observer(
     const { authStore } = useStores();
     const [index, setIndex] = useState(0);
 
-    if (!authStore.token || !entry.fetched) {
+    if (!(authStore.token && entry.fetched)) {
       return null;
     }
 

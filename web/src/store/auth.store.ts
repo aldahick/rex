@@ -1,5 +1,4 @@
 import { makeAutoObservable } from "mobx";
-
 import { IAuthPermission, IRole } from "../graphql";
 
 const TOKEN_KEY = "rex.auth.token/v2";

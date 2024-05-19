@@ -1,5 +1,4 @@
 import { injectable } from "@athenajs/core";
-
 import { IAuthPermission } from "../../graphql.js";
 import { RoleModel } from "../../model/index.js";
 import { DatabaseService } from "../../service/database.service.js";
@@ -17,11 +16,11 @@ export class RoleManager {
   }
 
   async fetchMany(): Promise<RoleModel[]> {
-    return this.db.roles.selectAll();
+    return await this.db.roles.selectAll();
   }
 
   async create(name: string): Promise<RoleModel> {
-    return this.db.roles.create({
+    return await this.db.roles.create({
       name,
       permissions: [],
     });

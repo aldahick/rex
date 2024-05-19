@@ -1,6 +1,5 @@
 import { Breadcrumbs, Grid, Typography } from "@mui/material";
 import React from "react";
-
 import { useNoteQuery } from "../../graphql";
 import { useStatus } from "../../hooks";
 import { RexLink } from "../utils/RexLink";

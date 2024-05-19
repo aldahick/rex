@@ -1,7 +1,6 @@
 import { Logger } from "@athenajs/core";
 import { compact } from "@athenajs/utils";
 import { Message } from "discord.js";
-
 import {
   DiscordCommand,
   discordCommand,

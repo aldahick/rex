@@ -2,7 +2,6 @@ import UploadIcon from "@mui/icons-material/Upload";
 import { Grid, IconButton, Typography, styled } from "@mui/material";
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
-
 import { RexLink } from "../utils/RexLink";
 import { PathTypography, getFileEntryType } from "./FileListItem";
 

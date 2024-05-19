@@ -1,7 +1,6 @@
 import { resolve as resolveUrl } from "node:url";
 import { injectable } from "@athenajs/core";
 import axios from "axios";
-
 import { RexConfig } from "../../config.js";
 import { SteamPlayer } from "./SteamPlayer.js";
 import { GetOwnedGames } from "./dto/GetOwnedGames.js";

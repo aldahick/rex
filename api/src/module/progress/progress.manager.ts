@@ -24,7 +24,7 @@ export class ProgressManager {
   }
 
   async create(action: string): Promise<ProgressModel> {
-    return this.db.progress.create({
+    return await this.db.progress.create({
       action,
       createdAt: new Date(),
       status: IProgressStatus.Created,

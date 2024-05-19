@@ -20,7 +20,6 @@ export const change = rakeDb(
     baseTable: BaseTable,
     migrationsTable: "migrations",
     migrationsPath: "../migrations",
-    useCodeUpdater: false,
     import: (path) => import(pathToFileURL(resolvePath(path)).toString()),
   },
 );

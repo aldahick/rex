@@ -1,7 +1,6 @@
 import { Button, Grid, TextField, styled } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-
 import {
   IStorableAuthTokenFragment,
   useConfigQuery,
@@ -31,7 +30,7 @@ export const LocalAuthForm: React.FC<LocalAuthFormProps> = ({
   const status = useStatus();
 
   const handleSubmit = async () => {
-    if (!username || !password) {
+    if (!(username && password)) {
       return;
     }
     try {

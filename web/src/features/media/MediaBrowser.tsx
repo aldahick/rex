@@ -1,10 +1,9 @@
 import { Typography } from "@mui/material";
-import { cloneDeep } from "lodash";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import { clone } from "remeda";
 import { useImmer } from "use-immer";
-
 import {
   IMediaItem,
   IMediaItemType,
@@ -46,7 +45,7 @@ interface MediaBrowserProps {
  */
 export const MediaBrowser: React.FC<MediaBrowserProps> = observer(({ dir }) => {
   // no preceding "/"
-  const [root, setRoot] = useImmer(cloneDeep(EMPTY_ROOT));
+  const [root, setRoot] = useImmer(clone(EMPTY_ROOT));
   const [selected, setSelected] = useState<FileTreeEntry>();
   const [createMediaUpload] = useCreateMediaUploadMutation();
   const [deleteMedia] = useDeleteMediaMutation();
@@ -71,7 +70,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = observer(({ dir }) => {
         }
         entry.children = children
           ?.filter((i) => !i.key.startsWith("."))
-          .map((i) => cloneDeep(mediaItemToEntry(i)));
+          .map((i) => clone(mediaItemToEntry(i)));
         entry.fetched = true;
       });
     },
@@ -80,7 +79,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = observer(({ dir }) => {
     },
   });
 
-  const changeDir = async (newDir: string) => {
+  const changeDir = (newDir: string) => {
     navigate(`/media/${encodeURIComponent(newDir)}`);
   };
 

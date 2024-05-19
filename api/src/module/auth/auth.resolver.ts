@@ -1,5 +1,4 @@
 import { resolveField, resolveMutation, resolver } from "@athenajs/core";
-
 import { RexConfig } from "../../config.js";
 import {
   IAuthClientType,

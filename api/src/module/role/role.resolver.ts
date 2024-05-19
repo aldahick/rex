@@ -1,5 +1,4 @@
 import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
-
 import {
   IAuthPermission,
   IMutation,

@@ -1,5 +1,4 @@
 import { resolveQuery, resolver } from "@athenajs/core";
-
 import {
   IProgress,
   IQuery,

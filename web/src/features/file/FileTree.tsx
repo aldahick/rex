@@ -11,7 +11,6 @@ import {
   useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
-
 import { FileTreeEntry } from "./FileTreeEntry";
 
 const CenteredListItemIcon = styled(ListItemIcon)({

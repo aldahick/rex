@@ -3,7 +3,6 @@ import {
   ContextRequest,
   contextGenerator,
 } from "@athenajs/core";
-
 import { IAuthPermission } from "../../graphql.js";
 import { UserManager } from "../user/user.manager.js";
 import { AuthManager } from "./auth.manager.js";
@@ -17,15 +16,14 @@ export class RexContext {
     readonly userId?: string,
   ) {}
 
-  async isAuthorized(permission: IAuthPermission): Promise<boolean> {
+  async isAuthorized(...permissions: IAuthPermission[]): Promise<boolean> {
     if (!this.userId) {
       return false;
     }
-    if (this.permissions) {
-      return this.permissions.has(permission);
+    if (!this.permissions) {
+      this.permissions = await this.userManager.fetchPermissions(this.userId);
     }
-    this.permissions = await this.userManager.fetchPermissions(this.userId);
-    return this.permissions.has(permission);
+    return permissions.every((p) => this.permissions?.has(p));
   }
 }
 
@@ -36,13 +34,13 @@ export class AuthContextGenerator implements ContextGenerator {
     private readonly userManager: UserManager,
   ) {}
 
-  async generateContext(req: ContextRequest): Promise<RexContext> {
+  generateContext(req: ContextRequest): Promise<RexContext> {
     const token = this.getToken(req);
     if (!token) {
-      return new RexContext(this.userManager);
+      return Promise.resolve(new RexContext(this.userManager));
     }
     const userId = this.authManager.getTokenUserId(token);
-    return new RexContext(this.userManager, token, userId);
+    return Promise.resolve(new RexContext(this.userManager, token, userId));
   }
 
   private getToken({ headers, query }: ContextRequest): string | undefined {

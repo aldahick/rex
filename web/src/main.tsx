@@ -5,7 +5,6 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { Outlet, RouteObject, RouterProvider } from "react-router";
 import { createBrowserRouter } from "react-router-dom";
-
 import { config } from "./config";
 import { AuthGuard } from "./features/auth/AuthGuard";
 import { Layout } from "./features/layout/Layout";

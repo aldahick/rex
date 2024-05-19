@@ -1,6 +1,5 @@
 import { injectable } from "@athenajs/core";
 import { JobsClient } from "@google-cloud/run";
-
 import { RexConfig } from "../config.js";
 
 export interface CreateJobParams {
