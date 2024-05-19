@@ -1,7 +1,8 @@
-import { randomInt } from "node:crypto";
 import { clamp, range } from "remeda";
 import { XYCoord } from "../utils/XYCoord";
 import { CatSettings } from "./CatSettings";
+
+const randomInt = (max: number) => Math.floor(Math.random() * max);
 
 const startAngles = [30, 45, 60, 120, 135, 150, 210, 225, 240, 300, 315, 330];
 
@@ -57,9 +58,9 @@ export class CatGame {
 
   randomDot(canvas: HTMLCanvasElement): Dot {
     return {
-      x: randomInt(0, canvas.width),
-      y: randomInt(0, canvas.height),
-      theta: startAngles[randomInt(0, startAngles.length)],
+      x: randomInt(canvas.width),
+      y: randomInt(canvas.height),
+      theta: startAngles[randomInt(startAngles.length)],
     };
   }
 
