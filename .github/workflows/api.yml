@@ -1,0 +1,30 @@
+name: API
+run-name: ${{ github.ref_type == 'tag' && 'Publish' || 'Build' }} ${{ github.ref_type == 'tag' && github.ref_name || 'API' }}
+on:
+  push:
+    branches: '*'
+    tags:
+      - v*
+      - api-*
+    paths:
+      - .github/workflows/*
+      - api/**
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      directory: api
+
+  publish:
+    if: ${{ github.ref_type == 'tag' }}
+    needs: build
+    uses: ./.github/workflows/publish.yml
+    with:
+      directory: api
+      dockerfile: api/Dockerfile
+      imageName: ghcr.io/aldahick/rex-api

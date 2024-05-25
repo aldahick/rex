@@ -2,26 +2,19 @@ name: publish-image
 on:
   workflow_call:
     inputs:
-      copySchema:
-        required: false
-        default: false
-        type: boolean
       dockerfile:
         required: true
         type: string
       directory:
         required: true
         type: string
-      installReactUtils:
-        required: false
-        default: false
-        type: boolean
       imageName:
         required: true
         type: string
-    secrets:
-      githubToken:
-        required: true
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   build-image:
@@ -37,10 +30,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - if: ${{ inputs.installReactUtils }}
+      - if: ${{ inputs.directory == 'web' }}
         run: npm i @athenajs/react-utils
-      - if: ${{ inputs.copySchema }}
-        run: cp -r gql api/gql
+      - run: cp -r gql api/gql
       - uses: docker/setup-qemu-action@v3
         if: ${{ matrix.platform != 'amd64' }}
         with:
@@ -54,7 +46,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.githubToken }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build digest
         id: build
         uses: docker/build-push-action@v5

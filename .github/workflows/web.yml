@@ -1,0 +1,30 @@
+name: Web
+run-name: ${{ github.ref_type == 'tag' && 'Publish' || 'Build' }} ${{ github.ref_type == 'tag' && github.ref_name || 'Web' }}
+on:
+  push:
+    branches: '*'
+    tags:
+      - v*
+      - web-*
+    paths:
+      - .github/workflows/*
+      - web/**
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      directory: web
+
+  publish:
+    if: ${{ github.ref_type == 'tag' }}
+    needs: build
+    uses: ./.github/workflows/publish.yml
+    with:
+      directory: web
+      dockerfile: node_modules/@athenajs/react-utils/Dockerfile
+      imageName: ghcr.io/aldahick/rex-web
