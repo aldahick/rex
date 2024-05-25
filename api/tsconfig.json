@@ -15,5 +15,6 @@
     "useUnknownInCatchVariables": true,
     "noUncheckedIndexedAccess": true,
     "esModuleInterop": true
-  }
+  },
+  "include": ["src"]
 }

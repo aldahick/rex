@@ -1,9 +1,10 @@
-node_modules
-*.log
 .env
-dist
-logs
-tsconfig.tsbuildinfo
+*.log
 api/gql
 api/media
+coverage
+dist
 google-cloud-credentials.json
+logs
+node_modules
+tsconfig.tsbuildinfo

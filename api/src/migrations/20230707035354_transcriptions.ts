@@ -1,6 +1,6 @@
 import { ITranscriptionStatus } from "../graphql.js";
 import { UserTable } from "../model/user.model.js";
-import { change } from "../util/orchid.js";
+import { change } from "../service/database/database.migration.js";
 
 change(async (db) => {
   await db.createEnum(

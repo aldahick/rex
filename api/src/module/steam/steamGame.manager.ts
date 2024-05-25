@@ -3,7 +3,7 @@ import { chunk } from "@athenajs/utils";
 import { IProgressStatus } from "../../graphql.js";
 import { SteamGameModel } from "../../model/index.js";
 import { DatabaseService } from "../../service/database/database.service.js";
-import { SteamService } from "../../service/steam/index.js";
+import { SteamService } from "../../service/steam/steam.service.js";
 import { ProgressManager } from "../progress/index.js";
 
 const FETCH_CHUNK_SIZE = 1000;

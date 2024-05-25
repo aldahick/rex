@@ -27,18 +27,16 @@ export class SteamService {
   }
 
   async getPlayerSummary(steamId64: string): Promise<SteamPlayer | undefined> {
-    const url = resolveUrl(BASE_URL, "/ISteamUser/GetPlayerSummaries/v2/?");
+    const params = new URLSearchParams({
+      key: this.apiKey,
+      steamids: steamId64,
+    }).toString();
+    const url = resolveUrl(BASE_URL, "/ISteamUser/GetPlayerSummaries/v2/");
     const {
       data: {
         response: { players },
       },
-    } = await axios.get<GetPlayerSummaries>(
-      url +
-        new URLSearchParams({
-          key: this.apiKey,
-          steamids: steamId64,
-        }).toString(),
-    );
+    } = await axios.get<GetPlayerSummaries>(`${url}?${params}`);
     if (players.length === 0) {
       throw new Error(`no players found for steamid="${steamId64}"`);
     }

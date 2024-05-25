@@ -8,8 +8,8 @@ import { pathToFileURL } from "node:url";
 import { container } from "@athenajs/core";
 import { rakeDb } from "rake-db";
 
-import { RexConfig } from "../config.js";
-import { BaseTable } from "../model/base.table.js";
+import { RexConfig } from "../../config.js";
+import { BaseTable } from "../../model/base.table.js";
 
 const config = container.resolve(RexConfig);
 export const change = rakeDb(

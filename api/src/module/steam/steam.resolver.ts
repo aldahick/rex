@@ -9,7 +9,7 @@ import {
   ISteamPlayer,
 } from "../../graphql.js";
 import { SteamGameModel } from "../../model/index.js";
-import { SteamPlayer } from "../../service/steam/index.js";
+import { SteamPlayer } from "../../service/steam/SteamPlayer.js";
 import { RexContext } from "../auth/index.js";
 import { ProgressManager, ProgressResolver } from "../progress/index.js";
 import { SteamGameManager } from "./steamGame.manager.js";

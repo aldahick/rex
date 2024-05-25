@@ -1,7 +1,8 @@
 import { injectable } from "@athenajs/core";
 import { compact } from "@athenajs/utils";
 import { SteamGameModel } from "../../model/index.js";
-import { SteamPlayer, SteamService } from "../../service/steam/index.js";
+import { SteamPlayer } from "../../service/steam/SteamPlayer.js";
+import { SteamService } from "../../service/steam/steam.service.js";
 import { SteamGameManager } from "./steamGame.manager.js";
 
 export interface SteamPlayerWithGames {
