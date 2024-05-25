@@ -1,5 +1,5 @@
 import { injectable } from "@athenajs/core";
-import { compact } from "@athenajs/utils";
+import { filter, isTruthy } from "remeda";
 import { SteamGameModel } from "../../model/index.js";
 import { SteamPlayer } from "../../service/steam/SteamPlayer.js";
 import { SteamService } from "../../service/steam/steam.service.js";
@@ -34,21 +34,20 @@ export class SteamPlayerManager {
   }
 
   async getMany(steamIds64: string[]): Promise<SteamPlayerWithGames[]> {
-    const players = compact(
-      await Promise.all(
-        steamIds64.map(async (steamId64) => {
-          const player = await this.steamService.getPlayerSummary(steamId64);
-          return player
-            ? {
-                player,
-                ownedGameIds: await this.steamService.getPlayerOwnedGameIds(
-                  player.id,
-                ),
-              }
-            : undefined;
-        }),
-      ),
+    const allPlayers = await Promise.all(
+      steamIds64.map(async (steamId64) => {
+        const player = await this.steamService.getPlayerSummary(steamId64);
+        return player
+          ? {
+              player,
+              ownedGameIds: await this.steamService.getPlayerOwnedGameIds(
+                player.id,
+              ),
+            }
+          : undefined;
+      }),
     );
+    const players = filter(allPlayers, isTruthy);
     if (players.length !== steamIds64.length) {
       throw new Error("Some steam players could not be found");
     }

@@ -16,6 +16,6 @@
     "useUnknownInCatchVariables": true,
     "noImplicitAny": true
   },
-  "include": ["src", "scripts"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

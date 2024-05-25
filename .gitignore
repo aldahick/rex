@@ -1,6 +1,5 @@
 .env
 *.log
-api/gql
 api/media
 coverage
 dist

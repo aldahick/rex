@@ -1,5 +1,5 @@
 import { injectable } from "@athenajs/core";
-import { chunk } from "@athenajs/utils";
+import { chunk } from "remeda";
 import { IProgressStatus } from "../../graphql.js";
 import { SteamGameModel } from "../../model/index.js";
 import { DatabaseService } from "../../service/database/database.service.js";

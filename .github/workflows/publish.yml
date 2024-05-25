@@ -1,4 +1,4 @@
-name: publish-image
+name: publish
 on:
   workflow_call:
     inputs:
@@ -30,9 +30,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - if: ${{ inputs.directory == 'web' }}
-        run: npm i @athenajs/react-utils
-      - run: cp -r gql api/gql
       - uses: docker/setup-qemu-action@v3
         if: ${{ matrix.platform != 'amd64' }}
         with:
@@ -57,6 +54,8 @@ jobs:
           outputs: type=image,name=${{ inputs.imageName }},push-by-digest=true,name-canonical=true,push=true
           push: true
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            WEB_DIR=web
       - name: Export digest
         run: |
           mkdir -p /tmp/digests

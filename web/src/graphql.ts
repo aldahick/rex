@@ -1,430 +1,538 @@
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import { gql } from "@apollo/client";
+import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | undefined;
 export type InputMaybe<T> = T | undefined;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T,
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
+    };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  DateTime: { input: Date; output: Date; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  DateTime: { input: Date; output: Date };
 };
 
 export enum IAuthClientType {
-  Mobile = 'MOBILE',
-  Web = 'WEB'
+  Mobile = "MOBILE",
+  Web = "WEB",
 }
 
 export enum IAuthPermission {
-  AdminMedia = 'ADMIN_MEDIA',
-  AdminNotes = 'ADMIN_NOTES',
-  AdminRoles = 'ADMIN_ROLES',
-  AdminSteam = 'ADMIN_STEAM',
-  AdminUsers = 'ADMIN_USERS',
-  Media = 'MEDIA',
-  Notes = 'NOTES',
-  Transcriptions = 'TRANSCRIPTIONS'
+  AdminMedia = "ADMIN_MEDIA",
+  AdminNotes = "ADMIN_NOTES",
+  AdminRoles = "ADMIN_ROLES",
+  AdminSteam = "ADMIN_STEAM",
+  AdminUsers = "ADMIN_USERS",
+  Media = "MEDIA",
+  Notes = "NOTES",
+  Transcriptions = "TRANSCRIPTIONS",
 }
 
 export type IAuthToken = {
-  __typename?: 'AuthToken';
-  token: Scalars['String']['output'];
+  __typename?: "AuthToken";
+  token: Scalars["String"]["output"];
   user: IUser;
-  userId: Scalars['ID']['output'];
+  userId: Scalars["ID"]["output"];
 };
 
 export type IConfig = {
-  __typename?: 'Config';
-  createAnonymousUsers: Scalars['Boolean']['output'];
-  mediaDataLimit?: Maybe<Scalars['Int']['output']>;
+  __typename?: "Config";
+  createAnonymousUsers: Scalars["Boolean"]["output"];
+  mediaDataLimit?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type IMediaItem = {
-  __typename?: 'MediaItem';
-  children?: Maybe<Array<IMediaItem>>;
-  key: Scalars['String']['output'];
+  __typename?: "MediaItem";
+  children?: Maybe<IMediaItem[]>;
+  key: Scalars["String"]["output"];
   type: IMediaItemType;
 };
 
 export enum IMediaItemType {
-  Directory = 'DIRECTORY',
-  File = 'FILE',
-  Series = 'SERIES'
+  Directory = "DIRECTORY",
+  File = "FILE",
+  Series = "SERIES",
 }
 
 export type IMutation = {
-  __typename?: 'Mutation';
+  __typename?: "Mutation";
   addMediaDownload: IProgress;
-  addRoleToUser: Scalars['Boolean']['output'];
+  addRoleToUser: Scalars["Boolean"]["output"];
   createAuthToken: IAuthToken;
   createAuthTokenGoogle: IAuthToken;
   createAuthTokenLocal: IAuthToken;
-  createMedia: Scalars['Boolean']['output'];
-  createMediaUpload: Scalars['String']['output'];
+  createMedia: Scalars["Boolean"]["output"];
+  createMediaUpload: Scalars["String"]["output"];
   createNote: INote;
   createRole: IRole;
   createUser: IUser;
-  deleteMedia: Scalars['Boolean']['output'];
-  deleteRole: Scalars['Boolean']['output'];
+  deleteMedia: Scalars["Boolean"]["output"];
+  deleteRole: Scalars["Boolean"]["output"];
   fetchSteamGames: IProgress;
-  removeNote: Scalars['Boolean']['output'];
-  setUserPassword: Scalars['Boolean']['output'];
+  removeNote: Scalars["Boolean"]["output"];
+  setUserPassword: Scalars["Boolean"]["output"];
   startTranscription: ITranscription;
-  updateNoteBody: Scalars['Boolean']['output'];
-  updateRole: Scalars['Boolean']['output'];
-  updateRolePermissions: Scalars['Boolean']['output'];
+  updateNoteBody: Scalars["Boolean"]["output"];
+  updateRole: Scalars["Boolean"]["output"];
+  updateRolePermissions: Scalars["Boolean"]["output"];
 };
-
 
 export type IMutationAddMediaDownloadArgs = {
-  destinationKey: Scalars['String']['input'];
-  url: Scalars['String']['input'];
+  destinationKey: Scalars["String"]["input"];
+  sync?: InputMaybe<Scalars["Boolean"]["input"]>;
+  url: Scalars["String"]["input"];
 };
-
 
 export type IMutationAddRoleToUserArgs = {
-  roleId: Scalars['ID']['input'];
-  userId: Scalars['ID']['input'];
+  roleId: Scalars["ID"]["input"];
+  userId: Scalars["ID"]["input"];
 };
-
 
 export type IMutationCreateAuthTokenArgs = {
-  userId: Scalars['String']['input'];
+  userId: Scalars["String"]["input"];
 };
-
 
 export type IMutationCreateAuthTokenGoogleArgs = {
   clientType: IAuthClientType;
-  googleIdToken: Scalars['String']['input'];
+  googleIdToken: Scalars["String"]["input"];
 };
-
 
 export type IMutationCreateAuthTokenLocalArgs = {
-  password: Scalars['String']['input'];
-  username: Scalars['String']['input'];
+  password: Scalars["String"]["input"];
+  username: Scalars["String"]["input"];
 };
-
 
 export type IMutationCreateMediaArgs = {
-  data: Scalars['String']['input'];
-  key: Scalars['String']['input'];
+  data: Scalars["String"]["input"];
+  key: Scalars["String"]["input"];
 };
-
 
 export type IMutationCreateMediaUploadArgs = {
-  key: Scalars['String']['input'];
+  key: Scalars["String"]["input"];
 };
-
 
 export type IMutationCreateNoteArgs = {
-  title: Scalars['String']['input'];
+  title: Scalars["String"]["input"];
 };
-
 
 export type IMutationCreateRoleArgs = {
-  name: Scalars['String']['input'];
+  name: Scalars["String"]["input"];
 };
-
 
 export type IMutationCreateUserArgs = {
-  email: Scalars['String']['input'];
-  password?: InputMaybe<Scalars['String']['input']>;
-  username?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars["String"]["input"];
+  password?: InputMaybe<Scalars["String"]["input"]>;
+  username?: InputMaybe<Scalars["String"]["input"]>;
 };
-
 
 export type IMutationDeleteMediaArgs = {
-  key: Scalars['String']['input'];
+  key: Scalars["String"]["input"];
 };
-
 
 export type IMutationDeleteRoleArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars["ID"]["input"];
 };
-
 
 export type IMutationRemoveNoteArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars["ID"]["input"];
 };
-
 
 export type IMutationSetUserPasswordArgs = {
-  password: Scalars['String']['input'];
-  userId: Scalars['ID']['input'];
+  password: Scalars["String"]["input"];
+  userId: Scalars["ID"]["input"];
 };
-
 
 export type IMutationStartTranscriptionArgs = {
-  mediaKey: Scalars['String']['input'];
+  mediaKey: Scalars["String"]["input"];
 };
-
 
 export type IMutationUpdateNoteBodyArgs = {
-  body: Scalars['String']['input'];
-  id: Scalars['ID']['input'];
+  body: Scalars["String"]["input"];
+  id: Scalars["ID"]["input"];
 };
-
 
 export type IMutationUpdateRoleArgs = {
-  id: Scalars['ID']['input'];
-  name: Scalars['String']['input'];
+  id: Scalars["ID"]["input"];
+  name: Scalars["String"]["input"];
 };
 
-
 export type IMutationUpdateRolePermissionsArgs = {
-  id: Scalars['ID']['input'];
-  permissions: Array<IAuthPermission>;
+  id: Scalars["ID"]["input"];
+  permissions: IAuthPermission[];
 };
 
 export type INote = {
-  __typename?: 'Note';
-  body: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['ID']['output'];
-  title: Scalars['String']['output'];
+  __typename?: "Note";
+  body: Scalars["String"]["output"];
+  createdAt: Scalars["DateTime"]["output"];
+  id: Scalars["ID"]["output"];
+  title: Scalars["String"]["output"];
 };
 
 export type IProgress = {
-  __typename?: 'Progress';
-  action: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['ID']['output'];
-  logs: Array<IProgressLog>;
+  __typename?: "Progress";
+  action: Scalars["String"]["output"];
+  createdAt: Scalars["DateTime"]["output"];
+  id: Scalars["ID"]["output"];
+  logs: IProgressLog[];
   status: IProgressStatus;
 };
 
 export type IProgressLog = {
-  __typename?: 'ProgressLog';
-  createdAt: Scalars['DateTime']['output'];
-  text: Scalars['String']['output'];
+  __typename?: "ProgressLog";
+  createdAt: Scalars["DateTime"]["output"];
+  text: Scalars["String"]["output"];
 };
 
 export enum IProgressStatus {
-  Complete = 'COMPLETE',
-  Created = 'CREATED',
-  Errored = 'ERRORED',
-  InProgress = 'IN_PROGRESS'
+  Complete = "COMPLETE",
+  Created = "CREATED",
+  Errored = "ERRORED",
+  InProgress = "IN_PROGRESS",
 }
 
 export type IQuery = {
-  __typename?: 'Query';
+  __typename?: "Query";
   config: IConfig;
   mediaItem?: Maybe<IMediaItem>;
   note: INote;
-  notes: Array<INote>;
+  notes: INote[];
   progress: IProgress;
-  progresses: Array<IProgress>;
-  roles: Array<IRole>;
-  steamGames: Array<ISteamGame>;
+  progresses: IProgress[];
+  roles: IRole[];
+  steamGames: ISteamGame[];
   steamPlayer: ISteamPlayer;
-  steamPlayers: Array<ISteamPlayer>;
-  transcriptions: Array<ITranscription>;
+  steamPlayers: ISteamPlayer[];
+  transcriptions: ITranscription[];
   user: IUser;
-  users: Array<IUser>;
+  users: IUser[];
 };
-
 
 export type IQueryMediaItemArgs = {
-  key: Scalars['String']['input'];
+  key: Scalars["String"]["input"];
 };
-
 
 export type IQueryNoteArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars["ID"]["input"];
 };
-
 
 export type IQueryProgressArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars["ID"]["input"];
 };
-
 
 export type IQueryProgressesArgs = {
-  ids: Array<Scalars['ID']['input']>;
+  ids: Scalars["ID"]["input"][];
 };
-
 
 export type IQuerySteamGamesArgs = {
-  page: Scalars['Int']['input'];
-  search: Scalars['String']['input'];
+  page: Scalars["Int"]["input"];
+  search: Scalars["String"]["input"];
 };
-
 
 export type IQuerySteamPlayerArgs = {
-  steamId64: Scalars['String']['input'];
+  steamId64: Scalars["String"]["input"];
 };
-
 
 export type IQuerySteamPlayersArgs = {
-  steamIds64: Array<Scalars['String']['input']>;
+  steamIds64: Scalars["String"]["input"][];
 };
 
-
 export type IQueryUserArgs = {
-  id?: InputMaybe<Scalars['ID']['input']>;
+  id?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type IRole = {
-  __typename?: 'Role';
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
-  permissions: Array<IAuthPermission>;
+  __typename?: "Role";
+  id: Scalars["ID"]["output"];
+  name: Scalars["String"]["output"];
+  permissions: IAuthPermission[];
 };
 
 export type ISteamGame = {
-  __typename?: 'SteamGame';
-  id: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
+  __typename?: "SteamGame";
+  id: Scalars["Int"]["output"];
+  name: Scalars["String"]["output"];
 };
 
 export type ISteamPlayer = {
-  __typename?: 'SteamPlayer';
-  avatarUrl: Scalars['String']['output'];
-  id: Scalars['String']['output'];
-  nickname: Scalars['String']['output'];
-  ownedGames: Array<ISteamGame>;
+  __typename?: "SteamPlayer";
+  avatarUrl: Scalars["String"]["output"];
+  id: Scalars["String"]["output"];
+  nickname: Scalars["String"]["output"];
+  ownedGames: ISteamGame[];
   playingGame?: Maybe<ISteamGame>;
-  profileUrl: Scalars['String']['output'];
+  profileUrl: Scalars["String"]["output"];
 };
 
 export type ITranscription = {
-  __typename?: 'Transcription';
-  filename: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
+  __typename?: "Transcription";
+  filename: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
   pdf?: Maybe<IMediaItem>;
   status: ITranscriptionStatus;
 };
 
 export enum ITranscriptionStatus {
-  Complete = 'COMPLETE',
-  Created = 'CREATED',
-  Errored = 'ERRORED',
-  Started = 'STARTED'
+  Complete = "COMPLETE",
+  Created = "CREATED",
+  Errored = "ERRORED",
+  Started = "STARTED",
 }
 
 export type IUser = {
-  __typename?: 'User';
-  email: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  permissions?: Maybe<Array<IAuthPermission>>;
-  roles?: Maybe<Array<IRole>>;
-  username?: Maybe<Scalars['String']['output']>;
+  __typename?: "User";
+  email: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  permissions?: Maybe<IAuthPermission[]>;
+  roles?: Maybe<IRole[]>;
+  username?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type IStorableAuthTokenFragment = { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, username?: string | undefined, roles?: Array<{ __typename?: 'Role', id: string, name: string, permissions: Array<IAuthPermission> }> | undefined } };
+export type IStorableAuthTokenFragment = {
+  __typename?: "AuthToken";
+  token: string;
+  user: {
+    __typename?: "User";
+    id: string;
+    username?: string | undefined;
+    roles?:
+      | Array<{
+          __typename?: "Role";
+          id: string;
+          name: string;
+          permissions: IAuthPermission[];
+        }>
+      | undefined;
+  };
+};
 
 export type ICreateAuthTokenGoogleMutationVariables = Exact<{
-  googleIdToken: Scalars['String']['input'];
+  googleIdToken: Scalars["String"]["input"];
 }>;
 
-
-export type ICreateAuthTokenGoogleMutation = { __typename?: 'Mutation', authToken: { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, username?: string | undefined, roles?: Array<{ __typename?: 'Role', id: string, name: string, permissions: Array<IAuthPermission> }> | undefined } } };
+export type ICreateAuthTokenGoogleMutation = {
+  __typename?: "Mutation";
+  authToken: {
+    __typename?: "AuthToken";
+    token: string;
+    user: {
+      __typename?: "User";
+      id: string;
+      username?: string | undefined;
+      roles?:
+        | Array<{
+            __typename?: "Role";
+            id: string;
+            name: string;
+            permissions: IAuthPermission[];
+          }>
+        | undefined;
+    };
+  };
+};
 
 export type ICreateAuthTokenLocalMutationVariables = Exact<{
-  username: Scalars['String']['input'];
-  password: Scalars['String']['input'];
+  username: Scalars["String"]["input"];
+  password: Scalars["String"]["input"];
 }>;
 
+export type ICreateAuthTokenLocalMutation = {
+  __typename?: "Mutation";
+  authToken: {
+    __typename?: "AuthToken";
+    token: string;
+    user: {
+      __typename?: "User";
+      id: string;
+      username?: string | undefined;
+      roles?:
+        | Array<{
+            __typename?: "Role";
+            id: string;
+            name: string;
+            permissions: IAuthPermission[];
+          }>
+        | undefined;
+    };
+  };
+};
 
-export type ICreateAuthTokenLocalMutation = { __typename?: 'Mutation', authToken: { __typename?: 'AuthToken', token: string, user: { __typename?: 'User', id: string, username?: string | undefined, roles?: Array<{ __typename?: 'Role', id: string, name: string, permissions: Array<IAuthPermission> }> | undefined } } };
+export type IConfigQueryVariables = Exact<{ [key: string]: never }>;
 
-export type IConfigQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type IConfigQuery = { __typename?: 'Query', config: { __typename?: 'Config', createAnonymousUsers: boolean } };
+export type IConfigQuery = {
+  __typename?: "Query";
+  config: { __typename?: "Config"; createAnonymousUsers: boolean };
+};
 
 export type ICreateUserMutationVariables = Exact<{
-  email: Scalars['String']['input'];
-  username: Scalars['String']['input'];
-  password: Scalars['String']['input'];
+  email: Scalars["String"]["input"];
+  username: Scalars["String"]["input"];
+  password: Scalars["String"]["input"];
 }>;
 
-
-export type ICreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string } };
+export type ICreateUserMutation = {
+  __typename?: "Mutation";
+  createUser: { __typename?: "User"; id: string };
+};
 
 export type IMediaItemQueryVariables = Exact<{
-  key: Scalars['String']['input'];
+  key: Scalars["String"]["input"];
 }>;
 
-
-export type IMediaItemQuery = { __typename?: 'Query', mediaItem?: { __typename?: 'MediaItem', key: string, type: IMediaItemType, children?: Array<{ __typename?: 'MediaItem', key: string, type: IMediaItemType }> | undefined } | undefined };
+export type IMediaItemQuery = {
+  __typename?: "Query";
+  mediaItem?:
+    | {
+        __typename?: "MediaItem";
+        key: string;
+        type: IMediaItemType;
+        children?:
+          | Array<{
+              __typename?: "MediaItem";
+              key: string;
+              type: IMediaItemType;
+            }>
+          | undefined;
+      }
+    | undefined;
+};
 
 export type ICreateMediaUploadMutationVariables = Exact<{
-  key: Scalars['String']['input'];
+  key: Scalars["String"]["input"];
 }>;
 
-
-export type ICreateMediaUploadMutation = { __typename?: 'Mutation', uploadUrl: string };
+export type ICreateMediaUploadMutation = {
+  __typename?: "Mutation";
+  uploadUrl: string;
+};
 
 export type IDeleteMediaMutationVariables = Exact<{
-  key: Scalars['String']['input'];
+  key: Scalars["String"]["input"];
 }>;
 
+export type IDeleteMediaMutation = {
+  __typename?: "Mutation";
+  deleteMedia: boolean;
+};
 
-export type IDeleteMediaMutation = { __typename?: 'Mutation', deleteMedia: boolean };
+export type ITranscriptionsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type ITranscriptionsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ITranscriptionsQuery = { __typename?: 'Query', transcriptions: Array<{ __typename?: 'Transcription', id: string, status: ITranscriptionStatus, filename: string, pdf?: { __typename?: 'MediaItem', key: string } | undefined }> };
+export type ITranscriptionsQuery = {
+  __typename?: "Query";
+  transcriptions: Array<{
+    __typename?: "Transcription";
+    id: string;
+    status: ITranscriptionStatus;
+    filename: string;
+    pdf?: { __typename?: "MediaItem"; key: string } | undefined;
+  }>;
+};
 
 export type IStartTranscriptionMutationVariables = Exact<{
-  key: Scalars['String']['input'];
+  key: Scalars["String"]["input"];
 }>;
 
-
-export type IStartTranscriptionMutation = { __typename?: 'Mutation', transcription: { __typename?: 'Transcription', id: string } };
+export type IStartTranscriptionMutation = {
+  __typename?: "Mutation";
+  transcription: { __typename?: "Transcription"; id: string };
+};
 
 export type ICreateNoteMutationVariables = Exact<{
-  title: Scalars['String']['input'];
+  title: Scalars["String"]["input"];
 }>;
 
-
-export type ICreateNoteMutation = { __typename?: 'Mutation', createNote: { __typename?: 'Note', id: string } };
+export type ICreateNoteMutation = {
+  __typename?: "Mutation";
+  createNote: { __typename?: "Note"; id: string };
+};
 
 export type IRemoveNoteMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: Scalars["ID"]["input"];
 }>;
 
-
-export type IRemoveNoteMutation = { __typename?: 'Mutation', removeNote: boolean };
+export type IRemoveNoteMutation = {
+  __typename?: "Mutation";
+  removeNote: boolean;
+};
 
 export type IUpdateNoteBodyMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-  body: Scalars['String']['input'];
+  id: Scalars["ID"]["input"];
+  body: Scalars["String"]["input"];
 }>;
 
+export type IUpdateNoteBodyMutation = {
+  __typename?: "Mutation";
+  updateNoteBody: boolean;
+};
 
-export type IUpdateNoteBodyMutation = { __typename?: 'Mutation', updateNoteBody: boolean };
-
-export type IListNoteFragment = { __typename?: 'Note', id: string, createdAt: Date, title: string };
+export type IListNoteFragment = {
+  __typename?: "Note";
+  id: string;
+  createdAt: Date;
+  title: string;
+};
 
 export type INoteQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: Scalars["ID"]["input"];
 }>;
 
+export type INoteQuery = {
+  __typename?: "Query";
+  note: {
+    __typename?: "Note";
+    body: string;
+    id: string;
+    createdAt: Date;
+    title: string;
+  };
+};
 
-export type INoteQuery = { __typename?: 'Query', note: { __typename?: 'Note', body: string, id: string, createdAt: Date, title: string } };
+export type INotesQueryVariables = Exact<{ [key: string]: never }>;
 
-export type INotesQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type INotesQuery = { __typename?: 'Query', notes: Array<{ __typename?: 'Note', id: string, createdAt: Date, title: string }> };
+export type INotesQuery = {
+  __typename?: "Query";
+  notes: Array<{
+    __typename?: "Note";
+    id: string;
+    createdAt: Date;
+    title: string;
+  }>;
+};
 
 export type IProgressQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: Scalars["ID"]["input"];
 }>;
 
-
-export type IProgressQuery = { __typename?: 'Query', progress: { __typename?: 'Progress', id: string, action: string, createdAt: Date, status: IProgressStatus, logs: Array<{ __typename?: 'ProgressLog', createdAt: Date, text: string }> } };
+export type IProgressQuery = {
+  __typename?: "Query";
+  progress: {
+    __typename?: "Progress";
+    id: string;
+    action: string;
+    createdAt: Date;
+    status: IProgressStatus;
+    logs: Array<{ __typename?: "ProgressLog"; createdAt: Date; text: string }>;
+  };
+};
 
 export const StorableAuthTokenFragmentDoc = gql`
     fragment StorableAuthToken on AuthToken {
@@ -454,7 +562,10 @@ export const CreateAuthTokenGoogleDocument = gql`
   }
 }
     ${StorableAuthTokenFragmentDoc}`;
-export type ICreateAuthTokenGoogleMutationFn = Apollo.MutationFunction<ICreateAuthTokenGoogleMutation, ICreateAuthTokenGoogleMutationVariables>;
+export type ICreateAuthTokenGoogleMutationFn = Apollo.MutationFunction<
+  ICreateAuthTokenGoogleMutation,
+  ICreateAuthTokenGoogleMutationVariables
+>;
 
 /**
  * __useCreateAuthTokenGoogleMutation__
@@ -473,13 +584,27 @@ export type ICreateAuthTokenGoogleMutationFn = Apollo.MutationFunction<ICreateAu
  *   },
  * });
  */
-export function useCreateAuthTokenGoogleMutation(baseOptions?: Apollo.MutationHookOptions<ICreateAuthTokenGoogleMutation, ICreateAuthTokenGoogleMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ICreateAuthTokenGoogleMutation, ICreateAuthTokenGoogleMutationVariables>(CreateAuthTokenGoogleDocument, options);
-      }
-export type CreateAuthTokenGoogleMutationHookResult = ReturnType<typeof useCreateAuthTokenGoogleMutation>;
-export type CreateAuthTokenGoogleMutationResult = Apollo.MutationResult<ICreateAuthTokenGoogleMutation>;
-export type CreateAuthTokenGoogleMutationOptions = Apollo.BaseMutationOptions<ICreateAuthTokenGoogleMutation, ICreateAuthTokenGoogleMutationVariables>;
+export function useCreateAuthTokenGoogleMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ICreateAuthTokenGoogleMutation,
+    ICreateAuthTokenGoogleMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    ICreateAuthTokenGoogleMutation,
+    ICreateAuthTokenGoogleMutationVariables
+  >(CreateAuthTokenGoogleDocument, options);
+}
+export type CreateAuthTokenGoogleMutationHookResult = ReturnType<
+  typeof useCreateAuthTokenGoogleMutation
+>;
+export type CreateAuthTokenGoogleMutationResult =
+  Apollo.MutationResult<ICreateAuthTokenGoogleMutation>;
+export type CreateAuthTokenGoogleMutationOptions = Apollo.BaseMutationOptions<
+  ICreateAuthTokenGoogleMutation,
+  ICreateAuthTokenGoogleMutationVariables
+>;
 export const CreateAuthTokenLocalDocument = gql`
     mutation CreateAuthTokenLocal($username: String!, $password: String!) {
   authToken: createAuthTokenLocal(username: $username, password: $password) {
@@ -487,7 +612,10 @@ export const CreateAuthTokenLocalDocument = gql`
   }
 }
     ${StorableAuthTokenFragmentDoc}`;
-export type ICreateAuthTokenLocalMutationFn = Apollo.MutationFunction<ICreateAuthTokenLocalMutation, ICreateAuthTokenLocalMutationVariables>;
+export type ICreateAuthTokenLocalMutationFn = Apollo.MutationFunction<
+  ICreateAuthTokenLocalMutation,
+  ICreateAuthTokenLocalMutationVariables
+>;
 
 /**
  * __useCreateAuthTokenLocalMutation__
@@ -507,13 +635,27 @@ export type ICreateAuthTokenLocalMutationFn = Apollo.MutationFunction<ICreateAut
  *   },
  * });
  */
-export function useCreateAuthTokenLocalMutation(baseOptions?: Apollo.MutationHookOptions<ICreateAuthTokenLocalMutation, ICreateAuthTokenLocalMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ICreateAuthTokenLocalMutation, ICreateAuthTokenLocalMutationVariables>(CreateAuthTokenLocalDocument, options);
-      }
-export type CreateAuthTokenLocalMutationHookResult = ReturnType<typeof useCreateAuthTokenLocalMutation>;
-export type CreateAuthTokenLocalMutationResult = Apollo.MutationResult<ICreateAuthTokenLocalMutation>;
-export type CreateAuthTokenLocalMutationOptions = Apollo.BaseMutationOptions<ICreateAuthTokenLocalMutation, ICreateAuthTokenLocalMutationVariables>;
+export function useCreateAuthTokenLocalMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ICreateAuthTokenLocalMutation,
+    ICreateAuthTokenLocalMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    ICreateAuthTokenLocalMutation,
+    ICreateAuthTokenLocalMutationVariables
+  >(CreateAuthTokenLocalDocument, options);
+}
+export type CreateAuthTokenLocalMutationHookResult = ReturnType<
+  typeof useCreateAuthTokenLocalMutation
+>;
+export type CreateAuthTokenLocalMutationResult =
+  Apollo.MutationResult<ICreateAuthTokenLocalMutation>;
+export type CreateAuthTokenLocalMutationOptions = Apollo.BaseMutationOptions<
+  ICreateAuthTokenLocalMutation,
+  ICreateAuthTokenLocalMutationVariables
+>;
 export const ConfigDocument = gql`
     query Config {
   config {
@@ -537,22 +679,48 @@ export const ConfigDocument = gql`
  *   },
  * });
  */
-export function useConfigQuery(baseOptions?: Apollo.QueryHookOptions<IConfigQuery, IConfigQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<IConfigQuery, IConfigQueryVariables>(ConfigDocument, options);
-      }
-export function useConfigLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IConfigQuery, IConfigQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<IConfigQuery, IConfigQueryVariables>(ConfigDocument, options);
-        }
-export function useConfigSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<IConfigQuery, IConfigQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<IConfigQuery, IConfigQueryVariables>(ConfigDocument, options);
-        }
+export function useConfigQuery(
+  baseOptions?: Apollo.QueryHookOptions<IConfigQuery, IConfigQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<IConfigQuery, IConfigQueryVariables>(
+    ConfigDocument,
+    options,
+  );
+}
+export function useConfigLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    IConfigQuery,
+    IConfigQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<IConfigQuery, IConfigQueryVariables>(
+    ConfigDocument,
+    options,
+  );
+}
+export function useConfigSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    IConfigQuery,
+    IConfigQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<IConfigQuery, IConfigQueryVariables>(
+    ConfigDocument,
+    options,
+  );
+}
 export type ConfigQueryHookResult = ReturnType<typeof useConfigQuery>;
 export type ConfigLazyQueryHookResult = ReturnType<typeof useConfigLazyQuery>;
-export type ConfigSuspenseQueryHookResult = ReturnType<typeof useConfigSuspenseQuery>;
-export type ConfigQueryResult = Apollo.QueryResult<IConfigQuery, IConfigQueryVariables>;
+export type ConfigSuspenseQueryHookResult = ReturnType<
+  typeof useConfigSuspenseQuery
+>;
+export type ConfigQueryResult = Apollo.QueryResult<
+  IConfigQuery,
+  IConfigQueryVariables
+>;
 export const CreateUserDocument = gql`
     mutation CreateUser($email: String!, $username: String!, $password: String!) {
   createUser(email: $email, username: $username, password: $password) {
@@ -560,7 +728,10 @@ export const CreateUserDocument = gql`
   }
 }
     `;
-export type ICreateUserMutationFn = Apollo.MutationFunction<ICreateUserMutation, ICreateUserMutationVariables>;
+export type ICreateUserMutationFn = Apollo.MutationFunction<
+  ICreateUserMutation,
+  ICreateUserMutationVariables
+>;
 
 /**
  * __useCreateUserMutation__
@@ -581,13 +752,27 @@ export type ICreateUserMutationFn = Apollo.MutationFunction<ICreateUserMutation,
  *   },
  * });
  */
-export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<ICreateUserMutation, ICreateUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ICreateUserMutation, ICreateUserMutationVariables>(CreateUserDocument, options);
-      }
-export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
-export type CreateUserMutationResult = Apollo.MutationResult<ICreateUserMutation>;
-export type CreateUserMutationOptions = Apollo.BaseMutationOptions<ICreateUserMutation, ICreateUserMutationVariables>;
+export function useCreateUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ICreateUserMutation,
+    ICreateUserMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ICreateUserMutation, ICreateUserMutationVariables>(
+    CreateUserDocument,
+    options,
+  );
+}
+export type CreateUserMutationHookResult = ReturnType<
+  typeof useCreateUserMutation
+>;
+export type CreateUserMutationResult =
+  Apollo.MutationResult<ICreateUserMutation>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<
+  ICreateUserMutation,
+  ICreateUserMutationVariables
+>;
 export const MediaItemDocument = gql`
     query MediaItem($key: String!) {
   mediaItem(key: $key) {
@@ -617,28 +802,66 @@ export const MediaItemDocument = gql`
  *   },
  * });
  */
-export function useMediaItemQuery(baseOptions: Apollo.QueryHookOptions<IMediaItemQuery, IMediaItemQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<IMediaItemQuery, IMediaItemQueryVariables>(MediaItemDocument, options);
-      }
-export function useMediaItemLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IMediaItemQuery, IMediaItemQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<IMediaItemQuery, IMediaItemQueryVariables>(MediaItemDocument, options);
-        }
-export function useMediaItemSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<IMediaItemQuery, IMediaItemQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<IMediaItemQuery, IMediaItemQueryVariables>(MediaItemDocument, options);
-        }
+export function useMediaItemQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    IMediaItemQuery,
+    IMediaItemQueryVariables
+  > &
+    (
+      | { variables: IMediaItemQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<IMediaItemQuery, IMediaItemQueryVariables>(
+    MediaItemDocument,
+    options,
+  );
+}
+export function useMediaItemLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    IMediaItemQuery,
+    IMediaItemQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<IMediaItemQuery, IMediaItemQueryVariables>(
+    MediaItemDocument,
+    options,
+  );
+}
+export function useMediaItemSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    IMediaItemQuery,
+    IMediaItemQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<IMediaItemQuery, IMediaItemQueryVariables>(
+    MediaItemDocument,
+    options,
+  );
+}
 export type MediaItemQueryHookResult = ReturnType<typeof useMediaItemQuery>;
-export type MediaItemLazyQueryHookResult = ReturnType<typeof useMediaItemLazyQuery>;
-export type MediaItemSuspenseQueryHookResult = ReturnType<typeof useMediaItemSuspenseQuery>;
-export type MediaItemQueryResult = Apollo.QueryResult<IMediaItemQuery, IMediaItemQueryVariables>;
+export type MediaItemLazyQueryHookResult = ReturnType<
+  typeof useMediaItemLazyQuery
+>;
+export type MediaItemSuspenseQueryHookResult = ReturnType<
+  typeof useMediaItemSuspenseQuery
+>;
+export type MediaItemQueryResult = Apollo.QueryResult<
+  IMediaItemQuery,
+  IMediaItemQueryVariables
+>;
 export const CreateMediaUploadDocument = gql`
     mutation CreateMediaUpload($key: String!) {
   uploadUrl: createMediaUpload(key: $key)
 }
     `;
-export type ICreateMediaUploadMutationFn = Apollo.MutationFunction<ICreateMediaUploadMutation, ICreateMediaUploadMutationVariables>;
+export type ICreateMediaUploadMutationFn = Apollo.MutationFunction<
+  ICreateMediaUploadMutation,
+  ICreateMediaUploadMutationVariables
+>;
 
 /**
  * __useCreateMediaUploadMutation__
@@ -657,19 +880,36 @@ export type ICreateMediaUploadMutationFn = Apollo.MutationFunction<ICreateMediaU
  *   },
  * });
  */
-export function useCreateMediaUploadMutation(baseOptions?: Apollo.MutationHookOptions<ICreateMediaUploadMutation, ICreateMediaUploadMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ICreateMediaUploadMutation, ICreateMediaUploadMutationVariables>(CreateMediaUploadDocument, options);
-      }
-export type CreateMediaUploadMutationHookResult = ReturnType<typeof useCreateMediaUploadMutation>;
-export type CreateMediaUploadMutationResult = Apollo.MutationResult<ICreateMediaUploadMutation>;
-export type CreateMediaUploadMutationOptions = Apollo.BaseMutationOptions<ICreateMediaUploadMutation, ICreateMediaUploadMutationVariables>;
+export function useCreateMediaUploadMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ICreateMediaUploadMutation,
+    ICreateMediaUploadMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    ICreateMediaUploadMutation,
+    ICreateMediaUploadMutationVariables
+  >(CreateMediaUploadDocument, options);
+}
+export type CreateMediaUploadMutationHookResult = ReturnType<
+  typeof useCreateMediaUploadMutation
+>;
+export type CreateMediaUploadMutationResult =
+  Apollo.MutationResult<ICreateMediaUploadMutation>;
+export type CreateMediaUploadMutationOptions = Apollo.BaseMutationOptions<
+  ICreateMediaUploadMutation,
+  ICreateMediaUploadMutationVariables
+>;
 export const DeleteMediaDocument = gql`
     mutation DeleteMedia($key: String!) {
   deleteMedia(key: $key)
 }
     `;
-export type IDeleteMediaMutationFn = Apollo.MutationFunction<IDeleteMediaMutation, IDeleteMediaMutationVariables>;
+export type IDeleteMediaMutationFn = Apollo.MutationFunction<
+  IDeleteMediaMutation,
+  IDeleteMediaMutationVariables
+>;
 
 /**
  * __useDeleteMediaMutation__
@@ -688,13 +928,27 @@ export type IDeleteMediaMutationFn = Apollo.MutationFunction<IDeleteMediaMutatio
  *   },
  * });
  */
-export function useDeleteMediaMutation(baseOptions?: Apollo.MutationHookOptions<IDeleteMediaMutation, IDeleteMediaMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<IDeleteMediaMutation, IDeleteMediaMutationVariables>(DeleteMediaDocument, options);
-      }
-export type DeleteMediaMutationHookResult = ReturnType<typeof useDeleteMediaMutation>;
-export type DeleteMediaMutationResult = Apollo.MutationResult<IDeleteMediaMutation>;
-export type DeleteMediaMutationOptions = Apollo.BaseMutationOptions<IDeleteMediaMutation, IDeleteMediaMutationVariables>;
+export function useDeleteMediaMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    IDeleteMediaMutation,
+    IDeleteMediaMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    IDeleteMediaMutation,
+    IDeleteMediaMutationVariables
+  >(DeleteMediaDocument, options);
+}
+export type DeleteMediaMutationHookResult = ReturnType<
+  typeof useDeleteMediaMutation
+>;
+export type DeleteMediaMutationResult =
+  Apollo.MutationResult<IDeleteMediaMutation>;
+export type DeleteMediaMutationOptions = Apollo.BaseMutationOptions<
+  IDeleteMediaMutation,
+  IDeleteMediaMutationVariables
+>;
 export const TranscriptionsDocument = gql`
     query Transcriptions {
   transcriptions {
@@ -723,22 +977,55 @@ export const TranscriptionsDocument = gql`
  *   },
  * });
  */
-export function useTranscriptionsQuery(baseOptions?: Apollo.QueryHookOptions<ITranscriptionsQuery, ITranscriptionsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ITranscriptionsQuery, ITranscriptionsQueryVariables>(TranscriptionsDocument, options);
-      }
-export function useTranscriptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ITranscriptionsQuery, ITranscriptionsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ITranscriptionsQuery, ITranscriptionsQueryVariables>(TranscriptionsDocument, options);
-        }
-export function useTranscriptionsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ITranscriptionsQuery, ITranscriptionsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ITranscriptionsQuery, ITranscriptionsQueryVariables>(TranscriptionsDocument, options);
-        }
-export type TranscriptionsQueryHookResult = ReturnType<typeof useTranscriptionsQuery>;
-export type TranscriptionsLazyQueryHookResult = ReturnType<typeof useTranscriptionsLazyQuery>;
-export type TranscriptionsSuspenseQueryHookResult = ReturnType<typeof useTranscriptionsSuspenseQuery>;
-export type TranscriptionsQueryResult = Apollo.QueryResult<ITranscriptionsQuery, ITranscriptionsQueryVariables>;
+export function useTranscriptionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    ITranscriptionsQuery,
+    ITranscriptionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ITranscriptionsQuery, ITranscriptionsQueryVariables>(
+    TranscriptionsDocument,
+    options,
+  );
+}
+export function useTranscriptionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ITranscriptionsQuery,
+    ITranscriptionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    ITranscriptionsQuery,
+    ITranscriptionsQueryVariables
+  >(TranscriptionsDocument, options);
+}
+export function useTranscriptionsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    ITranscriptionsQuery,
+    ITranscriptionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    ITranscriptionsQuery,
+    ITranscriptionsQueryVariables
+  >(TranscriptionsDocument, options);
+}
+export type TranscriptionsQueryHookResult = ReturnType<
+  typeof useTranscriptionsQuery
+>;
+export type TranscriptionsLazyQueryHookResult = ReturnType<
+  typeof useTranscriptionsLazyQuery
+>;
+export type TranscriptionsSuspenseQueryHookResult = ReturnType<
+  typeof useTranscriptionsSuspenseQuery
+>;
+export type TranscriptionsQueryResult = Apollo.QueryResult<
+  ITranscriptionsQuery,
+  ITranscriptionsQueryVariables
+>;
 export const StartTranscriptionDocument = gql`
     mutation StartTranscription($key: String!) {
   transcription: startTranscription(mediaKey: $key) {
@@ -746,7 +1033,10 @@ export const StartTranscriptionDocument = gql`
   }
 }
     `;
-export type IStartTranscriptionMutationFn = Apollo.MutationFunction<IStartTranscriptionMutation, IStartTranscriptionMutationVariables>;
+export type IStartTranscriptionMutationFn = Apollo.MutationFunction<
+  IStartTranscriptionMutation,
+  IStartTranscriptionMutationVariables
+>;
 
 /**
  * __useStartTranscriptionMutation__
@@ -765,13 +1055,27 @@ export type IStartTranscriptionMutationFn = Apollo.MutationFunction<IStartTransc
  *   },
  * });
  */
-export function useStartTranscriptionMutation(baseOptions?: Apollo.MutationHookOptions<IStartTranscriptionMutation, IStartTranscriptionMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<IStartTranscriptionMutation, IStartTranscriptionMutationVariables>(StartTranscriptionDocument, options);
-      }
-export type StartTranscriptionMutationHookResult = ReturnType<typeof useStartTranscriptionMutation>;
-export type StartTranscriptionMutationResult = Apollo.MutationResult<IStartTranscriptionMutation>;
-export type StartTranscriptionMutationOptions = Apollo.BaseMutationOptions<IStartTranscriptionMutation, IStartTranscriptionMutationVariables>;
+export function useStartTranscriptionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    IStartTranscriptionMutation,
+    IStartTranscriptionMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    IStartTranscriptionMutation,
+    IStartTranscriptionMutationVariables
+  >(StartTranscriptionDocument, options);
+}
+export type StartTranscriptionMutationHookResult = ReturnType<
+  typeof useStartTranscriptionMutation
+>;
+export type StartTranscriptionMutationResult =
+  Apollo.MutationResult<IStartTranscriptionMutation>;
+export type StartTranscriptionMutationOptions = Apollo.BaseMutationOptions<
+  IStartTranscriptionMutation,
+  IStartTranscriptionMutationVariables
+>;
 export const CreateNoteDocument = gql`
     mutation CreateNote($title: String!) {
   createNote(title: $title) {
@@ -779,7 +1083,10 @@ export const CreateNoteDocument = gql`
   }
 }
     `;
-export type ICreateNoteMutationFn = Apollo.MutationFunction<ICreateNoteMutation, ICreateNoteMutationVariables>;
+export type ICreateNoteMutationFn = Apollo.MutationFunction<
+  ICreateNoteMutation,
+  ICreateNoteMutationVariables
+>;
 
 /**
  * __useCreateNoteMutation__
@@ -798,19 +1105,36 @@ export type ICreateNoteMutationFn = Apollo.MutationFunction<ICreateNoteMutation,
  *   },
  * });
  */
-export function useCreateNoteMutation(baseOptions?: Apollo.MutationHookOptions<ICreateNoteMutation, ICreateNoteMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ICreateNoteMutation, ICreateNoteMutationVariables>(CreateNoteDocument, options);
-      }
-export type CreateNoteMutationHookResult = ReturnType<typeof useCreateNoteMutation>;
-export type CreateNoteMutationResult = Apollo.MutationResult<ICreateNoteMutation>;
-export type CreateNoteMutationOptions = Apollo.BaseMutationOptions<ICreateNoteMutation, ICreateNoteMutationVariables>;
+export function useCreateNoteMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ICreateNoteMutation,
+    ICreateNoteMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ICreateNoteMutation, ICreateNoteMutationVariables>(
+    CreateNoteDocument,
+    options,
+  );
+}
+export type CreateNoteMutationHookResult = ReturnType<
+  typeof useCreateNoteMutation
+>;
+export type CreateNoteMutationResult =
+  Apollo.MutationResult<ICreateNoteMutation>;
+export type CreateNoteMutationOptions = Apollo.BaseMutationOptions<
+  ICreateNoteMutation,
+  ICreateNoteMutationVariables
+>;
 export const RemoveNoteDocument = gql`
     mutation RemoveNote($id: ID!) {
   removeNote(id: $id)
 }
     `;
-export type IRemoveNoteMutationFn = Apollo.MutationFunction<IRemoveNoteMutation, IRemoveNoteMutationVariables>;
+export type IRemoveNoteMutationFn = Apollo.MutationFunction<
+  IRemoveNoteMutation,
+  IRemoveNoteMutationVariables
+>;
 
 /**
  * __useRemoveNoteMutation__
@@ -829,19 +1153,36 @@ export type IRemoveNoteMutationFn = Apollo.MutationFunction<IRemoveNoteMutation,
  *   },
  * });
  */
-export function useRemoveNoteMutation(baseOptions?: Apollo.MutationHookOptions<IRemoveNoteMutation, IRemoveNoteMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<IRemoveNoteMutation, IRemoveNoteMutationVariables>(RemoveNoteDocument, options);
-      }
-export type RemoveNoteMutationHookResult = ReturnType<typeof useRemoveNoteMutation>;
-export type RemoveNoteMutationResult = Apollo.MutationResult<IRemoveNoteMutation>;
-export type RemoveNoteMutationOptions = Apollo.BaseMutationOptions<IRemoveNoteMutation, IRemoveNoteMutationVariables>;
+export function useRemoveNoteMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    IRemoveNoteMutation,
+    IRemoveNoteMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<IRemoveNoteMutation, IRemoveNoteMutationVariables>(
+    RemoveNoteDocument,
+    options,
+  );
+}
+export type RemoveNoteMutationHookResult = ReturnType<
+  typeof useRemoveNoteMutation
+>;
+export type RemoveNoteMutationResult =
+  Apollo.MutationResult<IRemoveNoteMutation>;
+export type RemoveNoteMutationOptions = Apollo.BaseMutationOptions<
+  IRemoveNoteMutation,
+  IRemoveNoteMutationVariables
+>;
 export const UpdateNoteBodyDocument = gql`
     mutation UpdateNoteBody($id: ID!, $body: String!) {
   updateNoteBody(id: $id, body: $body)
 }
     `;
-export type IUpdateNoteBodyMutationFn = Apollo.MutationFunction<IUpdateNoteBodyMutation, IUpdateNoteBodyMutationVariables>;
+export type IUpdateNoteBodyMutationFn = Apollo.MutationFunction<
+  IUpdateNoteBodyMutation,
+  IUpdateNoteBodyMutationVariables
+>;
 
 /**
  * __useUpdateNoteBodyMutation__
@@ -861,13 +1202,27 @@ export type IUpdateNoteBodyMutationFn = Apollo.MutationFunction<IUpdateNoteBodyM
  *   },
  * });
  */
-export function useUpdateNoteBodyMutation(baseOptions?: Apollo.MutationHookOptions<IUpdateNoteBodyMutation, IUpdateNoteBodyMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<IUpdateNoteBodyMutation, IUpdateNoteBodyMutationVariables>(UpdateNoteBodyDocument, options);
-      }
-export type UpdateNoteBodyMutationHookResult = ReturnType<typeof useUpdateNoteBodyMutation>;
-export type UpdateNoteBodyMutationResult = Apollo.MutationResult<IUpdateNoteBodyMutation>;
-export type UpdateNoteBodyMutationOptions = Apollo.BaseMutationOptions<IUpdateNoteBodyMutation, IUpdateNoteBodyMutationVariables>;
+export function useUpdateNoteBodyMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    IUpdateNoteBodyMutation,
+    IUpdateNoteBodyMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    IUpdateNoteBodyMutation,
+    IUpdateNoteBodyMutationVariables
+  >(UpdateNoteBodyDocument, options);
+}
+export type UpdateNoteBodyMutationHookResult = ReturnType<
+  typeof useUpdateNoteBodyMutation
+>;
+export type UpdateNoteBodyMutationResult =
+  Apollo.MutationResult<IUpdateNoteBodyMutation>;
+export type UpdateNoteBodyMutationOptions = Apollo.BaseMutationOptions<
+  IUpdateNoteBodyMutation,
+  IUpdateNoteBodyMutationVariables
+>;
 export const NoteDocument = gql`
     query Note($id: ID!) {
   note(id: $id) {
@@ -893,22 +1248,46 @@ export const NoteDocument = gql`
  *   },
  * });
  */
-export function useNoteQuery(baseOptions: Apollo.QueryHookOptions<INoteQuery, INoteQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<INoteQuery, INoteQueryVariables>(NoteDocument, options);
-      }
-export function useNoteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<INoteQuery, INoteQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<INoteQuery, INoteQueryVariables>(NoteDocument, options);
-        }
-export function useNoteSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<INoteQuery, INoteQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<INoteQuery, INoteQueryVariables>(NoteDocument, options);
-        }
+export function useNoteQuery(
+  baseOptions: Apollo.QueryHookOptions<INoteQuery, INoteQueryVariables> &
+    ({ variables: INoteQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<INoteQuery, INoteQueryVariables>(
+    NoteDocument,
+    options,
+  );
+}
+export function useNoteLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<INoteQuery, INoteQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<INoteQuery, INoteQueryVariables>(
+    NoteDocument,
+    options,
+  );
+}
+export function useNoteSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    INoteQuery,
+    INoteQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<INoteQuery, INoteQueryVariables>(
+    NoteDocument,
+    options,
+  );
+}
 export type NoteQueryHookResult = ReturnType<typeof useNoteQuery>;
 export type NoteLazyQueryHookResult = ReturnType<typeof useNoteLazyQuery>;
-export type NoteSuspenseQueryHookResult = ReturnType<typeof useNoteSuspenseQuery>;
-export type NoteQueryResult = Apollo.QueryResult<INoteQuery, INoteQueryVariables>;
+export type NoteSuspenseQueryHookResult = ReturnType<
+  typeof useNoteSuspenseQuery
+>;
+export type NoteQueryResult = Apollo.QueryResult<
+  INoteQuery,
+  INoteQueryVariables
+>;
 export const NotesDocument = gql`
     query Notes {
   notes {
@@ -932,22 +1311,45 @@ export const NotesDocument = gql`
  *   },
  * });
  */
-export function useNotesQuery(baseOptions?: Apollo.QueryHookOptions<INotesQuery, INotesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<INotesQuery, INotesQueryVariables>(NotesDocument, options);
-      }
-export function useNotesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<INotesQuery, INotesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<INotesQuery, INotesQueryVariables>(NotesDocument, options);
-        }
-export function useNotesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<INotesQuery, INotesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<INotesQuery, INotesQueryVariables>(NotesDocument, options);
-        }
+export function useNotesQuery(
+  baseOptions?: Apollo.QueryHookOptions<INotesQuery, INotesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<INotesQuery, INotesQueryVariables>(
+    NotesDocument,
+    options,
+  );
+}
+export function useNotesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<INotesQuery, INotesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<INotesQuery, INotesQueryVariables>(
+    NotesDocument,
+    options,
+  );
+}
+export function useNotesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    INotesQuery,
+    INotesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<INotesQuery, INotesQueryVariables>(
+    NotesDocument,
+    options,
+  );
+}
 export type NotesQueryHookResult = ReturnType<typeof useNotesQuery>;
 export type NotesLazyQueryHookResult = ReturnType<typeof useNotesLazyQuery>;
-export type NotesSuspenseQueryHookResult = ReturnType<typeof useNotesSuspenseQuery>;
-export type NotesQueryResult = Apollo.QueryResult<INotesQuery, INotesQueryVariables>;
+export type NotesSuspenseQueryHookResult = ReturnType<
+  typeof useNotesSuspenseQuery
+>;
+export type NotesQueryResult = Apollo.QueryResult<
+  INotesQuery,
+  INotesQueryVariables
+>;
 export const ProgressDocument = gql`
     query Progress($id: ID!) {
   progress(id: $id) {
@@ -979,19 +1381,54 @@ export const ProgressDocument = gql`
  *   },
  * });
  */
-export function useProgressQuery(baseOptions: Apollo.QueryHookOptions<IProgressQuery, IProgressQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<IProgressQuery, IProgressQueryVariables>(ProgressDocument, options);
-      }
-export function useProgressLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IProgressQuery, IProgressQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<IProgressQuery, IProgressQueryVariables>(ProgressDocument, options);
-        }
-export function useProgressSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<IProgressQuery, IProgressQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<IProgressQuery, IProgressQueryVariables>(ProgressDocument, options);
-        }
+export function useProgressQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    IProgressQuery,
+    IProgressQueryVariables
+  > &
+    (
+      | { variables: IProgressQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<IProgressQuery, IProgressQueryVariables>(
+    ProgressDocument,
+    options,
+  );
+}
+export function useProgressLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    IProgressQuery,
+    IProgressQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<IProgressQuery, IProgressQueryVariables>(
+    ProgressDocument,
+    options,
+  );
+}
+export function useProgressSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    IProgressQuery,
+    IProgressQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<IProgressQuery, IProgressQueryVariables>(
+    ProgressDocument,
+    options,
+  );
+}
 export type ProgressQueryHookResult = ReturnType<typeof useProgressQuery>;
-export type ProgressLazyQueryHookResult = ReturnType<typeof useProgressLazyQuery>;
-export type ProgressSuspenseQueryHookResult = ReturnType<typeof useProgressSuspenseQuery>;
-export type ProgressQueryResult = Apollo.QueryResult<IProgressQuery, IProgressQueryVariables>;
+export type ProgressLazyQueryHookResult = ReturnType<
+  typeof useProgressLazyQuery
+>;
+export type ProgressSuspenseQueryHookResult = ReturnType<
+  typeof useProgressSuspenseQuery
+>;
+export type ProgressQueryResult = Apollo.QueryResult<
+  IProgressQuery,
+  IProgressQueryVariables
+>;

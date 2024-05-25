@@ -1,25 +1,25 @@
-export type Maybe<T> = T | undefined;
-export type InputMaybe<T> = T | undefined;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+import { GraphQLClient, RequestOptions } from "graphql-request";
+import { gql } from "graphql-request";
+type Maybe<T> = T | undefined;
+type InputMaybe<T> = T | undefined;
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]?: Maybe<T[SubKey]>;
 };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>;
 };
-export type MakeEmpty<
-  T extends { [key: string]: unknown },
-  K extends keyof T,
-> = { [_ in K]?: never };
-export type Incremental<T> =
+type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
+  [_ in K]?: never;
+};
+type Incremental<T> =
   | T
   | {
       [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
     };
+type GraphQLClientRequestHeaders = RequestOptions["requestHeaders"];
 /** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
+type Scalars = {
   ID: { input: string; output: string };
   String: { input: string; output: string };
   Boolean: { input: boolean; output: boolean };
@@ -28,12 +28,12 @@ export type Scalars = {
   DateTime: { input: Date; output: Date };
 };
 
-export enum IAuthClientType {
+enum IAuthClientType {
   Mobile = "MOBILE",
   Web = "WEB",
 }
 
-export enum IAuthPermission {
+enum IAuthPermission {
   AdminMedia = "ADMIN_MEDIA",
   AdminNotes = "ADMIN_NOTES",
   AdminRoles = "ADMIN_ROLES",
@@ -44,33 +44,33 @@ export enum IAuthPermission {
   Transcriptions = "TRANSCRIPTIONS",
 }
 
-export type IAuthToken = {
+type IAuthToken = {
   __typename?: "AuthToken";
   token: Scalars["String"]["output"];
   user: IUser;
   userId: Scalars["ID"]["output"];
 };
 
-export type IConfig = {
+type IConfig = {
   __typename?: "Config";
   createAnonymousUsers: Scalars["Boolean"]["output"];
   mediaDataLimit?: Maybe<Scalars["Int"]["output"]>;
 };
 
-export type IMediaItem = {
+type IMediaItem = {
   __typename?: "MediaItem";
   children?: Maybe<IMediaItem[]>;
   key: Scalars["String"]["output"];
   type: IMediaItemType;
 };
 
-export enum IMediaItemType {
+enum IMediaItemType {
   Directory = "DIRECTORY",
   File = "FILE",
   Series = "SERIES",
 }
 
-export type IMutation = {
+type IMutation = {
   __typename?: "Mutation";
   addMediaDownload: IProgress;
   addRoleToUser: Scalars["Boolean"]["output"];
@@ -93,91 +93,91 @@ export type IMutation = {
   updateRolePermissions: Scalars["Boolean"]["output"];
 };
 
-export type IMutationAddMediaDownloadArgs = {
+type IMutationAddMediaDownloadArgs = {
   destinationKey: Scalars["String"]["input"];
   sync?: InputMaybe<Scalars["Boolean"]["input"]>;
   url: Scalars["String"]["input"];
 };
 
-export type IMutationAddRoleToUserArgs = {
+type IMutationAddRoleToUserArgs = {
   roleId: Scalars["ID"]["input"];
   userId: Scalars["ID"]["input"];
 };
 
-export type IMutationCreateAuthTokenArgs = {
+type IMutationCreateAuthTokenArgs = {
   userId: Scalars["String"]["input"];
 };
 
-export type IMutationCreateAuthTokenGoogleArgs = {
+type IMutationCreateAuthTokenGoogleArgs = {
   clientType: IAuthClientType;
   googleIdToken: Scalars["String"]["input"];
 };
 
-export type IMutationCreateAuthTokenLocalArgs = {
+type IMutationCreateAuthTokenLocalArgs = {
   password: Scalars["String"]["input"];
   username: Scalars["String"]["input"];
 };
 
-export type IMutationCreateMediaArgs = {
+type IMutationCreateMediaArgs = {
   data: Scalars["String"]["input"];
   key: Scalars["String"]["input"];
 };
 
-export type IMutationCreateMediaUploadArgs = {
+type IMutationCreateMediaUploadArgs = {
   key: Scalars["String"]["input"];
 };
 
-export type IMutationCreateNoteArgs = {
+type IMutationCreateNoteArgs = {
   title: Scalars["String"]["input"];
 };
 
-export type IMutationCreateRoleArgs = {
+type IMutationCreateRoleArgs = {
   name: Scalars["String"]["input"];
 };
 
-export type IMutationCreateUserArgs = {
+type IMutationCreateUserArgs = {
   email: Scalars["String"]["input"];
   password?: InputMaybe<Scalars["String"]["input"]>;
   username?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type IMutationDeleteMediaArgs = {
+type IMutationDeleteMediaArgs = {
   key: Scalars["String"]["input"];
 };
 
-export type IMutationDeleteRoleArgs = {
+type IMutationDeleteRoleArgs = {
   id: Scalars["ID"]["input"];
 };
 
-export type IMutationRemoveNoteArgs = {
+type IMutationRemoveNoteArgs = {
   id: Scalars["ID"]["input"];
 };
 
-export type IMutationSetUserPasswordArgs = {
+type IMutationSetUserPasswordArgs = {
   password: Scalars["String"]["input"];
   userId: Scalars["ID"]["input"];
 };
 
-export type IMutationStartTranscriptionArgs = {
+type IMutationStartTranscriptionArgs = {
   mediaKey: Scalars["String"]["input"];
 };
 
-export type IMutationUpdateNoteBodyArgs = {
+type IMutationUpdateNoteBodyArgs = {
   body: Scalars["String"]["input"];
   id: Scalars["ID"]["input"];
 };
 
-export type IMutationUpdateRoleArgs = {
+type IMutationUpdateRoleArgs = {
   id: Scalars["ID"]["input"];
   name: Scalars["String"]["input"];
 };
 
-export type IMutationUpdateRolePermissionsArgs = {
+type IMutationUpdateRolePermissionsArgs = {
   id: Scalars["ID"]["input"];
   permissions: IAuthPermission[];
 };
 
-export type INote = {
+type INote = {
   __typename?: "Note";
   body: Scalars["String"]["output"];
   createdAt: Scalars["DateTime"]["output"];
@@ -185,7 +185,7 @@ export type INote = {
   title: Scalars["String"]["output"];
 };
 
-export type IProgress = {
+type IProgress = {
   __typename?: "Progress";
   action: Scalars["String"]["output"];
   createdAt: Scalars["DateTime"]["output"];
@@ -194,20 +194,20 @@ export type IProgress = {
   status: IProgressStatus;
 };
 
-export type IProgressLog = {
+type IProgressLog = {
   __typename?: "ProgressLog";
   createdAt: Scalars["DateTime"]["output"];
   text: Scalars["String"]["output"];
 };
 
-export enum IProgressStatus {
+enum IProgressStatus {
   Complete = "COMPLETE",
   Created = "CREATED",
   Errored = "ERRORED",
   InProgress = "IN_PROGRESS",
 }
 
-export type IQuery = {
+type IQuery = {
   __typename?: "Query";
   config: IConfig;
   mediaItem?: Maybe<IMediaItem>;
@@ -224,53 +224,53 @@ export type IQuery = {
   users: IUser[];
 };
 
-export type IQueryMediaItemArgs = {
+type IQueryMediaItemArgs = {
   key: Scalars["String"]["input"];
 };
 
-export type IQueryNoteArgs = {
+type IQueryNoteArgs = {
   id: Scalars["ID"]["input"];
 };
 
-export type IQueryProgressArgs = {
+type IQueryProgressArgs = {
   id: Scalars["ID"]["input"];
 };
 
-export type IQueryProgressesArgs = {
+type IQueryProgressesArgs = {
   ids: Scalars["ID"]["input"][];
 };
 
-export type IQuerySteamGamesArgs = {
+type IQuerySteamGamesArgs = {
   page: Scalars["Int"]["input"];
   search: Scalars["String"]["input"];
 };
 
-export type IQuerySteamPlayerArgs = {
+type IQuerySteamPlayerArgs = {
   steamId64: Scalars["String"]["input"];
 };
 
-export type IQuerySteamPlayersArgs = {
+type IQuerySteamPlayersArgs = {
   steamIds64: Scalars["String"]["input"][];
 };
 
-export type IQueryUserArgs = {
+type IQueryUserArgs = {
   id?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
-export type IRole = {
+type IRole = {
   __typename?: "Role";
   id: Scalars["ID"]["output"];
   name: Scalars["String"]["output"];
   permissions: IAuthPermission[];
 };
 
-export type ISteamGame = {
+type ISteamGame = {
   __typename?: "SteamGame";
   id: Scalars["Int"]["output"];
   name: Scalars["String"]["output"];
 };
 
-export type ISteamPlayer = {
+type ISteamPlayer = {
   __typename?: "SteamPlayer";
   avatarUrl: Scalars["String"]["output"];
   id: Scalars["String"]["output"];
@@ -280,7 +280,7 @@ export type ISteamPlayer = {
   profileUrl: Scalars["String"]["output"];
 };
 
-export type ITranscription = {
+type ITranscription = {
   __typename?: "Transcription";
   filename: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
@@ -288,14 +288,14 @@ export type ITranscription = {
   status: ITranscriptionStatus;
 };
 
-export enum ITranscriptionStatus {
+enum ITranscriptionStatus {
   Complete = "COMPLETE",
   Created = "CREATED",
   Errored = "ERRORED",
   Started = "STARTED",
 }
 
-export type IUser = {
+type IUser = {
   __typename?: "User";
   email: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
@@ -303,3 +303,78 @@ export type IUser = {
   roles?: Maybe<IRole[]>;
   username?: Maybe<Scalars["String"]["output"]>;
 };
+
+type IGetUsersQueryVariables = Exact<{ [key: string]: never }>;
+
+type IGetUsersQuery = {
+  __typename?: "Query";
+  users: Array<{
+    __typename?: "User";
+    id: string;
+    email: string;
+    username?: string | undefined;
+    permissions?: IAuthPermission[] | undefined;
+    roles?:
+      | Array<{
+          __typename?: "Role";
+          id: string;
+          name: string;
+          permissions: IAuthPermission[];
+        }>
+      | undefined;
+  }>;
+};
+
+const GetUsersDocument = gql`
+    query getUsers {
+  users {
+    id
+    email
+    username
+    permissions
+    roles {
+      id
+      name
+      permissions
+    }
+  }
+}
+    `;
+
+export type SdkFunctionWrapper = <T>(
+  action: (requestHeaders?: Record<string, string>) => Promise<T>,
+  operationName: string,
+  operationType?: string,
+  variables?: any,
+) => Promise<T>;
+
+const defaultWrapper: SdkFunctionWrapper = (
+  action,
+  _operationName,
+  _operationType,
+  _variables,
+) => action();
+
+export function getSdk(
+  client: GraphQLClient,
+  withWrapper: SdkFunctionWrapper = defaultWrapper,
+) {
+  return {
+    getUsers(
+      variables?: IGetUsersQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<IGetUsersQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<IGetUsersQuery>(GetUsersDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        "getUsers",
+        "query",
+        variables,
+      );
+    },
+  };
+}
+export type Sdk = ReturnType<typeof getSdk>;

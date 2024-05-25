@@ -1,5 +1,5 @@
 import { injectable } from "@athenajs/core";
-import { compact } from "@athenajs/utils";
+import { filter, isTruthy } from "remeda";
 import { IAuthPermission } from "../../graphql.js";
 import { RoleModel } from "../../model/role.model.js";
 import { UserModel } from "../../model/user.model.js";
@@ -68,7 +68,10 @@ export class UserManager {
         role: "role.*",
       })
       .where({ userId });
-    return compact(userRoles.map((ur) => ur.role));
+    return filter(
+      userRoles.map((ur) => ur.role),
+      isTruthy,
+    );
   }
 
   /**

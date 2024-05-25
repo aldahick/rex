@@ -1,6 +1,6 @@
 import { Logger } from "@athenajs/core";
-import { compact } from "@athenajs/utils";
 import { Message } from "discord.js";
+import { filter, isTruthy } from "remeda";
 import {
   DiscordCommand,
   discordCommand,
@@ -62,7 +62,7 @@ You may have given a bad user ID - make sure to use your steam ID (if your profi
         commonGameNames.push(gameNames.get(gameId));
       }
     }
-    const body = compact(commonGameNames)
+    const body = filter(commonGameNames, isTruthy)
       .sort((a, b) =>
         a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()),
       )
