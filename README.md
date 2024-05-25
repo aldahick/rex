@@ -2,6 +2,8 @@
 
 ![API image version](https://ghcr-badge.egpl.dev/aldahick/rex-api/latest_tag?trim=major&label=ghcr.io/aldahick/rex-api)
 ![Web image version](https://ghcr-badge.egpl.dev/aldahick/rex-web/latest_tag?trim=major&label=ghcr.io/aldahick/rex-web)
+![API workflow status badge](https://github.com/aldahick/rex/actions/workflows/api.yml/badge.svg?branch=main)
+![Web workflow status badge](https://github.com/aldahick/rex/actions/workflows/web.yml/badge.svg?branch=main)
 
 This is a monorepo for [my personal site](https://alexhicks.net), Rex, which includes a reference implementation of an [Athena](https://github.com/aldahick/athena) server. That backend is written in [TypeScript](https://typescriptlang.org), providing a GraphQL API using Athena, [Fastify](https://npmjs.com/package/fastify), and [Node.JS](https://nodejs.org). The frontend is built with [React](https://react.dev/) and TypeScript, with most styling from [MUI](https://mui.com).
 
