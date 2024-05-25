@@ -26,5 +26,5 @@ jobs:
     uses: ./.github/workflows/publish.yml
     with:
       directory: web
-      dockerfile: web/node_modules/@athenajs/react-utils/Dockerfile
+      dockerfile: node_modules/@athenajs/react-utils/Dockerfile
       imageName: ghcr.io/aldahick/rex-web
