@@ -15,7 +15,7 @@ jobs:
           node-version-file: .nvmrc
       - uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
       - run: pnpm install
         working-directory: ${{ inputs.directory }}
       - run: pnpm build
