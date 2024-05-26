@@ -11,7 +11,7 @@
     "lint": "biome check src",
     "generate": "graphql-codegen --config codegen.graphql.ts",
     "db": "tsx src/service/database/database.migration.ts",
-    "test": "tsx --enable-source-maps --test src"
+    "test": "vitest run"
   },
   "engines": {
     "node": "^20.13"
@@ -27,13 +27,13 @@
   },
   "homepage": "https://github.com/aldahick/rex#readme",
   "dependencies": {
-    "@athenajs/core": "^1.2.0",
+    "@athenajs/core": "^1.2.1",
     "@google-cloud/run": "^1.2.0",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
     "discord.js": "^14.15.2",
     "dockerode": "^4.0.2",
-    "googleapis": "^137.1.0",
+    "google-auth-library": "^9.10.0",
     "graphql": "^16.8.1",
     "graphql-request": "6.1.0",
     "jsonwebtoken": "^9.0.2",
@@ -47,13 +47,17 @@
   },
   "devDependencies": {
     "@graphql-codegen/typescript-graphql-request": "^6.2.0",
+    "@swc/core": "^1.5.7",
     "@types/bcrypt": "^5.0.2",
     "@types/dockerode": "^3.3.29",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.12.12",
     "@types/pg": "^8.11.6",
     "@types/pluralize": "^0.0.33",
+    "@vitest/coverage-v8": "^1.6.0",
     "rake-db": "^2.20.5",
-    "tsc-watch": "^6.2.0"
+    "tsc-watch": "^6.2.0",
+    "unplugin-swc": "^1.4.5",
+    "vitest": "^1.6.0"
   }
 }

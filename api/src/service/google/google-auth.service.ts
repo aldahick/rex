@@ -1,5 +1,5 @@
 import { injectable } from "@athenajs/core";
-import * as google from "googleapis";
+import { OAuth2Client } from "google-auth-library";
 import { RexConfig } from "../../config.js";
 
 export interface GoogleTokenPayload {
@@ -12,16 +12,18 @@ export interface GoogleTokenPayload {
 export class GoogleAuthService {
   constructor(private readonly config: RexConfig) {}
 
-  // TODO check
   async getIdTokenPayload(
     idToken: string,
-    clientId: string | undefined,
+    clientIdKey: keyof RexConfig["google"]["oauth"],
   ): Promise<GoogleTokenPayload | undefined> {
-    if (clientId === undefined) {
-      throw new Error("Missing Google client ID");
+    const { clientId, clientSecret } = this.config.google.oauth[clientIdKey];
+    if (!(clientId && clientSecret)) {
+      throw new Error(`Missing Google credentials for client ${clientIdKey}`);
     }
-    const api = new google.GoogleApis();
-    const ticket = await new api.auth.OAuth2().verifyIdToken({
+    const ticket = await new OAuth2Client({
+      clientId,
+      clientSecret,
+    }).verifyIdToken({
       idToken,
       audience: clientId,
     });

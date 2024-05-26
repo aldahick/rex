@@ -14,8 +14,8 @@ export class GoogleCloudService {
   readonly jobs;
   constructor(private readonly config: RexConfig) {
     this.jobs = new JobsClient({
-      projectId: this.config.googleCloud.projectId,
-      keyFilename: this.config.googleCloud.credentialsPath,
+      projectId: this.config.google.cloud.projectId,
+      keyFilename: this.config.google.cloud.credentialsPath,
     });
   }
 

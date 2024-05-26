@@ -34,22 +34,21 @@ export class SteamService {
     const url = resolveUrl(BASE_URL, "/ISteamUser/GetPlayerSummaries/v2/");
     const {
       data: {
-        response: { players },
+        response: {
+          players: [player],
+        },
       },
     } = await axios.get<GetPlayerSummaries>(`${url}?${params}`);
-    if (players.length === 0) {
+    if (!player) {
       throw new Error(`no players found for steamid="${steamId64}"`);
     }
-    const player = players[0];
-    return player
-      ? {
-          id: player.steamid,
-          nickname: player.personaname,
-          avatarUrl: player.avatarfull,
-          profileUrl: player.profileurl,
-          playingGameId: player.gameid ? Number(player.gameid) : undefined,
-        }
-      : undefined;
+    return {
+      id: player.steamid,
+      nickname: player.personaname,
+      avatarUrl: player.avatarfull,
+      profileUrl: player.profileurl,
+      playingGameId: player.gameid ? Number(player.gameid) : undefined,
+    };
   }
 
   async getPlayerOwnedGameIds(

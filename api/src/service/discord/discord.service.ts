@@ -1,5 +1,9 @@
-import { Logger, injectable, makeRegistryDecorator } from "@athenajs/core";
-import { injectAll } from "@athenajs/core/dist/container.js";
+import {
+  Logger,
+  injectAll,
+  injectable,
+  makeRegistryDecorator,
+} from "@athenajs/core";
 import { Client, GatewayIntentBits, Message } from "discord.js";
 import { RexConfig } from "../../config.js";
 
@@ -45,8 +49,8 @@ export class DiscordService {
         this.commands.set(command.toLowerCase(), handler);
       }
     }
-    this.init().catch((err) => {
-      this.logger.error(`failed to start Discord bot: ${err}`);
+    this.init().catch((err: Error) => {
+      this.logger.error(`failed to start Discord bot: ${err.message}`);
     });
   }
 
@@ -91,9 +95,9 @@ export class DiscordService {
           await message.reply(reply);
         }
       })
-      .catch(async (err) => {
+      .catch(async (err: Error) => {
         this.logger.error(
-          `uncaught error in discord command ${command}: ${err}`,
+          `uncaught error in discord command ${command}: ${err.message}`,
         );
         await message.reply("sorry, an internal error occurred");
       });

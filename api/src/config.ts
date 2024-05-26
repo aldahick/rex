@@ -12,16 +12,21 @@ export class RexConfig extends BaseConfig {
 
   readonly graphqlSchemaDirs = this.required("GRAPHQL_SCHEMA_DIRS").split(",");
 
-  readonly googleAuth = {
-    clientIds: {
-      mobile: this.optional("GOOGLE_CLIENT_ID_MOBILE"),
-      web: this.optional("GOOGLE_CLIENT_ID_WEB"),
+  readonly google = {
+    cloud: {
+      projectId: this.optional("GOOGLE_CLOUD_PROJECT_ID"),
+      credentialsPath: this.optional("GOOGLE_CLOUD_CREDENTIALS_PATH"),
     },
-  };
-
-  readonly googleCloud = {
-    projectId: this.optional("GOOGLE_CLOUD_PROJECT_ID"),
-    credentialsPath: this.optional("GOOGLE_CLOUD_CREDENTIALS_PATH"),
+    oauth: {
+      mobile: {
+        clientId: this.optional("GOOGLE_CLIENT_ID_MOBILE"),
+        clientSecret: this.optional("GOOGLE_CLIENT_SECRET_MOBILE"),
+      },
+      web: {
+        clientId: this.optional("GOOGLE_CLIENT_ID_WEB"),
+        clientSecret: this.optional("GOOGLE_CLIENT_SECRET_WEB"),
+      },
+    },
   };
 
   readonly http = {

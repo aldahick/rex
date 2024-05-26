@@ -17,7 +17,7 @@ import { AuthManager } from "./auth.manager.js";
 
 const clientIdsByType: Record<
   IAuthClientType,
-  keyof RexConfig["googleAuth"]["clientIds"]
+  keyof RexConfig["google"]["oauth"]
 > = {
   [IAuthClientType.Mobile]: "mobile",
   [IAuthClientType.Web]: "web",
@@ -41,7 +41,7 @@ export class AuthResolver {
   ): Promise<IMutation["createAuthTokenGoogle"]> {
     const googlePayload = await this.googleAuthService.getIdTokenPayload(
       googleIdToken,
-      this.config.googleAuth.clientIds[clientIdsByType[clientType]],
+      clientIdsByType[clientType],
     );
     if (!googlePayload) {
       throw new Error("Invalid Google token");

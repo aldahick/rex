@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "biome check src",
-    "generate": "graphql-codegen --config codegen.graphql.ts"
+    "generate": "graphql-codegen --config codegen.graphql.ts",
+    "test": "echo 'No tests yet'"
   },
   "engines": {
     "node": "^20.13"
