@@ -47,7 +47,7 @@
   "overrides": [
     {
       "include": [
-        "vitest.config.mts",
+        "vitest.config*ts",
         "vite.config.ts",
         "codegen*.ts"
       ],

@@ -15,14 +15,14 @@ permissions:
   packages: write
 
 jobs:
-  build:
-    uses: ./.github/workflows/build.yml
+  tests:
+    uses: ./.github/workflows/tests.yml
     with:
       directory: api
 
   publish:
     if: ${{ github.ref_type == 'tag' }}
-    needs: build
+    needs: tests
     uses: ./.github/workflows/publish.yml
     with:
       directory: api
