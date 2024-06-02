@@ -7,8 +7,8 @@ import {
 } from "@athenajs/core";
 import mime from "mime";
 import { IAuthPermission } from "../../graphql.js";
-import { RexContext } from "../auth/index.js";
-import { UserManager } from "../user/index.js";
+import { RexContext } from "../auth/auth.context.js";
+import { UserManager } from "../user/user.manager.js";
 import { MediaManager, MediaStats } from "./media.manager.js";
 
 const HTTP_SUCCESS = 200;

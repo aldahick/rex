@@ -3,7 +3,6 @@ import { setTimeout } from "node:timers/promises";
 import { Logger, container } from "@athenajs/core";
 import {
   afterAll,
-  afterEach,
   beforeAll,
   beforeEach,
   describe,
@@ -73,10 +72,6 @@ describe("DiscordService", () => {
     });
   });
 
-  afterEach(() => {
-    vi.resetAllMocks();
-  });
-
   afterAll(() => {
     vi.restoreAllMocks();
   });
@@ -85,7 +80,7 @@ describe("DiscordService", () => {
     it("should log an error if constructor init fails", async () => {
       mocks.client.login.mockRejectedValue(new Error("login failed"));
       service();
-      await setTimeout(100);
+      await setTimeout(0);
       expect(mocks.logger.error).toHaveBeenLastCalledWith(
         "failed to start Discord bot: login failed",
       );
@@ -186,7 +181,7 @@ describe("DiscordService", () => {
       const discord = service();
       await discord.init();
       discord.client.emit("message", message);
-      await setTimeout(100);
+      await setTimeout(0);
       expect(message.reply).toHaveBeenLastCalledWith("reply");
       expect(mocks.commands.single).toHaveBeenLastCalledWith(
         message,
@@ -206,7 +201,7 @@ describe("DiscordService", () => {
       const discord = service();
       await discord.init();
       discord.client.emit("message", message);
-      await setTimeout(100);
+      await setTimeout(0);
       expect(mocks.logger.error).toHaveBeenLastCalledWith(
         "uncaught error in discord command single: handler failed",
       );

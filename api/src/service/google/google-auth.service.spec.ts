@@ -1,7 +1,6 @@
 import { container } from "@athenajs/core";
 import {
   afterAll,
-  afterEach,
   beforeAll,
   beforeEach,
   describe,
@@ -40,10 +39,6 @@ describe("GoogleAuthService", () => {
         },
       },
     });
-  });
-
-  afterEach(() => {
-    vi.resetAllMocks();
   });
 
   afterAll(() => {

@@ -2,7 +2,6 @@ import axios from "axios";
 import {
   MockInstance,
   afterAll,
-  afterEach,
   beforeAll,
   describe,
   expect,
@@ -16,10 +15,6 @@ describe("HastebinService", () => {
   let mockPost: MockInstance;
   beforeAll(() => {
     mockPost = vi.spyOn(axios, "post");
-  });
-
-  afterEach(() => {
-    vi.resetAllMocks();
   });
 
   afterAll(() => {

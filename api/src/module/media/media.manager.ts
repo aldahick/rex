@@ -12,7 +12,7 @@ import axios from "axios";
 import { RexConfig } from "../../config.js";
 import { IMediaItem, IMediaItemType, IProgressStatus } from "../../graphql.js";
 import { UserModel } from "../../model/index.js";
-import { ProgressManager } from "../progress/index.js";
+import { ProgressManager } from "../progress/progress.manager.js";
 
 export type MediaStats = Stats;
 

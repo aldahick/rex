@@ -10,7 +10,7 @@ import {
   IRole,
 } from "../../graphql.js";
 import { RoleModel } from "../../model/index.js";
-import { RexContext } from "../auth/index.js";
+import { RexContext } from "../auth/auth.context.js";
 import { RoleManager } from "./role.manager.js";
 
 @resolver()

@@ -16,15 +16,14 @@ import {
   IUser,
 } from "../../graphql.js";
 import { UserModel } from "../../model/index.js";
-import { RexContext } from "../auth/index.js";
-import { RoleManager, RoleResolver } from "../role/index.js";
+import { RexContext } from "../auth/auth.context.js";
+import { RoleResolver } from "../role/role.resolver.js";
 import { UserManager } from "./user.manager.js";
 
 @resolver()
 export class UserResolver {
   constructor(
     private readonly config: RexConfig,
-    private readonly roleManager: RoleManager,
     private readonly roleResolver: RoleResolver,
     private readonly userManager: UserManager,
   ) {}
@@ -139,6 +138,7 @@ export class UserResolver {
     return {
       ...user,
       username: user.username ?? undefined,
+      projectConfigs: [],
     };
   }
 }

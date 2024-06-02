@@ -1,13 +1,5 @@
 import { container } from "@athenajs/core";
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { RexConfig } from "../../config.js";
 import { GoogleCloudService } from "./google-cloud.service.js";
 
@@ -36,10 +28,6 @@ describe("GoogleCloudService", () => {
         },
       } as RexConfig,
     });
-  });
-
-  afterEach(() => {
-    vi.resetAllMocks();
   });
 
   afterAll(() => {

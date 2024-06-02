@@ -9,9 +9,9 @@ import {
   IMutationCreateAuthTokenGoogleArgs,
   IMutationCreateAuthTokenLocalArgs,
 } from "../../graphql.js";
-import { DatabaseService } from "../../service/database/database.service.js";
 import { GoogleAuthService } from "../../service/google/google-auth.service.js";
-import { UserManager, UserResolver } from "../user/index.js";
+import { UserManager } from "../user/user.manager.js";
+import { UserResolver } from "../user/user.resolver.js";
 import { RexContext } from "./auth.context.js";
 import { AuthManager } from "./auth.manager.js";
 
@@ -27,8 +27,6 @@ const clientIdsByType: Record<
 export class AuthResolver {
   constructor(
     private readonly authManager: AuthManager,
-    private readonly config: RexConfig,
-    private readonly db: DatabaseService,
     private readonly googleAuthService: GoogleAuthService,
     private readonly userManager: UserManager,
     private readonly userResolver: UserResolver,

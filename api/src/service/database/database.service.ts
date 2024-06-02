@@ -1,18 +1,20 @@
 import { injectable } from "@athenajs/core";
 import { OrchidORM, orchidORM } from "orchid-orm";
 import { RexConfig } from "../../config.js";
+import { ProgressLogTable } from "../../model/progress-log.model.js";
 import { ProgressTable } from "../../model/progress.model.js";
-import { ProgressLogTable } from "../../model/progressLog.model.js";
+import { ProjectConfigTable } from "../../model/project-config.model.js";
 import { RoleTable } from "../../model/role.model.js";
-import { SteamGameTable } from "../../model/steamGame.model.js";
+import { SteamGameTable } from "../../model/steam-game.model.js";
 import { TranscriptionTable } from "../../model/transcription.model.js";
+import { UserNoteTable } from "../../model/user-note.model.js";
+import { UserRoleTable } from "../../model/user-role.model.js";
 import { UserTable } from "../../model/user.model.js";
-import { UserNoteTable } from "../../model/userNote.model.js";
-import { UserRoleTable } from "../../model/userRole.model.js";
 
 const tables = {
   progress: ProgressTable,
   progressLogs: ProgressLogTable,
+  projectConfigs: ProjectConfigTable,
   roles: RoleTable,
   steamGames: SteamGameTable,
   transcriptions: TranscriptionTable,
@@ -31,6 +33,7 @@ export class DatabaseService implements DbTables {
 
   readonly progress: DbTables["progress"];
   readonly progressLogs: DbTables["progressLogs"];
+  readonly projectConfigs: DbTables["projectConfigs"];
   readonly roles: DbTables["roles"];
   readonly steamGames: DbTables["steamGames"];
   readonly transcriptions: DbTables["transcriptions"];
@@ -49,6 +52,7 @@ export class DatabaseService implements DbTables {
 
     this.progress = this.orm.progress;
     this.progressLogs = this.orm.progressLogs;
+    this.projectConfigs = this.orm.projectConfigs;
     this.roles = this.orm.roles;
     this.steamGames = this.orm.steamGames;
     this.transcriptions = this.orm.transcriptions;

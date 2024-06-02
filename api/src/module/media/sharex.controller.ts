@@ -12,7 +12,8 @@ import {
 import mime from "mime";
 import { RexConfig } from "../../config.js";
 import { IAuthPermission } from "../../graphql.js";
-import { AuthManager, RexContext } from "../auth/index.js";
+import { RexContext } from "../auth/auth.context.js";
+import { AuthManager } from "../auth/auth.manager.js";
 import { UserManager } from "../user/user.manager.js";
 import { MediaController } from "./media.controller.js";
 import { MediaManager } from "./media.manager.js";

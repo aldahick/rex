@@ -9,8 +9,8 @@ import {
   IQuery,
   IQueryNoteArgs,
 } from "../../graphql.js";
-import { UserNoteModel } from "../../model/userNote.model.js";
-import { RexContext } from "../auth/index.js";
+import { UserNoteModel } from "../../model/user-note.model.js";
+import { RexContext } from "../auth/auth.context.js";
 import { NoteManager } from "./note.manager.js";
 
 @resolver()

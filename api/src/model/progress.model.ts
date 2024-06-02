@@ -1,7 +1,7 @@
 import { Selectable } from "orchid-orm";
 import { IProgressStatus } from "../graphql.js";
 import { BaseTable } from "./base.table.js";
-import { ProgressLogTable } from "./progressLog.model.js";
+import { ProgressLogTable } from "./progress-log.model.js";
 
 export type ProgressModel = Selectable<ProgressTable>;
 export class ProgressTable extends BaseTable {

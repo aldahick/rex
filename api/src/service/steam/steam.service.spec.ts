@@ -3,7 +3,6 @@ import axios from "axios";
 import {
   MockInstance,
   afterAll,
-  afterEach,
   beforeAll,
   beforeEach,
   describe,
@@ -28,10 +27,6 @@ describe("SteamService", () => {
     mockConfig.mockReturnValue({
       steamApiKey: "",
     });
-  });
-
-  afterEach(() => {
-    vi.resetAllMocks();
   });
 
   afterAll(() => {

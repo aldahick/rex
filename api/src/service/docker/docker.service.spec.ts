@@ -1,13 +1,5 @@
 import { container } from "@athenajs/core";
-import {
-  afterAll,
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { RexConfig } from "../../config.js";
 import { DockerService } from "./docker.service.js";
 
@@ -30,10 +22,6 @@ describe("DockerService", () => {
     container.register(RexConfig, {
       useValue: {} as RexConfig,
     });
-  });
-
-  afterEach(() => {
-    vi.resetAllMocks();
   });
 
   afterAll(() => {

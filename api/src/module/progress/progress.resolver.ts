@@ -6,7 +6,7 @@ import {
   IQueryProgressesArgs,
 } from "../../graphql.js";
 import { ProgressModel } from "../../model/index.js";
-import { RexContext } from "../auth/index.js";
+import { RexContext } from "../auth/auth.context.js";
 import { ProgressManager } from "./progress.manager.js";
 
 @resolver()

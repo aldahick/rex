@@ -1,6 +1,6 @@
 import { Selectable } from "orchid-orm";
 import { BaseTable } from "./base.table.js";
-import { UserRoleTable } from "./userRole.model.js";
+import { UserRoleTable } from "./user-role.model.js";
 
 export type RoleModel = Selectable<RoleTable>;
 export class RoleTable extends BaseTable {

@@ -28,5 +28,6 @@ enum AuthPermission {
   ADMIN_USERS
   MEDIA
   NOTES
+  PROJECTS
   TRANSCRIPTIONS
 }

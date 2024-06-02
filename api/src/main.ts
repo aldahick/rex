@@ -1,14 +1,19 @@
 import "reflect-metadata";
-import "./module/auth/index.js";
-import "./module/config/index.js";
-import "./module/generic/index.js";
-import "./module/media/index.js";
-import "./module/mzk/index.js";
-import "./module/note/index.js";
-import "./module/progress/index.js";
-import "./module/role/index.js";
-import "./module/steam/index.js";
-import "./module/user/index.js";
+
+import "./module/generic/help.command.js";
+import "./module/steam/steamGames.command.js";
+
+import "./module/auth/auth.resolver.js";
+import "./module/config/config.resolver.js";
+import "./module/generic/datetime.resolver.js";
+import "./module/media/media.resolver.js";
+import "./module/media/sharex.controller.js";
+import "./module/mzk/mzk.resolver.js";
+import "./module/note/note.resolver.js";
+import "./module/progress/progress.resolver.js";
+import "./module/role/role.resolver.js";
+import "./module/steam/steam.resolver.js";
+import "./module/user/user.resolver.js";
 
 import { createApp } from "@athenajs/core";
 

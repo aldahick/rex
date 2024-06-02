@@ -14,7 +14,6 @@ describe("database migration", () => {
     container.reset();
   });
   afterEach(() => {
-    vi.resetAllMocks();
     vi.restoreAllMocks();
   });
 

@@ -19,7 +19,8 @@ export const change = rakeDb(
   {
     baseTable: BaseTable,
     migrationsTable: "migrations",
-    migrationsPath: "../migrations",
+    migrationsPath: "../../migrations",
+    migrationId: "timestamp",
     import: (path) => import(pathToFileURL(resolvePath(path)).toString()),
   },
 );

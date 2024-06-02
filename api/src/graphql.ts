@@ -41,6 +41,7 @@ export enum IAuthPermission {
   AdminUsers = "ADMIN_USERS",
   Media = "MEDIA",
   Notes = "NOTES",
+  Projects = "PROJECTS",
   Transcriptions = "TRANSCRIPTIONS",
 }
 
@@ -83,12 +84,14 @@ export type IMutation = {
   createRole: IRole;
   createUser: IUser;
   deleteMedia: Scalars["Boolean"]["output"];
+  deleteProjectConfig: Scalars["Boolean"]["output"];
   deleteRole: Scalars["Boolean"]["output"];
   fetchSteamGames: IProgress;
   removeNote: Scalars["Boolean"]["output"];
   setUserPassword: Scalars["Boolean"]["output"];
   startTranscription: ITranscription;
   updateNoteBody: Scalars["Boolean"]["output"];
+  updateProjectConfig: Scalars["Boolean"]["output"];
   updateRole: Scalars["Boolean"]["output"];
   updateRolePermissions: Scalars["Boolean"]["output"];
 };
@@ -145,6 +148,10 @@ export type IMutationDeleteMediaArgs = {
   key: Scalars["String"]["input"];
 };
 
+export type IMutationDeleteProjectConfigArgs = {
+  adapterType: IProjectAdapterType;
+};
+
 export type IMutationDeleteRoleArgs = {
   id: Scalars["ID"]["input"];
 };
@@ -165,6 +172,10 @@ export type IMutationStartTranscriptionArgs = {
 export type IMutationUpdateNoteBodyArgs = {
   body: Scalars["String"]["input"];
   id: Scalars["ID"]["input"];
+};
+
+export type IMutationUpdateProjectConfigArgs = {
+  params: IUpdateProjectConfigParams;
 };
 
 export type IMutationUpdateRoleArgs = {
@@ -207,6 +218,77 @@ export enum IProgressStatus {
   InProgress = "IN_PROGRESS",
 }
 
+export type IProject = {
+  __typename?: "Project";
+  boards: IProjectBoard[];
+  config: IProjectConfig;
+  issues: IProjectIssue[];
+  sprints: IProjectSprint[];
+};
+
+export type IProjectIssuesArgs = {
+  sprintId: Scalars["Int"]["input"];
+};
+
+export type IProjectSprintsArgs = {
+  boardId: Scalars["Int"]["input"];
+};
+
+export enum IProjectAdapterType {
+  Jira = "JIRA",
+}
+
+export type IProjectBoard = {
+  __typename?: "ProjectBoard";
+  id: Scalars["Int"]["output"];
+  name: Scalars["String"]["output"];
+};
+
+export type IProjectConfig = {
+  __typename?: "ProjectConfig";
+  adapterType: IProjectAdapterType;
+  apiToken: Scalars["String"]["output"];
+  email: Scalars["String"]["output"];
+  host: Scalars["String"]["output"];
+};
+
+export type IProjectIssue = {
+  __typename?: "ProjectIssue";
+  id: Scalars["ID"]["output"];
+  implementer?: Maybe<IProjectUser>;
+  key: Scalars["String"]["output"];
+  sprints: IProjectSprint[];
+  state: Scalars["String"]["output"];
+  statusDurations: IProjectIssueStatusDuration[];
+  storyPoints?: Maybe<Scalars["Float"]["output"]>;
+  title: Scalars["String"]["output"];
+  type: Scalars["String"]["output"];
+};
+
+export type IProjectIssueStatusDuration = {
+  __typename?: "ProjectIssueStatusDuration";
+  fullDuration: Scalars["Int"]["output"];
+  status: Scalars["String"]["output"];
+  workingDays: Scalars["Int"]["output"];
+  workingDuration: Scalars["Int"]["output"];
+};
+
+export type IProjectSprint = {
+  __typename?: "ProjectSprint";
+  end?: Maybe<Scalars["DateTime"]["output"]>;
+  id: Scalars["Int"]["output"];
+  name: Scalars["String"]["output"];
+  start?: Maybe<Scalars["DateTime"]["output"]>;
+  state: Scalars["String"]["output"];
+};
+
+export type IProjectUser = {
+  __typename?: "ProjectUser";
+  email?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["ID"]["output"];
+  name: Scalars["String"]["output"];
+};
+
 export type IQuery = {
   __typename?: "Query";
   config: IConfig;
@@ -215,6 +297,7 @@ export type IQuery = {
   notes: INote[];
   progress: IProgress;
   progresses: IProgress[];
+  project: IProject;
   roles: IRole[];
   steamGames: ISteamGame[];
   steamPlayer: ISteamPlayer;
@@ -238,6 +321,10 @@ export type IQueryProgressArgs = {
 
 export type IQueryProgressesArgs = {
   ids: Scalars["ID"]["input"][];
+};
+
+export type IQueryProjectArgs = {
+  adapterType: IProjectAdapterType;
 };
 
 export type IQuerySteamGamesArgs = {
@@ -295,11 +382,19 @@ export enum ITranscriptionStatus {
   Started = "STARTED",
 }
 
+export type IUpdateProjectConfigParams = {
+  adapterType: IProjectAdapterType;
+  apiToken: Scalars["String"]["input"];
+  email: Scalars["String"]["input"];
+  host: Scalars["String"]["input"];
+};
+
 export type IUser = {
   __typename?: "User";
   email: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
   permissions?: Maybe<IAuthPermission[]>;
+  projectConfigs: IProjectConfig[];
   roles?: Maybe<IRole[]>;
   username?: Maybe<Scalars["String"]["output"]>;
 };

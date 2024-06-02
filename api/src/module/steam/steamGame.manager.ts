@@ -4,7 +4,7 @@ import { IProgressStatus } from "../../graphql.js";
 import { SteamGameModel } from "../../model/index.js";
 import { DatabaseService } from "../../service/database/database.service.js";
 import { SteamService } from "../../service/steam/steam.service.js";
-import { ProgressManager } from "../progress/index.js";
+import { ProgressManager } from "../progress/progress.manager.js";
 
 const FETCH_CHUNK_SIZE = 1000;
 

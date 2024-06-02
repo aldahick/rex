@@ -18,9 +18,10 @@ import {
   IQueryMediaItemArgs,
 } from "../../graphql.js";
 import { UserModel } from "../../model/index.js";
-import { RexContext } from "../auth/index.js";
-import { ProgressManager, ProgressResolver } from "../progress/index.js";
-import { UserManager } from "../user/index.js";
+import { RexContext } from "../auth/auth.context.js";
+import { ProgressManager } from "../progress/progress.manager.js";
+import { ProgressResolver } from "../progress/progress.resolver.js";
+import { UserManager } from "../user/user.manager.js";
 import { MediaManager } from "./media.manager.js";
 
 @resolver()
