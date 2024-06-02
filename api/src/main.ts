@@ -11,6 +11,8 @@ import "./module/media/sharex.controller.js";
 import "./module/mzk/mzk.resolver.js";
 import "./module/note/note.resolver.js";
 import "./module/progress/progress.resolver.js";
+import "./module/project/project.resolver.js";
+import "./module/project/project-config.resolver.js";
 import "./module/role/role.resolver.js";
 import "./module/steam/steam.resolver.js";
 import "./module/user/user.resolver.js";

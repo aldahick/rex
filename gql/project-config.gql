@@ -1,0 +1,26 @@
+extend type Mutation {
+  deleteProjectConfig(adapterType: ProjectAdapterType!): Boolean!
+  updateProjectConfig(params: UpdateProjectConfigParams!): Boolean!
+}
+
+extend type User {
+  projectConfigs: [ProjectConfig!]!
+}
+
+enum ProjectAdapterType {
+  JIRA
+}
+
+type ProjectConfig {
+  adapterType: ProjectAdapterType!
+  host: String!
+  email: String!
+  apiToken: String!
+}
+
+input UpdateProjectConfigParams {
+  adapterType: ProjectAdapterType!
+  host: String!
+  email: String!
+  apiToken: String!
+}

@@ -1,0 +1,50 @@
+extend type Query {
+  project(adapterType: ProjectAdapterType!): Project!
+}
+
+type Project {
+  config: ProjectConfig!
+  boards: [ProjectBoard!]!
+  sprints(boardId: Int!): [ProjectSprint!]!
+  issues(sprintId: Int!): [ProjectIssue!]!
+}
+
+type ProjectBoard {
+  id: Int!
+  name: String!
+}
+
+type ProjectSprint {
+  id: Int!
+  name: String!
+  state: String!
+  start: DateTime
+  end: DateTime
+}
+
+type ProjectUser {
+  id: ID!
+  name: String!
+  email: String
+}
+
+type ProjectIssue {
+  id: ID!
+  key: String!
+  type: String!
+  state: String!
+  title: String!
+  sprints: [ProjectSprint!]!
+  implementer: ProjectUser
+  storyPoints: Float
+  statusDurations: [ProjectIssueStatusDuration!]!
+}
+
+type ProjectIssueStatusDuration {
+  status: String!
+  workingDays: Int!
+  # Minutes during working hours, in addition to workingDays
+  workingDuration: Int!
+  # Total minutes, including days off
+  fullDuration: Int!
+}
