@@ -2,7 +2,7 @@
   "name": "@aldahick/rex",
   "license": "MIT",
   "private": true,
-  "version": "0.3.9",
+  "version": "0.4.0",
   "scripts": {
     "generate": "bash scripts/generate.sh",
     "version": "bash scripts/version.sh",
