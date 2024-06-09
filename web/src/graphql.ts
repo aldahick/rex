@@ -28,7 +28,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
-  DateTime: { input: Date; output: Date };
+  DateTime: { input: string; output: string };
 };
 
 export enum IAuthClientType {
@@ -272,6 +272,7 @@ export type IProjectIssueStatusDuration = {
   __typename?: "ProjectIssueStatusDuration";
   fullDuration: Scalars["Int"]["output"];
   status: Scalars["String"]["output"];
+  workingDays: Scalars["Int"]["output"];
   workingDuration: Scalars["Int"]["output"];
 };
 
@@ -581,7 +582,7 @@ export type IUpdateNoteBodyMutation = {
 export type IListNoteFragment = {
   __typename?: "Note";
   id: string;
-  createdAt: Date;
+  createdAt: string;
   title: string;
 };
 
@@ -595,7 +596,7 @@ export type INoteQuery = {
     __typename?: "Note";
     body: string;
     id: string;
-    createdAt: Date;
+    createdAt: string;
     title: string;
   };
 };
@@ -607,7 +608,7 @@ export type INotesQuery = {
   notes: Array<{
     __typename?: "Note";
     id: string;
-    createdAt: Date;
+    createdAt: string;
     title: string;
   }>;
 };
@@ -622,10 +623,136 @@ export type IProgressQuery = {
     __typename?: "Progress";
     id: string;
     action: string;
-    createdAt: Date;
+    createdAt: string;
     status: IProgressStatus;
-    logs: Array<{ __typename?: "ProgressLog"; createdAt: Date; text: string }>;
+    logs: Array<{
+      __typename?: "ProgressLog";
+      createdAt: string;
+      text: string;
+    }>;
   };
+};
+
+export type IProjectConfigsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type IProjectConfigsQuery = {
+  __typename?: "Query";
+  user: {
+    __typename?: "User";
+    projectConfigs: Array<{
+      __typename?: "ProjectConfig";
+      adapterType: IProjectAdapterType;
+      host: string;
+      email: string;
+      apiToken: string;
+    }>;
+  };
+};
+
+export type IUpdateProjectConfigMutationVariables = Exact<{
+  params: IUpdateProjectConfigParams;
+}>;
+
+export type IUpdateProjectConfigMutation = {
+  __typename?: "Mutation";
+  updated: boolean;
+};
+
+export type IDeleteProjectConfigMutationVariables = Exact<{
+  adapterType: IProjectAdapterType;
+}>;
+
+export type IDeleteProjectConfigMutation = {
+  __typename?: "Mutation";
+  deleted: boolean;
+};
+
+export type IProjectBoardsQueryVariables = Exact<{
+  adapterType: IProjectAdapterType;
+}>;
+
+export type IProjectBoardsQuery = {
+  __typename?: "Query";
+  project: {
+    __typename?: "Project";
+    config: { __typename?: "ProjectConfig"; adapterType: IProjectAdapterType };
+    boards: Array<{ __typename?: "ProjectBoard"; id: number; name: string }>;
+  };
+};
+
+export type IProjectSprintsQueryVariables = Exact<{
+  adapterType: IProjectAdapterType;
+  boardId: Scalars["Int"]["input"];
+}>;
+
+export type IProjectSprintsQuery = {
+  __typename?: "Query";
+  project: {
+    __typename?: "Project";
+    config: { __typename?: "ProjectConfig"; adapterType: IProjectAdapterType };
+    sprints: Array<{
+      __typename?: "ProjectSprint";
+      id: number;
+      name: string;
+      state: string;
+      start?: string | undefined;
+      end?: string | undefined;
+    }>;
+  };
+};
+
+export type IProjectIssuesQueryVariables = Exact<{
+  adapterType: IProjectAdapterType;
+  sprintId: Scalars["Int"]["input"];
+}>;
+
+export type IProjectIssuesQuery = {
+  __typename?: "Query";
+  project: {
+    __typename?: "Project";
+    config: { __typename?: "ProjectConfig"; adapterType: IProjectAdapterType };
+    issues: Array<{
+      __typename?: "ProjectIssue";
+      id: string;
+      key: string;
+      type: string;
+      state: string;
+      title: string;
+      storyPoints?: number | undefined;
+      implementer?:
+        | {
+            __typename?: "ProjectUser";
+            id: string;
+            name: string;
+            email?: string | undefined;
+          }
+        | undefined;
+      sprints: Array<{
+        __typename?: "ProjectSprint";
+        id: number;
+        name: string;
+        state: string;
+        start?: string | undefined;
+        end?: string | undefined;
+      }>;
+      statusDurations: Array<{
+        __typename?: "ProjectIssueStatusDuration";
+        status: string;
+        workingDays: number;
+        workingDuration: number;
+        fullDuration: number;
+      }>;
+    }>;
+  };
+};
+
+export type IProjectSprintFragmentFragment = {
+  __typename?: "ProjectSprint";
+  id: number;
+  name: string;
+  state: string;
+  start?: string | undefined;
+  end?: string | undefined;
 };
 
 export const StorableAuthTokenFragmentDoc = gql`
@@ -647,6 +774,15 @@ export const ListNoteFragmentDoc = gql`
   id
   createdAt
   title
+}
+    `;
+export const ProjectSprintFragmentFragmentDoc = gql`
+    fragment ProjectSprintFragment on ProjectSprint {
+  id
+  name
+  state
+  start
+  end
 }
     `;
 export const CreateAuthTokenGoogleDocument = gql`
@@ -1525,4 +1661,445 @@ export type ProgressSuspenseQueryHookResult = ReturnType<
 export type ProgressQueryResult = Apollo.QueryResult<
   IProgressQuery,
   IProgressQueryVariables
+>;
+export const ProjectConfigsDocument = gql`
+    query projectConfigs {
+  user {
+    projectConfigs {
+      adapterType
+      host
+      email
+      apiToken
+    }
+  }
+}
+    `;
+
+/**
+ * __useProjectConfigsQuery__
+ *
+ * To run a query within a React component, call `useProjectConfigsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProjectConfigsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProjectConfigsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useProjectConfigsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    IProjectConfigsQuery,
+    IProjectConfigsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<IProjectConfigsQuery, IProjectConfigsQueryVariables>(
+    ProjectConfigsDocument,
+    options,
+  );
+}
+export function useProjectConfigsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    IProjectConfigsQuery,
+    IProjectConfigsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    IProjectConfigsQuery,
+    IProjectConfigsQueryVariables
+  >(ProjectConfigsDocument, options);
+}
+export function useProjectConfigsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    IProjectConfigsQuery,
+    IProjectConfigsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    IProjectConfigsQuery,
+    IProjectConfigsQueryVariables
+  >(ProjectConfigsDocument, options);
+}
+export type ProjectConfigsQueryHookResult = ReturnType<
+  typeof useProjectConfigsQuery
+>;
+export type ProjectConfigsLazyQueryHookResult = ReturnType<
+  typeof useProjectConfigsLazyQuery
+>;
+export type ProjectConfigsSuspenseQueryHookResult = ReturnType<
+  typeof useProjectConfigsSuspenseQuery
+>;
+export type ProjectConfigsQueryResult = Apollo.QueryResult<
+  IProjectConfigsQuery,
+  IProjectConfigsQueryVariables
+>;
+export const UpdateProjectConfigDocument = gql`
+    mutation updateProjectConfig($params: UpdateProjectConfigParams!) {
+  updated: updateProjectConfig(params: $params)
+}
+    `;
+export type IUpdateProjectConfigMutationFn = Apollo.MutationFunction<
+  IUpdateProjectConfigMutation,
+  IUpdateProjectConfigMutationVariables
+>;
+
+/**
+ * __useUpdateProjectConfigMutation__
+ *
+ * To run a mutation, you first call `useUpdateProjectConfigMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProjectConfigMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProjectConfigMutation, { data, loading, error }] = useUpdateProjectConfigMutation({
+ *   variables: {
+ *      params: // value for 'params'
+ *   },
+ * });
+ */
+export function useUpdateProjectConfigMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    IUpdateProjectConfigMutation,
+    IUpdateProjectConfigMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    IUpdateProjectConfigMutation,
+    IUpdateProjectConfigMutationVariables
+  >(UpdateProjectConfigDocument, options);
+}
+export type UpdateProjectConfigMutationHookResult = ReturnType<
+  typeof useUpdateProjectConfigMutation
+>;
+export type UpdateProjectConfigMutationResult =
+  Apollo.MutationResult<IUpdateProjectConfigMutation>;
+export type UpdateProjectConfigMutationOptions = Apollo.BaseMutationOptions<
+  IUpdateProjectConfigMutation,
+  IUpdateProjectConfigMutationVariables
+>;
+export const DeleteProjectConfigDocument = gql`
+    mutation deleteProjectConfig($adapterType: ProjectAdapterType!) {
+  deleted: deleteProjectConfig(adapterType: $adapterType)
+}
+    `;
+export type IDeleteProjectConfigMutationFn = Apollo.MutationFunction<
+  IDeleteProjectConfigMutation,
+  IDeleteProjectConfigMutationVariables
+>;
+
+/**
+ * __useDeleteProjectConfigMutation__
+ *
+ * To run a mutation, you first call `useDeleteProjectConfigMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteProjectConfigMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteProjectConfigMutation, { data, loading, error }] = useDeleteProjectConfigMutation({
+ *   variables: {
+ *      adapterType: // value for 'adapterType'
+ *   },
+ * });
+ */
+export function useDeleteProjectConfigMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    IDeleteProjectConfigMutation,
+    IDeleteProjectConfigMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    IDeleteProjectConfigMutation,
+    IDeleteProjectConfigMutationVariables
+  >(DeleteProjectConfigDocument, options);
+}
+export type DeleteProjectConfigMutationHookResult = ReturnType<
+  typeof useDeleteProjectConfigMutation
+>;
+export type DeleteProjectConfigMutationResult =
+  Apollo.MutationResult<IDeleteProjectConfigMutation>;
+export type DeleteProjectConfigMutationOptions = Apollo.BaseMutationOptions<
+  IDeleteProjectConfigMutation,
+  IDeleteProjectConfigMutationVariables
+>;
+export const ProjectBoardsDocument = gql`
+    query projectBoards($adapterType: ProjectAdapterType!) {
+  project(adapterType: $adapterType) {
+    config {
+      adapterType
+    }
+    boards {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useProjectBoardsQuery__
+ *
+ * To run a query within a React component, call `useProjectBoardsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProjectBoardsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProjectBoardsQuery({
+ *   variables: {
+ *      adapterType: // value for 'adapterType'
+ *   },
+ * });
+ */
+export function useProjectBoardsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    IProjectBoardsQuery,
+    IProjectBoardsQueryVariables
+  > &
+    (
+      | { variables: IProjectBoardsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<IProjectBoardsQuery, IProjectBoardsQueryVariables>(
+    ProjectBoardsDocument,
+    options,
+  );
+}
+export function useProjectBoardsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    IProjectBoardsQuery,
+    IProjectBoardsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<IProjectBoardsQuery, IProjectBoardsQueryVariables>(
+    ProjectBoardsDocument,
+    options,
+  );
+}
+export function useProjectBoardsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    IProjectBoardsQuery,
+    IProjectBoardsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    IProjectBoardsQuery,
+    IProjectBoardsQueryVariables
+  >(ProjectBoardsDocument, options);
+}
+export type ProjectBoardsQueryHookResult = ReturnType<
+  typeof useProjectBoardsQuery
+>;
+export type ProjectBoardsLazyQueryHookResult = ReturnType<
+  typeof useProjectBoardsLazyQuery
+>;
+export type ProjectBoardsSuspenseQueryHookResult = ReturnType<
+  typeof useProjectBoardsSuspenseQuery
+>;
+export type ProjectBoardsQueryResult = Apollo.QueryResult<
+  IProjectBoardsQuery,
+  IProjectBoardsQueryVariables
+>;
+export const ProjectSprintsDocument = gql`
+    query projectSprints($adapterType: ProjectAdapterType!, $boardId: Int!) {
+  project(adapterType: $adapterType) {
+    config {
+      adapterType
+    }
+    sprints(boardId: $boardId) {
+      ...ProjectSprintFragment
+    }
+  }
+}
+    ${ProjectSprintFragmentFragmentDoc}`;
+
+/**
+ * __useProjectSprintsQuery__
+ *
+ * To run a query within a React component, call `useProjectSprintsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProjectSprintsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProjectSprintsQuery({
+ *   variables: {
+ *      adapterType: // value for 'adapterType'
+ *      boardId: // value for 'boardId'
+ *   },
+ * });
+ */
+export function useProjectSprintsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    IProjectSprintsQuery,
+    IProjectSprintsQueryVariables
+  > &
+    (
+      | { variables: IProjectSprintsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<IProjectSprintsQuery, IProjectSprintsQueryVariables>(
+    ProjectSprintsDocument,
+    options,
+  );
+}
+export function useProjectSprintsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    IProjectSprintsQuery,
+    IProjectSprintsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    IProjectSprintsQuery,
+    IProjectSprintsQueryVariables
+  >(ProjectSprintsDocument, options);
+}
+export function useProjectSprintsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    IProjectSprintsQuery,
+    IProjectSprintsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    IProjectSprintsQuery,
+    IProjectSprintsQueryVariables
+  >(ProjectSprintsDocument, options);
+}
+export type ProjectSprintsQueryHookResult = ReturnType<
+  typeof useProjectSprintsQuery
+>;
+export type ProjectSprintsLazyQueryHookResult = ReturnType<
+  typeof useProjectSprintsLazyQuery
+>;
+export type ProjectSprintsSuspenseQueryHookResult = ReturnType<
+  typeof useProjectSprintsSuspenseQuery
+>;
+export type ProjectSprintsQueryResult = Apollo.QueryResult<
+  IProjectSprintsQuery,
+  IProjectSprintsQueryVariables
+>;
+export const ProjectIssuesDocument = gql`
+    query projectIssues($adapterType: ProjectAdapterType!, $sprintId: Int!) {
+  project(adapterType: $adapterType) {
+    config {
+      adapterType
+    }
+    issues(sprintId: $sprintId) {
+      id
+      key
+      type
+      state
+      title
+      storyPoints
+      implementer {
+        id
+        name
+        email
+      }
+      sprints {
+        ...ProjectSprintFragment
+      }
+      statusDurations {
+        status
+        workingDays
+        workingDuration
+        fullDuration
+      }
+    }
+  }
+}
+    ${ProjectSprintFragmentFragmentDoc}`;
+
+/**
+ * __useProjectIssuesQuery__
+ *
+ * To run a query within a React component, call `useProjectIssuesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProjectIssuesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProjectIssuesQuery({
+ *   variables: {
+ *      adapterType: // value for 'adapterType'
+ *      sprintId: // value for 'sprintId'
+ *   },
+ * });
+ */
+export function useProjectIssuesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    IProjectIssuesQuery,
+    IProjectIssuesQueryVariables
+  > &
+    (
+      | { variables: IProjectIssuesQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<IProjectIssuesQuery, IProjectIssuesQueryVariables>(
+    ProjectIssuesDocument,
+    options,
+  );
+}
+export function useProjectIssuesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    IProjectIssuesQuery,
+    IProjectIssuesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<IProjectIssuesQuery, IProjectIssuesQueryVariables>(
+    ProjectIssuesDocument,
+    options,
+  );
+}
+export function useProjectIssuesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    IProjectIssuesQuery,
+    IProjectIssuesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    IProjectIssuesQuery,
+    IProjectIssuesQueryVariables
+  >(ProjectIssuesDocument, options);
+}
+export type ProjectIssuesQueryHookResult = ReturnType<
+  typeof useProjectIssuesQuery
+>;
+export type ProjectIssuesLazyQueryHookResult = ReturnType<
+  typeof useProjectIssuesLazyQuery
+>;
+export type ProjectIssuesSuspenseQueryHookResult = ReturnType<
+  typeof useProjectIssuesSuspenseQuery
+>;
+export type ProjectIssuesQueryResult = Apollo.QueryResult<
+  IProjectIssuesQuery,
+  IProjectIssuesQueryVariables
 >;

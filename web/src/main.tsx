@@ -18,6 +18,8 @@ import { MediaRoute } from "./routes/media.route";
 import { MzkRoute } from "./routes/mzk.route";
 import { NoteRoute } from "./routes/note.route";
 import { NotesRoute } from "./routes/notes.route";
+import { ProjectConfigsRoute } from "./routes/project-configs.route";
+import { ProjectRoute } from "./routes/project.route";
 import { RegisterRoute } from "./routes/register.route";
 import { RootRoute } from "./routes/root.route";
 
@@ -87,6 +89,22 @@ const routes: RouteObject[] = [
         element: (
           <AuthGuard permissions={[IAuthPermission.Notes]}>
             <NotesRoute />
+          </AuthGuard>
+        ),
+      },
+      {
+        path: "/project-configs",
+        element: (
+          <AuthGuard permissions={[IAuthPermission.Projects]}>
+            <ProjectConfigsRoute />
+          </AuthGuard>
+        ),
+      },
+      {
+        path: "/project/:adapterType",
+        element: (
+          <AuthGuard permissions={[IAuthPermission.Projects]}>
+            <ProjectRoute />
           </AuthGuard>
         ),
       },

@@ -56,19 +56,21 @@ export class JiraProjectAdapter implements BaseProjectAdapter {
       this.jira.getIssueFields(config),
     ]);
 
-    const sprintsField = fields.find((f) => f.name === "Sprint");
-    const storyPointsField = fields.find((f) => f.name === "Story Points");
-    const techImplementerField = fields.find(
-      (f) => f.name === "Tech Implementer",
-    );
+    const {
+      Sprint: sprintsFieldId,
+      "Story Points": storyPointsFieldId,
+      "Tech Implementer": techImplementerFieldId,
+    } = Object.fromEntries(fields.map((f) => [f.name ?? "", f.id]));
+    if (!(sprintsFieldId && storyPointsFieldId && techImplementerFieldId)) {
+      throw new Error("Missing a required custom field");
+    }
 
     const issueToGql = async (issue: JiraIssue): Promise<IProjectIssue> => {
-      console.log(issue.fields?.timespent);
       const storyPoints: number | undefined =
-        issue.fields?.[storyPointsField?.id ?? ""];
-      const sprints: JiraSprint[] = issue.fields?.[sprintsField?.id ?? ""];
-      const techImplementer: JiraUser =
-        issue.fields?.[techImplementerField?.id ?? ""];
+        issue.fields?.[storyPointsFieldId];
+      const sprints: JiraSprint[] = issue.fields?.[sprintsFieldId];
+      const techImplementer: JiraUser | undefined =
+        issue.fields?.[techImplementerFieldId];
       if (
         issue.changelog &&
         issue.changelog.maxResults === issue.changelog.histories?.length
@@ -90,11 +92,13 @@ export class JiraProjectAdapter implements BaseProjectAdapter {
           issue.key ?? "",
           issue.changelog?.histories ?? [],
         ),
-        implementer: {
-          id: techImplementer.accountId,
-          name: techImplementer.displayName,
-          email: techImplementer.emailAddress,
-        },
+        implementer: techImplementer
+          ? {
+              id: techImplementer.accountId,
+              name: techImplementer.displayName,
+              email: techImplementer.emailAddress,
+            }
+          : undefined,
       };
     };
 

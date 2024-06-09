@@ -112,6 +112,14 @@ export const HomeLinks: React.FC<HomeLinksProps> = observer(
               </>
             ),
           },
+          bottomLeft: {
+            element: authStore.isAuthorized(IAuthPermission.Projects) ? (
+              <RexLink to="/project-configs" textAlign="center">
+                <Typography variant="h3">🐗</Typography>
+                <Typography>View project statistics</Typography>
+              </RexLink>
+            ) : null,
+          },
           bottomCenter: {
             styles: { paddingTop: "25%" },
             element: (

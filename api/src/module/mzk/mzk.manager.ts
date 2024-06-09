@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { injectable } from "@athenajs/core";
+import { Logger, injectable } from "@athenajs/core";
 import { RexConfig } from "../../config.js";
 import { ITranscriptionStatus } from "../../graphql.js";
 import { TranscriptionModel, UserModel } from "../../model/index.js";
@@ -20,6 +20,7 @@ export class MzkManager {
     private readonly db: DatabaseService,
     private readonly docker: DockerService,
     private readonly googleCloud: GoogleCloudService,
+    private readonly logger: Logger,
     private readonly mediaManager: MediaManager,
   ) {}
 
@@ -123,7 +124,7 @@ export class MzkManager {
         void this.updateStatus(transcription, ITranscriptionStatus.Complete);
       })
       .catch((err) => {
-        console.error(err);
+        this.logger.error(err);
         void this.updateStatus(transcription, ITranscriptionStatus.Errored);
       });
   }
@@ -167,15 +168,15 @@ export class MzkManager {
       outputPath,
     ];
     const python = spawn("python3", args);
-    python.stdout.on("data", (chunk) => console.log(chunk.toString()));
-    python.stderr.on("data", (chunk) => console.error(chunk.toString()));
+    python.stdout.on("data", (chunk) => process.stdout.write(chunk.toString()));
+    python.stderr.on("data", (chunk) => process.stderr.write(chunk.toString()));
     python.on("error", (err) => {
-      console.error(err);
+      this.logger.error(err);
       void this.updateStatus(transcription, ITranscriptionStatus.Errored);
     });
     python.on("close", (code) => {
       if (code !== 0) {
-        console.error(
+        this.logger.error(
           new Error(`Omnizart failed to execute with code ${code}`),
         );
         void this.updateStatus(transcription, ITranscriptionStatus.Errored);

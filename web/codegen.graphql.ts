@@ -6,7 +6,7 @@ const config: CodegenConfig = {
     maybeValue: "T | undefined",
     typesPrefix: "I",
     scalars: {
-      DateTime: "Date",
+      DateTime: "string",
       Upload: "File",
     },
   },
