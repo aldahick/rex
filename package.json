@@ -19,11 +19,11 @@
     }
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.7.3",
+    "@biomejs/biome": "^1.8.2",
     "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/typescript": "^4.0.7",
     "@graphql-codegen/typescript-operations": "^4.2.1",
-    "tsx": "^4.11.0",
-    "typescript": "^5.4.5"
+    "tsx": "^4.15.7",
+    "typescript": "^5.5.2"
   }
 }
