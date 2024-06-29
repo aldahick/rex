@@ -8,20 +8,20 @@ export class UserTable extends BaseTable {
   table = "users";
   columns = this.setColumns((t) => ({
     id: t.uuid().primaryKey(),
-    email: t.varchar().unique(),
-    username: t.varchar().nullable(),
-    passwordHash: t.varchar().nullable(),
-    jiraHost: t.varchar().nullable(),
-    jiraApiToken: t.varchar().nullable(),
+    email: t.text().unique(),
+    username: t.text().nullable(),
+    passwordHash: t.text().nullable(),
+    jiraHost: t.text().nullable(),
+    jiraApiToken: t.text().nullable(),
   }));
   relations = {
     notes: this.hasMany(() => UserNoteTable, {
-      primaryKey: "id",
-      foreignKey: "userId",
+      columns: ["id"],
+      references: ["userId"],
     }),
     roles: this.hasMany(() => UserRoleTable, {
-      primaryKey: "id",
-      foreignKey: "userId",
+      columns: ["id"],
+      references: ["userId"],
     }),
   };
 }

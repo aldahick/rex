@@ -11,11 +11,11 @@ change(async (db) => {
   );
   await db.createTable("steam_games", (t) => ({
     id: t.integer().primaryKey(),
-    name: t.varchar(),
+    name: t.text(),
   }));
   await db.createTable("progress", (t) => ({
     id: t.uuid().primaryKey(),
-    action: t.varchar(),
+    action: t.text(),
     createdAt: t.timestamp(),
     status: t.enum("progress_status"),
   }));
@@ -25,18 +25,18 @@ change(async (db) => {
       .primaryKey()
       .foreignKey(() => ProgressTable, "id"),
     createdAt: t.timestamp().primaryKey(),
-    text: t.varchar(),
+    text: t.text(),
   }));
   await db.createTable("roles", (t) => ({
     id: t.uuid().primaryKey(),
-    name: t.varchar(),
-    permissions: t.array(t.varchar()),
+    name: t.text(),
+    permissions: t.array(t.text()),
   }));
   await db.createTable("users", (t) => ({
     id: t.uuid().primaryKey(),
-    email: t.varchar().unique(),
-    username: t.varchar().nullable(),
-    passwordHash: t.varchar().nullable(),
+    email: t.text().unique(),
+    username: t.text().nullable(),
+    passwordHash: t.text().nullable(),
   }));
   await db.createTable("user_roles", (t) => ({
     userId: t
@@ -51,8 +51,8 @@ change(async (db) => {
   await db.createTable("user_notes", (t) => ({
     id: t.uuid().primaryKey(),
     userId: t.uuid().foreignKey(() => UserTable, "id"),
-    title: t.varchar(),
-    body: t.varchar(),
+    title: t.text(),
+    body: t.text(),
     createdAt: t.timestamp(),
   }));
 });

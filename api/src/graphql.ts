@@ -42,7 +42,6 @@ export enum IAuthPermission {
   Media = "MEDIA",
   Notes = "NOTES",
   Projects = "PROJECTS",
-  Transcriptions = "TRANSCRIPTIONS",
 }
 
 export type IAuthToken = {
@@ -89,7 +88,6 @@ export type IMutation = {
   fetchSteamGames: IProgress;
   removeNote: Scalars["Boolean"]["output"];
   setUserPassword: Scalars["Boolean"]["output"];
-  startTranscription: ITranscription;
   updateNoteBody: Scalars["Boolean"]["output"];
   updateProjectConfig: Scalars["Boolean"]["output"];
   updateRole: Scalars["Boolean"]["output"];
@@ -163,10 +161,6 @@ export type IMutationRemoveNoteArgs = {
 export type IMutationSetUserPasswordArgs = {
   password: Scalars["String"]["input"];
   userId: Scalars["ID"]["input"];
-};
-
-export type IMutationStartTranscriptionArgs = {
-  mediaKey: Scalars["String"]["input"];
 };
 
 export type IMutationUpdateNoteBodyArgs = {
@@ -302,7 +296,6 @@ export type IQuery = {
   steamGames: ISteamGame[];
   steamPlayer: ISteamPlayer;
   steamPlayers: ISteamPlayer[];
-  transcriptions: ITranscription[];
   user: IUser;
   users: IUser[];
 };
@@ -366,21 +359,6 @@ export type ISteamPlayer = {
   playingGame?: Maybe<ISteamGame>;
   profileUrl: Scalars["String"]["output"];
 };
-
-export type ITranscription = {
-  __typename?: "Transcription";
-  filename: Scalars["String"]["output"];
-  id: Scalars["ID"]["output"];
-  pdf?: Maybe<IMediaItem>;
-  status: ITranscriptionStatus;
-};
-
-export enum ITranscriptionStatus {
-  Complete = "COMPLETE",
-  Created = "CREATED",
-  Errored = "ERRORED",
-  Started = "STARTED",
-}
 
 export type IUpdateProjectConfigParams = {
   adapterType: IProjectAdapterType;

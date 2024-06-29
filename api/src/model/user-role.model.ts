@@ -12,12 +12,12 @@ export class UserRoleTable extends BaseTable {
   }));
   relations = {
     user: this.hasOne(() => UserTable, {
-      primaryKey: "userId",
-      foreignKey: "id",
+      columns: ["userId"],
+      references: ["id"],
     }),
     role: this.hasOne(() => RoleTable, {
-      primaryKey: "roleId",
-      foreignKey: "id",
+      columns: ["roleId"],
+      references: ["id"],
     }),
   };
 }

@@ -11,7 +11,7 @@
     "build:web": "cd web && pnpm build"
   },
   "engines": {
-    "node": "^20.13"
+    "node": "^20.15"
   },
   "pnpm": {
     "overrides": {
@@ -19,11 +19,11 @@
     }
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.8.2",
+    "@biomejs/biome": "^1.8.3",
     "@graphql-codegen/cli": "^5.0.2",
-    "@graphql-codegen/typescript": "^4.0.7",
-    "@graphql-codegen/typescript-operations": "^4.2.1",
-    "tsx": "^4.15.7",
+    "@graphql-codegen/typescript": "^4.0.8",
+    "@graphql-codegen/typescript-operations": "^4.2.2",
+    "tsx": "^4.16.0",
     "typescript": "^5.5.2"
   }
 }

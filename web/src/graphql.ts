@@ -45,7 +45,6 @@ export enum IAuthPermission {
   Media = "MEDIA",
   Notes = "NOTES",
   Projects = "PROJECTS",
-  Transcriptions = "TRANSCRIPTIONS",
 }
 
 export type IAuthToken = {
@@ -92,7 +91,6 @@ export type IMutation = {
   fetchSteamGames: IProgress;
   removeNote: Scalars["Boolean"]["output"];
   setUserPassword: Scalars["Boolean"]["output"];
-  startTranscription: ITranscription;
   updateNoteBody: Scalars["Boolean"]["output"];
   updateProjectConfig: Scalars["Boolean"]["output"];
   updateRole: Scalars["Boolean"]["output"];
@@ -166,10 +164,6 @@ export type IMutationRemoveNoteArgs = {
 export type IMutationSetUserPasswordArgs = {
   password: Scalars["String"]["input"];
   userId: Scalars["ID"]["input"];
-};
-
-export type IMutationStartTranscriptionArgs = {
-  mediaKey: Scalars["String"]["input"];
 };
 
 export type IMutationUpdateNoteBodyArgs = {
@@ -305,7 +299,6 @@ export type IQuery = {
   steamGames: ISteamGame[];
   steamPlayer: ISteamPlayer;
   steamPlayers: ISteamPlayer[];
-  transcriptions: ITranscription[];
   user: IUser;
   users: IUser[];
 };
@@ -369,21 +362,6 @@ export type ISteamPlayer = {
   playingGame?: Maybe<ISteamGame>;
   profileUrl: Scalars["String"]["output"];
 };
-
-export type ITranscription = {
-  __typename?: "Transcription";
-  filename: Scalars["String"]["output"];
-  id: Scalars["ID"]["output"];
-  pdf?: Maybe<IMediaItem>;
-  status: ITranscriptionStatus;
-};
-
-export enum ITranscriptionStatus {
-  Complete = "COMPLETE",
-  Created = "CREATED",
-  Errored = "ERRORED",
-  Started = "STARTED",
-}
 
 export type IUpdateProjectConfigParams = {
   adapterType: IProjectAdapterType;
@@ -527,28 +505,6 @@ export type IDeleteMediaMutationVariables = Exact<{
 export type IDeleteMediaMutation = {
   __typename?: "Mutation";
   deleteMedia: boolean;
-};
-
-export type ITranscriptionsQueryVariables = Exact<{ [key: string]: never }>;
-
-export type ITranscriptionsQuery = {
-  __typename?: "Query";
-  transcriptions: Array<{
-    __typename?: "Transcription";
-    id: string;
-    status: ITranscriptionStatus;
-    filename: string;
-    pdf?: { __typename?: "MediaItem"; key: string } | undefined;
-  }>;
-};
-
-export type IStartTranscriptionMutationVariables = Exact<{
-  key: Scalars["String"]["input"];
-}>;
-
-export type IStartTranscriptionMutation = {
-  __typename?: "Mutation";
-  transcription: { __typename?: "Transcription"; id: string };
 };
 
 export type ICreateNoteMutationVariables = Exact<{
@@ -1178,133 +1134,6 @@ export type DeleteMediaMutationResult =
 export type DeleteMediaMutationOptions = Apollo.BaseMutationOptions<
   IDeleteMediaMutation,
   IDeleteMediaMutationVariables
->;
-export const TranscriptionsDocument = gql`
-    query Transcriptions {
-  transcriptions {
-    id
-    status
-    filename
-    pdf {
-      key
-    }
-  }
-}
-    `;
-
-/**
- * __useTranscriptionsQuery__
- *
- * To run a query within a React component, call `useTranscriptionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useTranscriptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useTranscriptionsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useTranscriptionsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    ITranscriptionsQuery,
-    ITranscriptionsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<ITranscriptionsQuery, ITranscriptionsQueryVariables>(
-    TranscriptionsDocument,
-    options,
-  );
-}
-export function useTranscriptionsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    ITranscriptionsQuery,
-    ITranscriptionsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    ITranscriptionsQuery,
-    ITranscriptionsQueryVariables
-  >(TranscriptionsDocument, options);
-}
-export function useTranscriptionsSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    ITranscriptionsQuery,
-    ITranscriptionsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    ITranscriptionsQuery,
-    ITranscriptionsQueryVariables
-  >(TranscriptionsDocument, options);
-}
-export type TranscriptionsQueryHookResult = ReturnType<
-  typeof useTranscriptionsQuery
->;
-export type TranscriptionsLazyQueryHookResult = ReturnType<
-  typeof useTranscriptionsLazyQuery
->;
-export type TranscriptionsSuspenseQueryHookResult = ReturnType<
-  typeof useTranscriptionsSuspenseQuery
->;
-export type TranscriptionsQueryResult = Apollo.QueryResult<
-  ITranscriptionsQuery,
-  ITranscriptionsQueryVariables
->;
-export const StartTranscriptionDocument = gql`
-    mutation StartTranscription($key: String!) {
-  transcription: startTranscription(mediaKey: $key) {
-    id
-  }
-}
-    `;
-export type IStartTranscriptionMutationFn = Apollo.MutationFunction<
-  IStartTranscriptionMutation,
-  IStartTranscriptionMutationVariables
->;
-
-/**
- * __useStartTranscriptionMutation__
- *
- * To run a mutation, you first call `useStartTranscriptionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useStartTranscriptionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [startTranscriptionMutation, { data, loading, error }] = useStartTranscriptionMutation({
- *   variables: {
- *      key: // value for 'key'
- *   },
- * });
- */
-export function useStartTranscriptionMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    IStartTranscriptionMutation,
-    IStartTranscriptionMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    IStartTranscriptionMutation,
-    IStartTranscriptionMutationVariables
-  >(StartTranscriptionDocument, options);
-}
-export type StartTranscriptionMutationHookResult = ReturnType<
-  typeof useStartTranscriptionMutation
->;
-export type StartTranscriptionMutationResult =
-  Apollo.MutationResult<IStartTranscriptionMutation>;
-export type StartTranscriptionMutationOptions = Apollo.BaseMutationOptions<
-  IStartTranscriptionMutation,
-  IStartTranscriptionMutationVariables
 >;
 export const CreateNoteDocument = gql`
     mutation CreateNote($title: String!) {

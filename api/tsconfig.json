@@ -9,6 +9,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "incremental": true,
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
     "skipLibCheck": true,
     "strict": true,
     "noImplicitAny": true,

@@ -10,9 +10,9 @@ change(async (db) => {
         .uuid()
         .foreignKey(() => UserTable, "id", { onDelete: "CASCADE" }),
       adapterType: t.enum("project_adapter_type"),
-      host: t.varchar(),
-      email: t.varchar(),
-      apiToken: t.varchar(),
+      host: t.text(),
+      email: t.text(),
+      apiToken: t.text(),
     }),
     (t) => [t.primaryKey(["userId", "adapterType"])],
   );

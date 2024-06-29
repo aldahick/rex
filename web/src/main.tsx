@@ -15,7 +15,6 @@ import { ErrorRoute } from "./routes/error.route";
 import { LoginRoute } from "./routes/login.route";
 import { LogoutRoute } from "./routes/logout.route";
 import { MediaRoute } from "./routes/media.route";
-import { MzkRoute } from "./routes/mzk.route";
 import { NoteRoute } from "./routes/note.route";
 import { NotesRoute } from "./routes/notes.route";
 import { ProjectConfigsRoute } from "./routes/project-configs.route";
@@ -60,19 +59,6 @@ const routes: RouteObject[] = [
         element: (
           <AuthGuard permissions={[IAuthPermission.Media]}>
             <MediaRoute />
-          </AuthGuard>
-        ),
-      },
-      {
-        path: "/mzk",
-        element: (
-          <AuthGuard
-            permissions={[
-              IAuthPermission.Media,
-              IAuthPermission.Transcriptions,
-            ]}
-          >
-            <MzkRoute />
           </AuthGuard>
         ),
       },

@@ -1,14 +1,10 @@
 import "reflect-metadata";
 
-import "./module/generic/help.command.js";
-import "./module/steam/steamGames.command.js";
-
 import "./module/auth/auth.resolver.js";
 import "./module/config/config.resolver.js";
 import "./module/generic/datetime.resolver.js";
 import "./module/media/media.resolver.js";
 import "./module/media/sharex.controller.js";
-import "./module/mzk/mzk.resolver.js";
 import "./module/note/note.resolver.js";
 import "./module/progress/progress.resolver.js";
 import "./module/project/project.resolver.js";

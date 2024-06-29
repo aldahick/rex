@@ -29,5 +29,4 @@ enum AuthPermission {
   MEDIA
   NOTES
   PROJECTS
-  TRANSCRIPTIONS
 }

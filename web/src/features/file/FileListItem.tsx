@@ -2,9 +2,8 @@ import AudioIcon from "@mui/icons-material/AudioFile";
 import SeriesIcon from "@mui/icons-material/Collections";
 import FolderIcon from "@mui/icons-material/Folder";
 import ImageIcon from "@mui/icons-material/Image";
-import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import VideoIcon from "@mui/icons-material/VideoFile";
-import { Grid, IconButton, Typography, styled } from "@mui/material";
+import { Grid, Typography, styled } from "@mui/material";
 import mime from "mime";
 import React, { useState } from "react";
 import { FileDeleteButton } from "./FileDeleteButton";
@@ -43,7 +42,6 @@ export interface FileListItemCallbacks {
   onDelete: (entry: FileTreeEntry) => void;
   onDirChange: (value: string) => void;
   onFileOpen: (entry: FileTreeEntry) => void;
-  onTranscribe: (entry: FileTreeEntry) => void;
 }
 
 export interface FileListItemProps extends FileListItemCallbacks {
@@ -55,7 +53,6 @@ export const FileListItem: React.FC<FileListItemProps> = ({
   onDelete,
   onDirChange,
   onFileOpen,
-  onTranscribe,
 }) => {
   const [hover, setHover] = useState(false);
 
@@ -71,9 +68,6 @@ export const FileListItem: React.FC<FileListItemProps> = ({
   };
   const handleMouseLeave = () => {
     setHover(false);
-  };
-  const handleTranscribe = () => {
-    onTranscribe(entry);
   };
 
   const [Icon, type] = getFileEntryType(entry);
@@ -92,11 +86,6 @@ export const FileListItem: React.FC<FileListItemProps> = ({
       </PathTypography>
       <Grid item xs={true} onClick={handleClick} />
       <Grid item style={hover ? {} : { opacity: 0 }}>
-        {type?.startsWith("audio/") ? (
-          <IconButton onClick={handleTranscribe}>
-            <MusicNoteIcon />
-          </IconButton>
-        ) : null}
         <FileDeleteButton entry={entry} onDelete={onDelete} />
       </Grid>
     </Grid>

@@ -13,17 +13,17 @@ export class ProjectConfigTable extends BaseTable {
         .uuid()
         .foreignKey(() => UserTable, "id", { onDelete: "CASCADE" }),
       adapterType: t.tsEnum("project_adapter_type", IProjectAdapterType),
-      host: t.varchar(),
-      email: t.varchar(),
-      apiToken: t.varchar(),
+      host: t.text(),
+      email: t.text(),
+      apiToken: t.text(),
     }),
     (t) => [t.primaryKey(["userId", "adapterType"])],
   );
 
   relations = {
     user: this.hasOne(() => UserTable, {
-      primaryKey: "userId",
-      foreignKey: "id",
+      columns: ["userId"],
+      references: ["id"],
       required: true,
     }),
   };

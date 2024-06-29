@@ -7,13 +7,13 @@ export class RoleTable extends BaseTable {
   table = "roles";
   columns = this.setColumns((t) => ({
     id: t.uuid().primaryKey(),
-    name: t.varchar(),
-    permissions: t.array(t.varchar()),
+    name: t.text(),
+    permissions: t.array(t.text()),
   }));
   relations = {
     users: this.hasMany(() => UserRoleTable, {
-      primaryKey: "id",
-      foreignKey: "roleId",
+      columns: ["id"],
+      references: ["roleId"],
     }),
   };
 }

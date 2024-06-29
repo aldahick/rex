@@ -1,4 +1,3 @@
-import { Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
@@ -10,12 +9,10 @@ import {
   useCreateMediaUploadMutation,
   useDeleteMediaMutation,
   useMediaItemQuery,
-  useStartTranscriptionMutation,
 } from "../../graphql";
 import { useStatus, useStores } from "../../hooks";
 import { FileBrowser } from "../file/FileBrowser";
 import { FileTreeEntry, getFileEntryAt } from "../file/FileTreeEntry";
-import { RexLink } from "../utils/RexLink";
 import { MediaContentView } from "./MediaContentView";
 
 export const mediaItemToEntry = ({ key, type }: IMediaItem): FileTreeEntry => ({
@@ -49,7 +46,6 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = observer(({ dir }) => {
   const [selected, setSelected] = useState<FileTreeEntry>();
   const [createMediaUpload] = useCreateMediaUploadMutation();
   const [deleteMedia] = useDeleteMediaMutation();
-  const [startTranscription] = useStartTranscriptionMutation();
   const status = useStatus();
   const { authStore } = useStores();
   const navigate = useNavigate();
@@ -142,25 +138,6 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = observer(({ dir }) => {
     status.success(`Successfully uploaded ${file.name}`);
   };
 
-  const handleStartTranscription = async (entry: FileTreeEntry) => {
-    if (!entry.path || entry.type !== "file") {
-      throw new Error("Cannot transcribe a directory");
-    }
-    const res = await startTranscription({ variables: { key: entry.path } });
-    if (res.errors || !res.data) {
-      throw (
-        res.errors?.[0] ?? new Error("No transcription ID returned from API")
-      );
-    }
-    const { transcription } = res.data;
-    status.success(
-      <Typography>
-        Started transcribing {entry.path}{" "}
-        <RexLink to={`/mzk/${transcription.id}`}>here</RexLink>
-      </Typography>,
-    );
-  };
-
   return (
     <FileBrowser
       dir={dir}
@@ -176,9 +153,6 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = observer(({ dir }) => {
       onExpand={changeDir}
       onFileOpen={(entry) => setSelected(entry)}
       onUploadStart={(file) => uploadFile(file).catch(status.error)}
-      onTranscribe={(entry) =>
-        handleStartTranscription(entry).catch(status.error)
-      }
     />
   );
 });

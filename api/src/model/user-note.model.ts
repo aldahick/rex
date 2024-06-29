@@ -8,14 +8,14 @@ export class UserNoteTable extends BaseTable {
   columns = this.setColumns((t) => ({
     id: t.uuid().primaryKey(),
     userId: t.uuid(),
-    title: t.varchar(),
-    body: t.varchar(),
+    title: t.text(),
+    body: t.text(),
     createdAt: t.timestamp(),
   }));
   relations = {
     user: this.hasOne(() => UserTable, {
-      primaryKey: "userId",
-      foreignKey: "id",
+      columns: ["userId"],
+      references: ["id"],
     }),
   };
 }

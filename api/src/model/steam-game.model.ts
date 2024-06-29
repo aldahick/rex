@@ -6,6 +6,6 @@ export class SteamGameTable extends BaseTable {
   table = "steam_games";
   columns = this.setColumns((t) => ({
     id: t.integer().primaryKey(),
-    name: t.varchar(),
+    name: t.text(),
   }));
 }

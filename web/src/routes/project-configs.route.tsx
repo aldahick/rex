@@ -7,7 +7,7 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EditProjectConfig } from "../features/project/EditProjectConfig";
 import {
   IProjectAdapterType,
@@ -28,6 +28,12 @@ export const ProjectConfigsRoute: React.FC = () => {
     },
     onError: status.error,
   });
+
+  useEffect(() => {
+    if (projectConfigs?.length === 1 && !selectedAdapterType) {
+      setSelectedAdapterType(projectConfigs[0].adapterType);
+    }
+  }, [projectConfigs, selectedAdapterType]);
 
   if (!projectConfigs) {
     return <CircularProgress />;

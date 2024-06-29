@@ -8,14 +8,14 @@ export class ProgressTable extends BaseTable {
   table = "progress";
   columns = this.setColumns((t) => ({
     id: t.uuid().primaryKey(),
-    action: t.varchar(),
+    action: t.text(),
     createdAt: t.timestamp(),
     status: t.tsEnum("progress_status", IProgressStatus),
   }));
   relations = {
     logs: this.hasMany(() => ProgressLogTable, {
-      primaryKey: "id",
-      foreignKey: "progressId",
+      columns: ["id"],
+      references: ["progressId"],
     }),
   };
 }
