@@ -7,7 +7,7 @@ import {
 import React, { useState } from "react";
 import {
   IStorableAuthTokenFragment,
-  useCreateAuthTokenGoogleMutation,
+  useGetAuthTokenLazyQuery,
 } from "../../graphql";
 import { useStatus } from "../../hooks";
 
@@ -15,7 +15,7 @@ export const GoogleLoginButton: React.FC<{
   clientId: string;
   onSuccess: (authToken: IStorableAuthTokenFragment) => void;
 }> = ({ clientId, onSuccess }) => {
-  const [createAuthToken] = useCreateAuthTokenGoogleMutation();
+  const [getAuthToken] = useGetAuthTokenLazyQuery();
   const [errored, setErrored] = useState(false);
   const status = useStatus();
 
@@ -25,15 +25,18 @@ export const GoogleLoginButton: React.FC<{
       return;
     }
     try {
-      const res = await createAuthToken({
+      const res = await getAuthToken({
         variables: {
-          googleIdToken: response.credential,
+          params: {
+            google: { idToken: response.credential },
+          },
         },
       });
+      console.log(res);
       if (res.data) {
         onSuccess(res.data.authToken);
-      } else if (res.errors) {
-        throw res.errors[0];
+      } else if (res.error) {
+        throw res.error;
       }
     } catch (err) {
       status.error(err);
@@ -49,11 +52,16 @@ export const GoogleLoginButton: React.FC<{
     return <span />;
   }
 
+  console.log(clientId);
+
   return (
     <Grid container justifyContent="center">
       <Grid item>
         <div style={{ minWidth: "200px" }} />
-        <GoogleOAuthProvider clientId={clientId}>
+        <GoogleOAuthProvider
+          clientId={clientId}
+          onScriptLoadError={handleError}
+        >
           <GoogleLogin
             size="large"
             context="signin"

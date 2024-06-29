@@ -31,6 +31,7 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: npm i --no-save @athenajs/react-utils
+        if: ${{ inputs.directory == 'web' }}
       - uses: docker/setup-qemu-action@v3
         if: ${{ matrix.platform != 'amd64' }}
         with:

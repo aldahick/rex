@@ -31,11 +31,6 @@ export type Scalars = {
   DateTime: { input: string; output: string };
 };
 
-export enum IAuthClientType {
-  Mobile = "MOBILE",
-  Web = "WEB",
-}
-
 export enum IAuthPermission {
   AdminMedia = "ADMIN_MEDIA",
   AdminNotes = "ADMIN_NOTES",
@@ -52,6 +47,21 @@ export type IAuthToken = {
   token: Scalars["String"]["output"];
   user: IUser;
   userId: Scalars["ID"]["output"];
+};
+
+export type IAuthTokenGoogleParams = {
+  idToken: Scalars["String"]["input"];
+};
+
+export type IAuthTokenLocalParams = {
+  password: Scalars["String"]["input"];
+  username: Scalars["String"]["input"];
+};
+
+export type IAuthTokenParams = {
+  google?: InputMaybe<IAuthTokenGoogleParams>;
+  local?: InputMaybe<IAuthTokenLocalParams>;
+  userId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type IConfig = {
@@ -77,9 +87,6 @@ export type IMutation = {
   __typename?: "Mutation";
   addMediaDownload: IProgress;
   addRoleToUser: Scalars["Boolean"]["output"];
-  createAuthToken: IAuthToken;
-  createAuthTokenGoogle: IAuthToken;
-  createAuthTokenLocal: IAuthToken;
   createMedia: Scalars["Boolean"]["output"];
   createMediaUpload: Scalars["String"]["output"];
   createNote: INote;
@@ -106,20 +113,6 @@ export type IMutationAddMediaDownloadArgs = {
 export type IMutationAddRoleToUserArgs = {
   roleId: Scalars["ID"]["input"];
   userId: Scalars["ID"]["input"];
-};
-
-export type IMutationCreateAuthTokenArgs = {
-  userId: Scalars["String"]["input"];
-};
-
-export type IMutationCreateAuthTokenGoogleArgs = {
-  clientType: IAuthClientType;
-  googleIdToken: Scalars["String"]["input"];
-};
-
-export type IMutationCreateAuthTokenLocalArgs = {
-  password: Scalars["String"]["input"];
-  username: Scalars["String"]["input"];
 };
 
 export type IMutationCreateMediaArgs = {
@@ -288,6 +281,7 @@ export type IProjectUser = {
 
 export type IQuery = {
   __typename?: "Query";
+  authToken: IAuthToken;
   config: IConfig;
   mediaItem?: Maybe<IMediaItem>;
   note: INote;
@@ -301,6 +295,10 @@ export type IQuery = {
   steamPlayers: ISteamPlayer[];
   user: IUser;
   users: IUser[];
+};
+
+export type IQueryAuthTokenArgs = {
+  params: IAuthTokenParams;
 };
 
 export type IQueryMediaItemArgs = {
@@ -398,38 +396,12 @@ export type IStorableAuthTokenFragment = {
   };
 };
 
-export type ICreateAuthTokenGoogleMutationVariables = Exact<{
-  googleIdToken: Scalars["String"]["input"];
+export type IGetAuthTokenQueryVariables = Exact<{
+  params: IAuthTokenParams;
 }>;
 
-export type ICreateAuthTokenGoogleMutation = {
-  __typename?: "Mutation";
-  authToken: {
-    __typename?: "AuthToken";
-    token: string;
-    user: {
-      __typename?: "User";
-      id: string;
-      username?: string | undefined;
-      roles?:
-        | Array<{
-            __typename?: "Role";
-            id: string;
-            name: string;
-            permissions: IAuthPermission[];
-          }>
-        | undefined;
-    };
-  };
-};
-
-export type ICreateAuthTokenLocalMutationVariables = Exact<{
-  username: Scalars["String"]["input"];
-  password: Scalars["String"]["input"];
-}>;
-
-export type ICreateAuthTokenLocalMutation = {
-  __typename?: "Mutation";
+export type IGetAuthTokenQuery = {
+  __typename?: "Query";
   authToken: {
     __typename?: "AuthToken";
     token: string;
@@ -741,106 +713,82 @@ export const ProjectSprintFragmentFragmentDoc = gql`
   end
 }
     `;
-export const CreateAuthTokenGoogleDocument = gql`
-    mutation CreateAuthTokenGoogle($googleIdToken: String!) {
-  authToken: createAuthTokenGoogle(googleIdToken: $googleIdToken, clientType: WEB) {
+export const GetAuthTokenDocument = gql`
+    query GetAuthToken($params: AuthTokenParams!) {
+  authToken(params: $params) {
     ...StorableAuthToken
   }
 }
     ${StorableAuthTokenFragmentDoc}`;
-export type ICreateAuthTokenGoogleMutationFn = Apollo.MutationFunction<
-  ICreateAuthTokenGoogleMutation,
-  ICreateAuthTokenGoogleMutationVariables
->;
 
 /**
- * __useCreateAuthTokenGoogleMutation__
+ * __useGetAuthTokenQuery__
  *
- * To run a mutation, you first call `useCreateAuthTokenGoogleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateAuthTokenGoogleMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
+ * To run a query within a React component, call `useGetAuthTokenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAuthTokenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
  *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const [createAuthTokenGoogleMutation, { data, loading, error }] = useCreateAuthTokenGoogleMutation({
+ * const { data, loading, error } = useGetAuthTokenQuery({
  *   variables: {
- *      googleIdToken: // value for 'googleIdToken'
+ *      params: // value for 'params'
  *   },
  * });
  */
-export function useCreateAuthTokenGoogleMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    ICreateAuthTokenGoogleMutation,
-    ICreateAuthTokenGoogleMutationVariables
+export function useGetAuthTokenQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    IGetAuthTokenQuery,
+    IGetAuthTokenQueryVariables
+  > &
+    (
+      | { variables: IGetAuthTokenQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<IGetAuthTokenQuery, IGetAuthTokenQueryVariables>(
+    GetAuthTokenDocument,
+    options,
+  );
+}
+export function useGetAuthTokenLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    IGetAuthTokenQuery,
+    IGetAuthTokenQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    ICreateAuthTokenGoogleMutation,
-    ICreateAuthTokenGoogleMutationVariables
-  >(CreateAuthTokenGoogleDocument, options);
+  return Apollo.useLazyQuery<IGetAuthTokenQuery, IGetAuthTokenQueryVariables>(
+    GetAuthTokenDocument,
+    options,
+  );
 }
-export type CreateAuthTokenGoogleMutationHookResult = ReturnType<
-  typeof useCreateAuthTokenGoogleMutation
->;
-export type CreateAuthTokenGoogleMutationResult =
-  Apollo.MutationResult<ICreateAuthTokenGoogleMutation>;
-export type CreateAuthTokenGoogleMutationOptions = Apollo.BaseMutationOptions<
-  ICreateAuthTokenGoogleMutation,
-  ICreateAuthTokenGoogleMutationVariables
->;
-export const CreateAuthTokenLocalDocument = gql`
-    mutation CreateAuthTokenLocal($username: String!, $password: String!) {
-  authToken: createAuthTokenLocal(username: $username, password: $password) {
-    ...StorableAuthToken
-  }
-}
-    ${StorableAuthTokenFragmentDoc}`;
-export type ICreateAuthTokenLocalMutationFn = Apollo.MutationFunction<
-  ICreateAuthTokenLocalMutation,
-  ICreateAuthTokenLocalMutationVariables
->;
-
-/**
- * __useCreateAuthTokenLocalMutation__
- *
- * To run a mutation, you first call `useCreateAuthTokenLocalMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateAuthTokenLocalMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createAuthTokenLocalMutation, { data, loading, error }] = useCreateAuthTokenLocalMutation({
- *   variables: {
- *      username: // value for 'username'
- *      password: // value for 'password'
- *   },
- * });
- */
-export function useCreateAuthTokenLocalMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    ICreateAuthTokenLocalMutation,
-    ICreateAuthTokenLocalMutationVariables
+export function useGetAuthTokenSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    IGetAuthTokenQuery,
+    IGetAuthTokenQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    ICreateAuthTokenLocalMutation,
-    ICreateAuthTokenLocalMutationVariables
-  >(CreateAuthTokenLocalDocument, options);
+  return Apollo.useSuspenseQuery<
+    IGetAuthTokenQuery,
+    IGetAuthTokenQueryVariables
+  >(GetAuthTokenDocument, options);
 }
-export type CreateAuthTokenLocalMutationHookResult = ReturnType<
-  typeof useCreateAuthTokenLocalMutation
+export type GetAuthTokenQueryHookResult = ReturnType<
+  typeof useGetAuthTokenQuery
 >;
-export type CreateAuthTokenLocalMutationResult =
-  Apollo.MutationResult<ICreateAuthTokenLocalMutation>;
-export type CreateAuthTokenLocalMutationOptions = Apollo.BaseMutationOptions<
-  ICreateAuthTokenLocalMutation,
-  ICreateAuthTokenLocalMutationVariables
+export type GetAuthTokenLazyQueryHookResult = ReturnType<
+  typeof useGetAuthTokenLazyQuery
+>;
+export type GetAuthTokenSuspenseQueryHookResult = ReturnType<
+  typeof useGetAuthTokenSuspenseQuery
+>;
+export type GetAuthTokenQueryResult = Apollo.QueryResult<
+  IGetAuthTokenQuery,
+  IGetAuthTokenQueryVariables
 >;
 export const ConfigDocument = gql`
     query Config {

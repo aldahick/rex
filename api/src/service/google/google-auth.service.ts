@@ -14,11 +14,10 @@ export class GoogleAuthService {
 
   async getIdTokenPayload(
     idToken: string,
-    clientIdKey: keyof RexConfig["google"]["oauth"],
   ): Promise<GoogleTokenPayload | undefined> {
-    const { clientId, clientSecret } = this.config.google.oauth[clientIdKey];
+    const { clientId, clientSecret } = this.config.google.oauth;
     if (!(clientId && clientSecret)) {
-      throw new Error(`Missing Google credentials for client ${clientIdKey}`);
+      throw new Error("Missing Google credentials");
     }
     const ticket = await new OAuth2Client({
       clientId,

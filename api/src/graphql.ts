@@ -28,11 +28,6 @@ export type Scalars = {
   DateTime: { input: Date; output: Date };
 };
 
-export enum IAuthClientType {
-  Mobile = "MOBILE",
-  Web = "WEB",
-}
-
 export enum IAuthPermission {
   AdminMedia = "ADMIN_MEDIA",
   AdminNotes = "ADMIN_NOTES",
@@ -49,6 +44,21 @@ export type IAuthToken = {
   token: Scalars["String"]["output"];
   user: IUser;
   userId: Scalars["ID"]["output"];
+};
+
+export type IAuthTokenGoogleParams = {
+  idToken: Scalars["String"]["input"];
+};
+
+export type IAuthTokenLocalParams = {
+  password: Scalars["String"]["input"];
+  username: Scalars["String"]["input"];
+};
+
+export type IAuthTokenParams = {
+  google?: InputMaybe<IAuthTokenGoogleParams>;
+  local?: InputMaybe<IAuthTokenLocalParams>;
+  userId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type IConfig = {
@@ -74,9 +84,6 @@ export type IMutation = {
   __typename?: "Mutation";
   addMediaDownload: IProgress;
   addRoleToUser: Scalars["Boolean"]["output"];
-  createAuthToken: IAuthToken;
-  createAuthTokenGoogle: IAuthToken;
-  createAuthTokenLocal: IAuthToken;
   createMedia: Scalars["Boolean"]["output"];
   createMediaUpload: Scalars["String"]["output"];
   createNote: INote;
@@ -103,20 +110,6 @@ export type IMutationAddMediaDownloadArgs = {
 export type IMutationAddRoleToUserArgs = {
   roleId: Scalars["ID"]["input"];
   userId: Scalars["ID"]["input"];
-};
-
-export type IMutationCreateAuthTokenArgs = {
-  userId: Scalars["String"]["input"];
-};
-
-export type IMutationCreateAuthTokenGoogleArgs = {
-  clientType: IAuthClientType;
-  googleIdToken: Scalars["String"]["input"];
-};
-
-export type IMutationCreateAuthTokenLocalArgs = {
-  password: Scalars["String"]["input"];
-  username: Scalars["String"]["input"];
 };
 
 export type IMutationCreateMediaArgs = {
@@ -285,6 +278,7 @@ export type IProjectUser = {
 
 export type IQuery = {
   __typename?: "Query";
+  authToken: IAuthToken;
   config: IConfig;
   mediaItem?: Maybe<IMediaItem>;
   note: INote;
@@ -298,6 +292,10 @@ export type IQuery = {
   steamPlayers: ISteamPlayer[];
   user: IUser;
   users: IUser[];
+};
+
+export type IQueryAuthTokenArgs = {
+  params: IAuthTokenParams;
 };
 
 export type IQueryMediaItemArgs = {

@@ -2,6 +2,7 @@ import { getConfigFromAttributes } from "@athenajs/react-utils";
 
 const athenaConfig = getConfigFromAttributes(import.meta.env);
 
+console.log(athenaConfig);
 export const config = {
   apiUrl: athenaConfig.API_URL,
   basePath: athenaConfig.BASE_PATH,

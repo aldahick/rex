@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import {
   IStorableAuthTokenFragment,
   useConfigQuery,
-  useCreateAuthTokenLocalMutation,
+  useGetAuthTokenLazyQuery,
 } from "../../graphql";
 import { useStatus } from "../../hooks";
 
@@ -24,7 +24,7 @@ export const LocalAuthForm: React.FC<LocalAuthFormProps> = ({
 }) => {
   const navigate = useNavigate();
   const config = useConfigQuery();
-  const [createAuthToken] = useCreateAuthTokenLocalMutation();
+  const [getAuthToken] = useGetAuthTokenLazyQuery();
   const [username, setUsername] = useState(initialUsername ?? "");
   const [password, setPassword] = useState("");
   const status = useStatus();
@@ -34,13 +34,13 @@ export const LocalAuthForm: React.FC<LocalAuthFormProps> = ({
       return;
     }
     try {
-      const res = await createAuthToken({
-        variables: { username, password },
+      const res = await getAuthToken({
+        variables: { params: { local: { username, password } } },
       });
       if (res.data) {
         onSuccess(res.data.authToken);
-      } else if (res.errors) {
-        throw res.errors[0];
+      } else if (res.error) {
+        throw res.error;
       }
     } catch (err) {
       status.error(err);

@@ -28,11 +28,6 @@ type Scalars = {
   DateTime: { input: Date; output: Date };
 };
 
-enum IAuthClientType {
-  Mobile = "MOBILE",
-  Web = "WEB",
-}
-
 enum IAuthPermission {
   AdminMedia = "ADMIN_MEDIA",
   AdminNotes = "ADMIN_NOTES",
@@ -49,6 +44,21 @@ type IAuthToken = {
   token: Scalars["String"]["output"];
   user: IUser;
   userId: Scalars["ID"]["output"];
+};
+
+type IAuthTokenGoogleParams = {
+  idToken: Scalars["String"]["input"];
+};
+
+type IAuthTokenLocalParams = {
+  password: Scalars["String"]["input"];
+  username: Scalars["String"]["input"];
+};
+
+type IAuthTokenParams = {
+  google?: InputMaybe<IAuthTokenGoogleParams>;
+  local?: InputMaybe<IAuthTokenLocalParams>;
+  userId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 type IConfig = {
@@ -74,9 +84,6 @@ type IMutation = {
   __typename?: "Mutation";
   addMediaDownload: IProgress;
   addRoleToUser: Scalars["Boolean"]["output"];
-  createAuthToken: IAuthToken;
-  createAuthTokenGoogle: IAuthToken;
-  createAuthTokenLocal: IAuthToken;
   createMedia: Scalars["Boolean"]["output"];
   createMediaUpload: Scalars["String"]["output"];
   createNote: INote;
@@ -103,20 +110,6 @@ type IMutationAddMediaDownloadArgs = {
 type IMutationAddRoleToUserArgs = {
   roleId: Scalars["ID"]["input"];
   userId: Scalars["ID"]["input"];
-};
-
-type IMutationCreateAuthTokenArgs = {
-  userId: Scalars["String"]["input"];
-};
-
-type IMutationCreateAuthTokenGoogleArgs = {
-  clientType: IAuthClientType;
-  googleIdToken: Scalars["String"]["input"];
-};
-
-type IMutationCreateAuthTokenLocalArgs = {
-  password: Scalars["String"]["input"];
-  username: Scalars["String"]["input"];
 };
 
 type IMutationCreateMediaArgs = {
@@ -285,6 +278,7 @@ type IProjectUser = {
 
 type IQuery = {
   __typename?: "Query";
+  authToken: IAuthToken;
   config: IConfig;
   mediaItem?: Maybe<IMediaItem>;
   note: INote;
@@ -298,6 +292,10 @@ type IQuery = {
   steamPlayers: ISteamPlayer[];
   user: IUser;
   users: IUser[];
+};
+
+type IQueryAuthTokenArgs = {
+  params: IAuthTokenParams;
 };
 
 type IQueryMediaItemArgs = {

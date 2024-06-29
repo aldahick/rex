@@ -33,8 +33,8 @@ importers:
   api:
     dependencies:
       '@athenajs/core':
-        specifier: ^1.2.2
-        version: 1.2.2
+        specifier: ^1.2.3
+        version: 1.2.3
       '@google-cloud/run':
         specifier: ^1.3.0
         version: 1.3.0
@@ -123,6 +123,8 @@ importers:
       vitest:
         specifier: ^1.6.0
         version: 1.6.0(@types/node@20.14.9)
+
+  sdk: {}
 
   web:
     dependencies:
@@ -342,8 +344,8 @@ packages:
       '@apollo/server': ^4.0.0
       fastify: ^4.4.0
 
-  '@athenajs/core@1.2.2':
-    resolution: {integrity: sha512-fOwFyXqQoPxQzKNYH5Y48Axu1OgnwUjz0Z3/2YEt9TMvy7ygB8arEEzWT69FuZ0Vpuecz0BvDfFCfI3jUr9ZsA==}
+  '@athenajs/core@1.2.3':
+    resolution: {integrity: sha512-tCiD+2TrQ3sfdRumIlIVey+EMbLy47+VeifwdacVCG8WJu2oOMb28/8Vgaj+gaS3e0stpxKXJwLZH00XEB1QhQ==}
     engines: {node: ^20.12}
 
   '@athenajs/react-utils@0.2.10':
@@ -4494,7 +4496,7 @@ snapshots:
       fastify: 4.28.1
       fastify-plugin: 4.5.1
 
-  '@athenajs/core@1.2.2':
+  '@athenajs/core@1.2.3':
     dependencies:
       '@apollo/server': 4.10.4(graphql@16.9.0)
       '@as-integrations/fastify': 2.1.1(@apollo/server@4.10.4(graphql@16.9.0))(fastify@4.28.1)

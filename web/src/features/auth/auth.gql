@@ -11,17 +11,8 @@ fragment StorableAuthToken on AuthToken {
   }
 }
 
-mutation CreateAuthTokenGoogle($googleIdToken: String!) {
-  authToken: createAuthTokenGoogle(
-    googleIdToken: $googleIdToken
-    clientType: WEB
-  ) {
-    ...StorableAuthToken
-  }
-}
-
-mutation CreateAuthTokenLocal($username: String!, $password: String!) {
-  authToken: createAuthTokenLocal(username: $username, password: $password) {
+query GetAuthToken($params: AuthTokenParams!) {
+  authToken(params: $params) {
     ...StorableAuthToken
   }
 }
