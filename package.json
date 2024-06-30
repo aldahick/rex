@@ -2,7 +2,7 @@
   "name": "@aldahick/rex",
   "license": "MIT",
   "private": true,
-  "version": "0.5.0",
+  "version": "1.0.0",
   "scripts": {
     "version": "bash scripts/version.sh",
     "build:api": "cd api && pnpm build",
