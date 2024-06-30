@@ -50,7 +50,7 @@ describe("GoogleAuthService", () => {
       });
       const actual = () => service().getIdTokenPayload("");
       await expect(actual).rejects.toThrow(
-        new Error("Missing Google credentials for client web"),
+        new Error("Missing Google credentials"),
       );
     });
 
