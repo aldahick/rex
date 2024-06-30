@@ -22,7 +22,7 @@ export const FileContent: React.FC<{
   const { auth, config } = useLoaderData<MediaLoader>();
   const mimeType = mime.getType(item.key);
   const params = new URLSearchParams({ key: item.key, token: auth.token });
-  const contentUrl = `${config.apiUrl}v1/media/content?${params}`;
+  const contentUrl = `${config.publicApiUrl}v1/media/content?${params}`;
 
   switch (mimeType) {
     case "audio/mp4":

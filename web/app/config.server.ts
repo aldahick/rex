@@ -6,7 +6,9 @@ const required = (key: string) => {
   return value;
 };
 
+const apiUrl = required("API_URL");
 export const config = {
-  apiUrl: required("API_URL"),
+  apiUrl,
+  publicApiUrl: process.env.PUBLIC_API_URL || apiUrl,
   googleClientId: process.env.GOOGLE_CLIENT_ID,
 };

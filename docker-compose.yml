@@ -1,0 +1,32 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    env_file: api/.env
+    environment:
+      REDIS_URL: redis://redis:6379
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+      - redis
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    env_file: web/.env
+    environment:
+      API_URL: http://api:8080/
+      PUBLIC_API_URL: http://localhost:8080/
+      # HOST: 0.0.0.0
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: compose
+  redis:
+    image: redis:7-alpine
