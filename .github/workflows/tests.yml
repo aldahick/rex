@@ -19,7 +19,11 @@ jobs:
           version: 9
       - run: pnpm install
         working-directory: ${{ inputs.directory }}
-      - run: pnpm build
+      - name: Build sdk
+        run: pnpm build
+        working-directory: sdk
+      - name: Build ${{ inputs.directory }}
+        run: pnpm build
         working-directory: ${{ inputs.directory }}
       - run: pnpm lint
         working-directory: ${{ inputs.directory }}
