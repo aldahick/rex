@@ -4,10 +4,9 @@
   "private": true,
   "version": "0.5.0",
   "scripts": {
-    "generate": "bash scripts/generate.sh",
     "version": "bash scripts/version.sh",
     "build:api": "cd api && pnpm build",
-    "build:mzk": "docker build -t ghcr.io/aldahick/mzk-runner:local docker/mzk",
+    "build:sdk": "cd sdk && pnpm build",
     "build:web": "cd web && pnpm build"
   },
   "engines": {
