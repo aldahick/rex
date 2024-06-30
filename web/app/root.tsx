@@ -60,7 +60,7 @@ export const ErrorBoundary: React.FC = () => {
 
   return (
     <Layout>
-      <h1>An error occurred!</h1>
+      <h4>An error occurred!</h4>
       <pre style={{ color: "rgb(192,0,0)" }}>{details}</pre>
       <Scripts />
     </Layout>

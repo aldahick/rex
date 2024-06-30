@@ -6,5 +6,5 @@ type Config {
   # Whether unauthenticated users can register a user account or not.
   createAnonymousUsers: Boolean!
   # Per-user total media limit in bytes. If null, this user cannot upload media.
-  mediaDataLimit: Int
+  mediaDataLimit: Float
 }

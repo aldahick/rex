@@ -67,7 +67,7 @@ export type IAuthTokenParams = {
 export type IConfig = {
   __typename?: "Config";
   createAnonymousUsers: Scalars["Boolean"]["output"];
-  mediaDataLimit?: Maybe<Scalars["Int"]["output"]>;
+  mediaDataLimit?: Maybe<Scalars["Float"]["output"]>;
 };
 
 export type ICreateUserParams = {
