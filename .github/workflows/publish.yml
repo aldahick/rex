@@ -2,9 +2,6 @@ name: Publish
 on:
   workflow_call:
     inputs:
-      dockerfile:
-        required: true
-        type: string
       directory:
         required: true
         type: string
@@ -50,7 +47,7 @@ jobs:
         id: build
         uses: docker/build-push-action@v5
         with:
-          file: ${{ inputs.dockerfile }}
+          file: ${{ inputs.directory }}/Dockerfile
           context: .
           platforms: linux/${{ matrix.platform }}
           outputs: type=image,name=${{ inputs.imageName }},push-by-digest=true,name-canonical=true,push=true
