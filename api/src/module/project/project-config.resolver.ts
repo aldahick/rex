@@ -1,11 +1,11 @@
-import { resolveField, resolveMutation, resolver } from "@athenajs/core";
 import {
   IAuthPermission,
   IMutation,
   IMutationDeleteProjectConfigArgs,
   IMutationUpdateProjectConfigArgs,
   IUser,
-} from "../../graphql.js";
+} from "@aldahick/rex-sdk";
+import { resolveField, resolveMutation, resolver } from "@athenajs/core";
 import { RexContext } from "../auth/auth.context.js";
 import { ProjectConfigManager } from "./project-config.manager.js";
 

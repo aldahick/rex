@@ -1,11 +1,4 @@
 import {
-  resolveField,
-  resolveMutation,
-  resolveQuery,
-  resolver,
-} from "@athenajs/core";
-import { RexConfig } from "../../config.js";
-import {
   IAuthPermission,
   IMediaItem,
   IMutation,
@@ -16,7 +9,14 @@ import {
   IProgressStatus,
   IQuery,
   IQueryMediaItemArgs,
-} from "../../graphql.js";
+} from "@aldahick/rex-sdk";
+import {
+  resolveField,
+  resolveMutation,
+  resolveQuery,
+  resolver,
+} from "@athenajs/core";
+import { RexConfig } from "../../config.js";
 import { UserModel } from "../../model/index.js";
 import { RexContext } from "../auth/auth.context.js";
 import { ProgressManager } from "../progress/progress.manager.js";

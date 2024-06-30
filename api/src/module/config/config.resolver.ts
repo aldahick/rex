@@ -1,6 +1,6 @@
+import { IQuery } from "@aldahick/rex-sdk";
 import { resolveQuery, resolver } from "@athenajs/core";
 import { RexConfig } from "../../config.js";
-import { IQuery } from "../../graphql.js";
 
 @resolver()
 export class ConfigResolver {

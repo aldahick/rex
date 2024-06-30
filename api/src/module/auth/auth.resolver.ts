@@ -1,11 +1,11 @@
-import { resolveField, resolveQuery, resolver } from "@athenajs/core";
 import {
   IAuthPermission,
   IAuthToken,
   IAuthTokenParams,
   IQuery,
   IQueryAuthTokenArgs,
-} from "../../graphql.js";
+} from "@aldahick/rex-sdk";
+import { resolveField, resolveQuery, resolver } from "@athenajs/core";
 import { GoogleAuthService } from "../../service/google/google-auth.service.js";
 import { UserManager } from "../user/user.manager.js";
 import { UserResolver } from "../user/user.resolver.js";

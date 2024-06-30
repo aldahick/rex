@@ -1,6 +1,12 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { vitePlugin as remix } from "@remix-run/dev";
+import { installGlobals } from "@remix-run/node";
+import { defineConfig } from "vite";
+
+installGlobals();
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [remix()],
+  server: {
+    port: 3000,
+  },
 });

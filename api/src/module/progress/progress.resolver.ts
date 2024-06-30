@@ -1,10 +1,10 @@
-import { resolveQuery, resolver } from "@athenajs/core";
 import {
   IProgress,
   IQuery,
   IQueryProgressArgs,
   IQueryProgressesArgs,
-} from "../../graphql.js";
+} from "@aldahick/rex-sdk";
+import { resolveQuery, resolver } from "@athenajs/core";
 import { ProgressModel } from "../../model/index.js";
 import { RexContext } from "../auth/auth.context.js";
 import { ProgressManager } from "./progress.manager.js";

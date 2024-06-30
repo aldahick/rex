@@ -1,0 +1,6 @@
+query getConfig {
+  config {
+    createAnonymousUsers
+    mediaDataLimit
+  }
+}

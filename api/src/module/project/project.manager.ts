@@ -1,7 +1,7 @@
 import "./adapter/jira.adapter.js";
 
+import { IProjectAdapterType } from "@aldahick/rex-sdk";
 import { injectable } from "@athenajs/core";
-import { IProjectAdapterType } from "../../graphql.js";
 import {
   BaseProjectAdapter,
   injectProjectAdapters,

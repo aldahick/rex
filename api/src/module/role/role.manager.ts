@@ -1,5 +1,5 @@
+import { IAuthPermission } from "@aldahick/rex-sdk";
 import { injectable } from "@athenajs/core";
-import { IAuthPermission } from "../../graphql.js";
 import { RoleModel } from "../../model/index.js";
 import { DatabaseService } from "../../service/database/database.service.js";
 

@@ -1,7 +1,6 @@
 type Mutation {
-  addRoleToUser(userId: ID!, roleId: ID!): Boolean!
-  createUser(email: String!, username: String, password: String): User!
-  setUserPassword(userId: ID!, password: String!): Boolean!
+  createUser(params: CreateUserParams!): User!
+  updateUser(params: UpdateUserParams!): Boolean!
 }
 
 type Query {
@@ -15,4 +14,18 @@ type User {
   username: String
   roles: [Role!]
   permissions: [AuthPermission!]
+}
+
+input CreateUserParams {
+  email: String!
+  username: String
+  password: String
+}
+
+input UpdateUserParams {
+  id: ID!
+  email: String
+  username: String
+  password: String
+  roleIds: [ID!]
 }

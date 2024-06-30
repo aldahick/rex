@@ -1,0 +1,9 @@
+mutation createUser($params: CreateUserParams!) {
+  created: createUser(params: $params) {
+    id
+  }
+}
+
+mutation updateUser($params: UpdateUserParams!) {
+  updated: updateUser(params: $params)
+}

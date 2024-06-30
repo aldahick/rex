@@ -7,10 +7,10 @@ import {
 } from "node:fs";
 import path from "node:path";
 import { Readable } from "node:stream";
+import { IMediaItem, IMediaItemType, IProgressStatus } from "@aldahick/rex-sdk";
 import { Logger, injectable } from "@athenajs/core";
 import axios from "axios";
 import { RexConfig } from "../../config.js";
-import { IMediaItem, IMediaItemType, IProgressStatus } from "../../graphql.js";
 import { UserModel } from "../../model/index.js";
 import { ProgressManager } from "../progress/progress.manager.js";
 

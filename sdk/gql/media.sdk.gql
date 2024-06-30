@@ -1,0 +1,18 @@
+query getMediaItem($key: String!) {
+  mediaItem(key: $key) {
+    key
+    type
+    children {
+      key
+      type
+    }
+  }
+}
+
+mutation createMediaUpload($key: String!) {
+  uploadUrl: createMediaUpload(key: $key)
+}
+
+mutation deleteMedia($key: String!) {
+  deleteMedia(key: $key)
+}

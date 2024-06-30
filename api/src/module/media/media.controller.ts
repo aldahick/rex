@@ -1,3 +1,4 @@
+import { IAuthPermission } from "@aldahick/rex-sdk";
 import {
   HttpRequest,
   HttpResponse,
@@ -6,7 +7,6 @@ import {
   post,
 } from "@athenajs/core";
 import mime from "mime";
-import { IAuthPermission } from "../../graphql.js";
 import { RexContext } from "../auth/auth.context.js";
 import { UserManager } from "../user/user.manager.js";
 import { MediaManager, MediaStats } from "./media.manager.js";

@@ -5,7 +5,6 @@ import "./module/config/config.resolver.js";
 import "./module/generic/datetime.resolver.js";
 import "./module/media/media.resolver.js";
 import "./module/media/sharex.controller.js";
-import "./module/note/note.resolver.js";
 import "./module/progress/progress.resolver.js";
 import "./module/project/project.resolver.js";
 import "./module/project/project-config.resolver.js";

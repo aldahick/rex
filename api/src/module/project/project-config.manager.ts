@@ -1,5 +1,5 @@
+import { IProjectAdapterType, IProjectConfig } from "@aldahick/rex-sdk";
 import { injectable } from "@athenajs/core";
-import { IProjectAdapterType, IProjectConfig } from "../../graphql.js";
 import { DatabaseService } from "../../service/database/database.service.js";
 
 @injectable()

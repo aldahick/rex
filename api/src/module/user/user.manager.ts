@@ -1,6 +1,6 @@
+import { IAuthPermission } from "@aldahick/rex-sdk";
 import { injectable } from "@athenajs/core";
 import { filter, isTruthy } from "remeda";
-import { IAuthPermission } from "../../graphql.js";
 import { RoleModel } from "../../model/role.model.js";
 import { UserModel } from "../../model/user.model.js";
 import { DatabaseService } from "../../service/database/database.service.js";
@@ -55,10 +55,6 @@ export class UserManager {
   async getSafe(id: string): Promise<UserModel | undefined> {
     const [user] = await this.db.users.selectAll().where({ id });
     return user;
-  }
-
-  async addRole(userId: string, roleId: string): Promise<void> {
-    await this.db.userRoles.create({ userId, roleId });
   }
 
   async fetchRolesByUser(userId: string): Promise<RoleModel[]> {
@@ -121,9 +117,30 @@ export class UserManager {
     });
   }
 
-  async updatePassword(id: string, password: string): Promise<void> {
-    await this.db.users.find(id).update({
-      passwordHash: await this.authManager.hashPassword(password),
+  async update(
+    id: string,
+    {
+      password,
+      ...fields
+    }: Partial<Pick<UserModel, "email" | "username"> & { password: string }>,
+  ): Promise<void> {
+    const updateFields = {
+      ...fields,
+      ...(password
+        ? { passwordHash: await this.authManager.hashPassword(password) }
+        : {}),
+    };
+    await this.db.users.find(id).update(updateFields);
+  }
+
+  async updateRoles(userId: string, roleIds: string[]): Promise<void> {
+    await this.db.transaction(async () => {
+      await this.db.userRoles
+        .where({ userId, roleId: { notIn: roleIds } })
+        .delete();
+      await this.db.userRoles
+        .createMany(roleIds.map((roleId) => ({ userId, roleId })))
+        .onConflictDoNothing();
     });
   }
 

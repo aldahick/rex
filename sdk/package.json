@@ -1,0 +1,37 @@
+{
+  "name": "@aldahick/rex-sdk",
+  "version": "0.0.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "engines": {
+    "node": "^20.15"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aldahick/rex.git"
+  },
+  "author": "Alex Hicks <alex@alexhicks.net>",
+  "bugs": {
+    "url": "https://github.com/aldahick/rex/issues"
+  },
+  "homepage": "https://github.com/aldahick/rex#readme",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pnpm generate && tsc",
+    "generate": "graphql-codegen -c codegen.graphql.ts"
+  },
+  "dependencies": {
+    "graphql-request": "6.1.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript": "^4.0.8",
+    "@graphql-codegen/typescript-graphql-request": "^6.2.0",
+    "@graphql-codegen/typescript-operations": "^4.2.2",
+    "tsc-watch": "^6.2.0"
+  }
+}

@@ -1,4 +1,3 @@
-import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
 import {
   IAuthPermission,
   IMutation,
@@ -8,7 +7,8 @@ import {
   IMutationUpdateRolePermissionsArgs,
   IQuery,
   IRole,
-} from "../../graphql.js";
+} from "@aldahick/rex-sdk";
+import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
 import { RoleModel } from "../../model/index.js";
 import { RexContext } from "../auth/auth.context.js";
 import { RoleManager } from "./role.manager.js";

@@ -1,4 +1,3 @@
-import { resolveField, resolveQuery, resolver } from "@athenajs/core";
 import {
   IAuthPermission,
   IProject,
@@ -6,7 +5,8 @@ import {
   IProjectSprintsArgs,
   IQuery,
   IQueryProjectArgs,
-} from "../../graphql.js";
+} from "@aldahick/rex-sdk";
+import { resolveField, resolveQuery, resolver } from "@athenajs/core";
 import { RexContext } from "../auth/auth.context.js";
 import { ProjectConfigManager } from "./project-config.manager.js";
 import { ProjectManager } from "./project.manager.js";

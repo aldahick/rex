@@ -1,20 +1,19 @@
 import {
+  IAuthPermission,
+  IMutation,
+  IMutationCreateUserArgs,
+  IMutationUpdateUserArgs,
+  IQuery,
+  IQueryUserArgs,
+  IUser,
+} from "@aldahick/rex-sdk";
+import {
   resolveField,
   resolveMutation,
   resolveQuery,
   resolver,
 } from "@athenajs/core";
 import { RexConfig } from "../../config.js";
-import {
-  IAuthPermission,
-  IMutation,
-  IMutationAddRoleToUserArgs,
-  IMutationCreateUserArgs,
-  IMutationSetUserPasswordArgs,
-  IQuery,
-  IQueryUserArgs,
-  IUser,
-} from "../../graphql.js";
 import { UserModel } from "../../model/index.js";
 import { RexContext } from "../auth/auth.context.js";
 import { RoleResolver } from "../role/role.resolver.js";
@@ -58,27 +57,9 @@ export class UserResolver {
   }
 
   @resolveMutation()
-  async addRoleToUser(
-    root: never,
-    { userId, roleId }: IMutationAddRoleToUserArgs,
-    context: RexContext,
-  ): Promise<IMutation["addRoleToUser"]> {
-    if (
-      !(await context.isAuthorized(
-        IAuthPermission.AdminUsers,
-        IAuthPermission.AdminRoles,
-      ))
-    ) {
-      throw new Error("Forbidden");
-    }
-    await this.userManager.addRole(userId, roleId);
-    return true;
-  }
-
-  @resolveMutation()
   async createUser(
     root: never,
-    { email, username, password }: IMutationCreateUserArgs,
+    { params: { email, username, password } }: IMutationCreateUserArgs,
     context: RexContext,
   ): Promise<IMutation["createUser"]> {
     if (
@@ -94,18 +75,26 @@ export class UserResolver {
   }
 
   @resolveMutation()
-  async setUserPassword(
+  async updateUser(
     root: unknown,
-    { userId, password }: IMutationSetUserPasswordArgs,
+    { params: { id, roleIds, ...fields } }: IMutationUpdateUserArgs,
     context: RexContext,
-  ): Promise<IMutation["setUserPassword"]> {
-    let id = context.userId;
-    if (userId && (await context.isAuthorized(IAuthPermission.AdminUsers))) {
-      id = userId;
+  ): Promise<IMutation["updateUser"]> {
+    let userId = context.userId;
+    if (id && (await context.isAuthorized(IAuthPermission.AdminUsers))) {
+      userId = id;
     } else if (!id) {
       throw new Error("Forbidden");
     }
-    await this.userManager.updatePassword(id, password);
+    if (roleIds) {
+      if (!(await context.isAuthorized(IAuthPermission.AdminRoles))) {
+        throw new Error("Forbidden");
+      }
+      await this.userManager.updateRoles(id, roleIds);
+    }
+    if (Object.keys(fields).length) {
+      await this.userManager.update(id, fields);
+    }
     return true;
   }
 
