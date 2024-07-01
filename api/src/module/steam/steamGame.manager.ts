@@ -1,6 +1,6 @@
+import { IProgressStatus } from "@aldahick/rex-sdk";
 import { injectable } from "@athenajs/core";
 import { chunk } from "remeda";
-import { IProgressStatus } from "../../graphql.js";
 import { SteamGameModel } from "../../model/index.js";
 import { DatabaseService } from "../../service/database/database.service.js";
 import { SteamService } from "../../service/steam/steam.service.js";

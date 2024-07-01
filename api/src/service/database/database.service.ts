@@ -6,7 +6,6 @@ import { ProgressTable } from "../../model/progress.model.js";
 import { ProjectConfigTable } from "../../model/project-config.model.js";
 import { RoleTable } from "../../model/role.model.js";
 import { SteamGameTable } from "../../model/steam-game.model.js";
-import { UserNoteTable } from "../../model/user-note.model.js";
 import { UserRoleTable } from "../../model/user-role.model.js";
 import { UserTable } from "../../model/user.model.js";
 
@@ -17,7 +16,6 @@ const tables = {
   roles: RoleTable,
   steamGames: SteamGameTable,
   users: UserTable,
-  userNotes: UserNoteTable,
   userRoles: UserRoleTable,
 };
 type Client = OrchidORM<typeof tables>;
@@ -35,7 +33,6 @@ export class DatabaseService implements DbTables {
   readonly roles: DbTables["roles"];
   readonly steamGames: DbTables["steamGames"];
   readonly users: DbTables["users"];
-  readonly userNotes: DbTables["userNotes"];
   readonly userRoles: DbTables["userRoles"];
 
   constructor(config: RexConfig) {
@@ -53,7 +50,10 @@ export class DatabaseService implements DbTables {
     this.roles = this.orm.roles;
     this.steamGames = this.orm.steamGames;
     this.users = this.orm.users;
-    this.userNotes = this.orm.userNotes;
     this.userRoles = this.orm.userRoles;
+  }
+
+  transaction<T>(transact: () => Promise<T>): Promise<T> {
+    return this.orm.$transaction(transact);
   }
 }

@@ -1,9 +1,9 @@
+import { IAuthPermission } from "@aldahick/rex-sdk";
 import {
   ContextGenerator,
   ContextRequest,
   contextGenerator,
 } from "@athenajs/core";
-import { IAuthPermission } from "../../graphql.js";
 import { UserManager } from "../user/user.manager.js";
 import { AuthManager } from "./auth.manager.js";
 

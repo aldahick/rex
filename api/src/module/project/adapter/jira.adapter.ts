@@ -1,5 +1,3 @@
-import { differenceInMilliseconds, eachHourOfInterval } from "date-fns";
-import { filter, isTruthy, sortBy } from "remeda";
 import {
   IProjectAdapterType,
   IProjectBoard,
@@ -9,7 +7,9 @@ import {
   IProjectIssuesArgs,
   IProjectSprint,
   IProjectSprintsArgs,
-} from "../../../graphql.js";
+} from "@aldahick/rex-sdk";
+import { differenceInMilliseconds, eachHourOfInterval } from "date-fns";
+import { filter, isTruthy, sortBy } from "remeda";
 import {
   JiraChangelog,
   JiraIssue,

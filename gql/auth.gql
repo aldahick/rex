@@ -1,17 +1,22 @@
-extend type Mutation {
-  createAuthTokenGoogle(
-    googleIdToken: String!,
-    clientType: AuthClientType!
-  ): AuthToken!
-  # username can also be email
-  createAuthTokenLocal(username: String!, password: String!): AuthToken!
-  # requires auth
-  createAuthToken(userId: String!): AuthToken!
+extend type Query {
+  authToken(params: AuthTokenParams!): AuthToken!
 }
 
-enum AuthClientType {
-  MOBILE
-  WEB
+# only one field may/must be provided
+input AuthTokenParams {
+  google: AuthTokenGoogleParams
+  local: AuthTokenLocalParams
+  # requires ADMIN_USERS permission
+  userId: ID
+}
+
+input AuthTokenGoogleParams {
+  idToken: String!
+}
+
+input AuthTokenLocalParams {
+  username: String!
+  password: String!
 }
 
 type AuthToken {

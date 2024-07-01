@@ -1,27 +1,16 @@
-import { resolveField, resolveMutation, resolver } from "@athenajs/core";
-import { RexConfig } from "../../config.js";
 import {
-  IAuthClientType,
   IAuthPermission,
   IAuthToken,
-  IMutation,
-  IMutationCreateAuthTokenArgs,
-  IMutationCreateAuthTokenGoogleArgs,
-  IMutationCreateAuthTokenLocalArgs,
-} from "../../graphql.js";
+  IAuthTokenParams,
+  IQuery,
+  IQueryAuthTokenArgs,
+} from "@aldahick/rex-sdk";
+import { resolveField, resolveQuery, resolver } from "@athenajs/core";
 import { GoogleAuthService } from "../../service/google/google-auth.service.js";
 import { UserManager } from "../user/user.manager.js";
 import { UserResolver } from "../user/user.resolver.js";
 import { RexContext } from "./auth.context.js";
 import { AuthManager } from "./auth.manager.js";
-
-const clientIdsByType: Record<
-  IAuthClientType,
-  keyof RexConfig["google"]["oauth"]
-> = {
-  [IAuthClientType.Mobile]: "mobile",
-  [IAuthClientType.Web]: "web",
-};
 
 @resolver()
 export class AuthResolver {
@@ -32,59 +21,14 @@ export class AuthResolver {
     private readonly userResolver: UserResolver,
   ) {}
 
-  @resolveMutation()
-  async createAuthTokenGoogle(
+  @resolveQuery()
+  async authToken(
     root: never,
-    { googleIdToken, clientType }: IMutationCreateAuthTokenGoogleArgs,
-  ): Promise<IMutation["createAuthTokenGoogle"]> {
-    const googlePayload = await this.googleAuthService.getIdTokenPayload(
-      googleIdToken,
-      clientIdsByType[clientType],
-    );
-    if (!googlePayload) {
-      throw new Error("Invalid Google token");
-    }
-    const userId = await this.userManager.fetchId(googlePayload.email);
-    if (!userId) {
-      throw Error(`User not found: ${googlePayload.email}`);
-    }
-    return this.getAuthToken(userId);
-  }
-
-  @resolveMutation()
-  async createAuthTokenLocal(
-    root: never,
-    { username, password }: IMutationCreateAuthTokenLocalArgs,
-  ): Promise<IMutation["createAuthTokenLocal"]> {
-    const [user] = await this.userManager
-      .whereEmailOrUsername(username)
-      .select("id", "passwordHash");
-    if (!user?.passwordHash) {
-      throw new Error("Invalid username/email or password");
-    }
-    const isValid = await this.authManager.comparePassword(
-      password,
-      user.passwordHash,
-    );
-    if (!isValid) {
-      throw new Error("Invalid username/email or password");
-    }
-    return this.getAuthToken(user.id);
-  }
-
-  @resolveMutation()
-  async createAuthToken(
-    root: never,
-    { userId }: IMutationCreateAuthTokenArgs,
+    { params }: IQueryAuthTokenArgs,
     context: RexContext,
-  ): Promise<IMutation["createAuthToken"]> {
-    if (!(await context.isAuthorized(IAuthPermission.AdminUsers))) {
-      throw new Error("Forbidden");
-    }
-    if (await this.userManager.exists(userId)) {
-      return this.getAuthToken(userId);
-    }
-    throw new Error(`User ${userId} not found`);
+  ): Promise<IQuery["authToken"]> {
+    const userId = await this.getUserId(params, context);
+    return this.getAuthToken(userId);
   }
 
   @resolveField("AuthToken.user", true)
@@ -98,6 +42,54 @@ export class AuthResolver {
       }
       return this.userResolver.makeGql(user);
     });
+  }
+
+  private async getUserId(
+    { userId: actingUserId, google, local }: IAuthTokenParams,
+    context: RexContext,
+  ) {
+    if (actingUserId) {
+      if (!(await context.isAuthorized(IAuthPermission.AdminUsers))) {
+        throw new Error("Forbidden");
+      }
+      if (!(await this.userManager.exists(actingUserId))) {
+        throw new Error(`User not found: ${actingUserId}`);
+      }
+      return actingUserId;
+    }
+
+    if (google) {
+      const googlePayload = await this.googleAuthService.getIdTokenPayload(
+        google.idToken,
+      );
+      if (!googlePayload) {
+        throw new Error("Invalid Google token");
+      }
+      const userId = await this.userManager.fetchId(googlePayload.email);
+      if (!userId) {
+        throw Error(`User not found: ${googlePayload.email}`);
+      }
+      return userId;
+    }
+
+    if (local) {
+      const [user] = await this.userManager
+        .whereEmailOrUsername(local.username)
+        .select("id", "passwordHash");
+      if (!user?.passwordHash) {
+        throw new Error("Invalid username/email or password");
+      }
+      const isValid = await this.authManager.comparePassword(
+        local.password,
+        user.passwordHash,
+      );
+      if (!isValid) {
+        throw new Error("Invalid username/email or password");
+      }
+      return user.id;
+    }
+
+    throw new Error("One field must be provided in AuthTokenParams");
   }
 
   private getAuthToken(userId: string): IAuthToken {

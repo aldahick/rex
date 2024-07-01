@@ -1,0 +1,96 @@
+query getProjectConfigs {
+  user {
+    projectConfigs {
+      ...ProjectConfigFragment
+      apiToken
+    }
+  }
+}
+
+mutation updateProjectConfig($params: UpdateProjectConfigParams!) {
+  updated: updateProjectConfig(params: $params)
+}
+
+mutation deleteProjectConfig($adapterType: ProjectAdapterType!) {
+  deleted: deleteProjectConfig(adapterType: $adapterType)
+}
+
+query getProjectBoards($adapterType: ProjectAdapterType!) {
+  project(adapterType: $adapterType) {
+    config {
+      ...ProjectConfigFragment
+    }
+    boards {
+      ...ProjectBoardFragment
+    }
+  }
+}
+
+query getProjectBoard($adapterType: ProjectAdapterType!, $boardId: Int!) {
+  project(adapterType: $adapterType) {
+    config {
+      ...ProjectConfigFragment
+    }
+    boards {
+      ...ProjectBoardFragment
+    }
+    sprints(boardId: $boardId) {
+      ...ProjectSprintFragment
+    }
+  }
+}
+
+query getProjectSprint($adapterType: ProjectAdapterType!, $boardId: Int!, $sprintId: Int!) {
+  project(adapterType: $adapterType) {
+    config {
+      ...ProjectConfigFragment
+    }
+    boards {
+      ...ProjectBoardFragment
+    }
+    sprints(boardId: $boardId) {
+      ...ProjectSprintFragment
+    }
+    issues(sprintId: $sprintId) {
+      id
+      key
+      type
+      state
+      title
+      storyPoints
+      implementer {
+        id
+        name
+        email
+      }
+      sprints {
+        ...ProjectSprintFragment
+      }
+      statusDurations {
+        status
+        workingDays
+        workingDuration
+        fullDuration
+      }
+    }
+  }
+}
+
+fragment ProjectConfigFragment on ProjectConfig {
+  adapterType
+  host
+  email
+}
+
+fragment ProjectBoardFragment on ProjectBoard {
+  id
+  name
+}
+
+fragment ProjectSprintFragment on ProjectSprint {
+  id
+  name
+  state
+  start
+  end
+}

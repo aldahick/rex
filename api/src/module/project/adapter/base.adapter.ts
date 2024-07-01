@@ -1,4 +1,3 @@
-import { injectAll, makeRegistryDecorator } from "@athenajs/core";
 import {
   IProjectAdapterType,
   IProjectBoard,
@@ -7,7 +6,8 @@ import {
   IProjectIssuesArgs,
   IProjectSprint,
   IProjectSprintsArgs,
-} from "../../../graphql.js";
+} from "@aldahick/rex-sdk";
+import { injectAll, makeRegistryDecorator } from "@athenajs/core";
 
 const projectAdapterSymbol = Symbol("ProjectAdapter");
 export const projectAdapter = makeRegistryDecorator(projectAdapterSymbol);

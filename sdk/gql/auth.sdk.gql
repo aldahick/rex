@@ -1,0 +1,19 @@
+fragment FullAuthToken on AuthToken {
+  token
+  user {
+    id
+    email
+    username
+    roles {
+      id
+      name
+      permissions
+    }
+  }
+}
+
+query getAuthToken($params: AuthTokenParams!) {
+  authToken(params: $params) {
+    ...FullAuthToken
+  }
+}

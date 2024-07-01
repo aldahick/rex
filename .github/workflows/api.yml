@@ -26,5 +26,4 @@ jobs:
     uses: ./.github/workflows/publish.yml
     with:
       directory: api
-      dockerfile: api/Dockerfile
       imageName: ghcr.io/aldahick/rex-api

@@ -1,5 +1,6 @@
 import { randomBytes } from "node:crypto";
 import path from "node:path";
+import { IAuthPermission } from "@aldahick/rex-sdk";
 import {
   HttpMethod,
   HttpRequest,
@@ -11,7 +12,6 @@ import {
 } from "@athenajs/core";
 import mime from "mime";
 import { RexConfig } from "../../config.js";
-import { IAuthPermission } from "../../graphql.js";
 import { RexContext } from "../auth/auth.context.js";
 import { AuthManager } from "../auth/auth.manager.js";
 import { UserManager } from "../user/user.manager.js";

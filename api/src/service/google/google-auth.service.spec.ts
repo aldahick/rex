@@ -32,10 +32,8 @@ describe("GoogleAuthService", () => {
     mockConfig.mockReturnValue({
       google: {
         oauth: {
-          web: {
-            clientId: "id",
-            clientSecret: "secret",
-          },
+          clientId: "id",
+          clientSecret: "secret",
         },
       },
     });
@@ -50,9 +48,9 @@ describe("GoogleAuthService", () => {
       mockConfig.mockReturnValue({
         google: { oauth: { web: { clientId: undefined, clientSecret: "" } } },
       });
-      const actual = () => service().getIdTokenPayload("", "web");
+      const actual = () => service().getIdTokenPayload("");
       await expect(actual).rejects.toThrow(
-        new Error("Missing Google credentials for client web"),
+        new Error("Missing Google credentials"),
       );
     });
 
@@ -61,7 +59,7 @@ describe("GoogleAuthService", () => {
         getPayload: () => ({ email: "email" }),
         getUserId: () => null,
       });
-      const actual = await service().getIdTokenPayload("", "web");
+      const actual = await service().getIdTokenPayload("");
       expect(actual).toEqual(undefined);
     });
 
@@ -70,7 +68,7 @@ describe("GoogleAuthService", () => {
         getPayload: () => undefined,
         getUserId: () => "user id",
       });
-      const actual = await service().getIdTokenPayload("", "web");
+      const actual = await service().getIdTokenPayload("");
       expect(actual).toEqual(undefined);
     });
 
@@ -79,7 +77,7 @@ describe("GoogleAuthService", () => {
         getPayload: () => ({ email: "test@gmail.com", hd: undefined }),
         getUserId: () => "user id",
       });
-      const actual = await service().getIdTokenPayload("", "web");
+      const actual = await service().getIdTokenPayload("");
       expect(actual).toEqual({
         domain: "gmail.com",
         email: "test@gmail.com",
@@ -92,7 +90,7 @@ describe("GoogleAuthService", () => {
         getPayload: () => ({ email: "test@ahicks.dev", hd: "alexhicks.net" }),
         getUserId: () => "user id",
       });
-      const actual = await service().getIdTokenPayload("", "web");
+      const actual = await service().getIdTokenPayload("");
       expect(actual).toEqual({
         domain: "alexhicks.net",
         email: "test@ahicks.dev",

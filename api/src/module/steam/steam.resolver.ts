@@ -1,4 +1,3 @@
-import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
 import {
   IAuthPermission,
   IMutation,
@@ -7,7 +6,8 @@ import {
   IQuerySteamPlayerArgs,
   IQuerySteamPlayersArgs,
   ISteamPlayer,
-} from "../../graphql.js";
+} from "@aldahick/rex-sdk";
+import { resolveMutation, resolveQuery, resolver } from "@athenajs/core";
 import { SteamGameModel } from "../../model/index.js";
 import { SteamPlayer } from "../../service/steam/SteamPlayer.js";
 import { RexContext } from "../auth/auth.context.js";

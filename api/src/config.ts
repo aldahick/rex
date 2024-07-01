@@ -13,19 +13,9 @@ export class RexConfig extends BaseConfig {
   readonly graphqlSchemaDirs = this.required("GRAPHQL_SCHEMA_DIRS").split(",");
 
   readonly google = {
-    cloud: {
-      projectId: this.optional("GOOGLE_CLOUD_PROJECT_ID"),
-      credentialsPath: this.optional("GOOGLE_CLOUD_CREDENTIALS_PATH"),
-    },
     oauth: {
-      mobile: {
-        clientId: this.optional("GOOGLE_CLIENT_ID_MOBILE"),
-        clientSecret: this.optional("GOOGLE_CLIENT_SECRET_MOBILE"),
-      },
-      web: {
-        clientId: this.optional("GOOGLE_CLIENT_ID_WEB"),
-        clientSecret: this.optional("GOOGLE_CLIENT_SECRET_WEB"),
-      },
+      clientId: this.optional("GOOGLE_CLIENT_ID"),
+      clientSecret: this.optional("GOOGLE_CLIENT_SECRET"),
     },
   };
 
@@ -47,14 +37,6 @@ export class RexConfig extends BaseConfig {
     dir: this.optional("MEDIA_DIR"),
     sharexUrl:
       this.optional("MEDIA_SHAREX_URL") ?? `${this.http.url}/v1/sharex`,
-  };
-
-  readonly mzk = {
-    runner: {
-      dir: this.optional("MZK_RUNNER_DIR"),
-      image: this.optional("MZK_RUNNER_IMAGE"),
-      platform: this.required("MZK_RUNNER_PLATFORM"),
-    },
   };
 
   readonly postgresUrl = this.required("POSTGRES_URL");

@@ -27,7 +27,7 @@ See the README files in [`api`](./api/README.md) and [`web`](./web/README.md) fo
 
 ### Changing GraphQL schema
 
-To generate new TypeScript types based on changes to the [GraphQL schema](./gql/), do `pnpm generate`. You can run this in either package directory, or the root (which runs it for both `api` and `web`).
+To generate new TypeScript types based on changes to the [GraphQL schema](./gql/), do `pnpm generate` in `./sdk`.
 
 ## Deployment
 

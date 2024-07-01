@@ -1,6 +1,8 @@
+.cache
 .env
 *.log
 api/media
+build
 coverage
 dist
 google-cloud-credentials.json

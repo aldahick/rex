@@ -1,6 +1,6 @@
+import { IProgressStatus } from "@aldahick/rex-sdk";
 import { Logger, injectable } from "@athenajs/core";
 import { uniqueBy } from "remeda";
-import { IProgressStatus } from "../../graphql.js";
 import { ProgressModel } from "../../model/index.js";
 import { DatabaseService } from "../../service/database/database.service.js";
 

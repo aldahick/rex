@@ -1,4 +1,4 @@
-import { IProgressStatus } from "../graphql.js";
+import { IProgressStatus } from "@aldahick/rex-sdk";
 import { ProgressTable } from "../model/progress.model.js";
 import { RoleTable } from "../model/role.model.js";
 import { UserTable } from "../model/user.model.js";

@@ -1,5 +1,5 @@
+import { IProjectAdapterType } from "@aldahick/rex-sdk";
 import { Selectable } from "orchid-orm";
-import { IProjectAdapterType } from "../graphql.js";
 import { BaseTable } from "./base.table.js";
 import { UserTable } from "./user.model.js";
 
