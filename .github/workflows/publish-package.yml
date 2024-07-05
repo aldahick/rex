@@ -1,0 +1,36 @@
+name: Publish Package
+permissions:
+  id-token: write
+on:
+  workflow_call:
+    inputs:
+      build-script:
+        required: false
+        type: string
+        default: build:ci
+      directory:
+        required: true
+        type: string
+    secrets:
+      NPM_TOKEN:
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          registry-url: 'https://registry.npmjs.org'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - run: pnpm install
+      - run: pnpm ${{ inputs.build-script }}
+        working-directory: ${{ inputs.directory }}
+      - run: pnpm publish --provenance --no-git-checks
+        working-directory: ${{ inputs.directory }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

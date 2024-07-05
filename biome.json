@@ -23,6 +23,7 @@
     "rules": {
       "complexity": {
         "noExcessiveCognitiveComplexity": "error",
+        "noUselessConstructor": "off",
         "useSimplifiedLogicExpression": "error"
       },
       "correctness": {

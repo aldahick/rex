@@ -9,10 +9,35 @@ query getMediaItem($key: String!) {
   }
 }
 
+query getDeepMediaItem($key: String!) {
+  mediaItem(key: $key) {
+    key
+    type
+    children {
+      key
+      type
+      children {
+        key
+        type
+      }
+    }
+  }
+}
+
 mutation createMediaUpload($key: String!) {
   uploadUrl: createMediaUpload(key: $key)
 }
 
 mutation deleteMedia($key: String!) {
   deleteMedia(key: $key)
+}
+
+mutation addMediaDownload($url: String!, $destinationKey: String!, $sync: Boolean!) {
+  progress: addMediaDownload(url: $url, destinationKey: $destinationKey, sync: $sync) {
+    id
+  }
+}
+
+mutation createMedia($key: String!, $data: String!) {
+  created: createMedia(key: $key, data: $data)
 }

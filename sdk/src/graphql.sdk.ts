@@ -431,6 +431,35 @@ export type IGetMediaItemQuery = {
     | undefined;
 };
 
+export type IGetDeepMediaItemQueryVariables = Exact<{
+  key: Scalars["String"]["input"];
+}>;
+
+export type IGetDeepMediaItemQuery = {
+  __typename?: "Query";
+  mediaItem?:
+    | {
+        __typename?: "MediaItem";
+        key: string;
+        type: IMediaItemType;
+        children?:
+          | Array<{
+              __typename?: "MediaItem";
+              key: string;
+              type: IMediaItemType;
+              children?:
+                | Array<{
+                    __typename?: "MediaItem";
+                    key: string;
+                    type: IMediaItemType;
+                  }>
+                | undefined;
+            }>
+          | undefined;
+      }
+    | undefined;
+};
+
 export type ICreateMediaUploadMutationVariables = Exact<{
   key: Scalars["String"]["input"];
 }>;
@@ -447,6 +476,27 @@ export type IDeleteMediaMutationVariables = Exact<{
 export type IDeleteMediaMutation = {
   __typename?: "Mutation";
   deleteMedia: boolean;
+};
+
+export type IAddMediaDownloadMutationVariables = Exact<{
+  url: Scalars["String"]["input"];
+  destinationKey: Scalars["String"]["input"];
+  sync: Scalars["Boolean"]["input"];
+}>;
+
+export type IAddMediaDownloadMutation = {
+  __typename?: "Mutation";
+  progress: { __typename?: "Progress"; id: string };
+};
+
+export type ICreateMediaMutationVariables = Exact<{
+  key: Scalars["String"]["input"];
+  data: Scalars["String"]["input"];
+}>;
+
+export type ICreateMediaMutation = {
+  __typename?: "Mutation";
+  created: boolean;
 };
 
 export type IGetProjectConfigsQueryVariables = Exact<{ [key: string]: never }>;
@@ -689,6 +739,22 @@ export const GetMediaItemDocument = gql`
   }
 }
     `;
+export const GetDeepMediaItemDocument = gql`
+    query getDeepMediaItem($key: String!) {
+  mediaItem(key: $key) {
+    key
+    type
+    children {
+      key
+      type
+      children {
+        key
+        type
+      }
+    }
+  }
+}
+    `;
 export const CreateMediaUploadDocument = gql`
     mutation createMediaUpload($key: String!) {
   uploadUrl: createMediaUpload(key: $key)
@@ -697,6 +763,22 @@ export const CreateMediaUploadDocument = gql`
 export const DeleteMediaDocument = gql`
     mutation deleteMedia($key: String!) {
   deleteMedia(key: $key)
+}
+    `;
+export const AddMediaDownloadDocument = gql`
+    mutation addMediaDownload($url: String!, $destinationKey: String!, $sync: Boolean!) {
+  progress: addMediaDownload(
+    url: $url
+    destinationKey: $destinationKey
+    sync: $sync
+  ) {
+    id
+  }
+}
+    `;
+export const CreateMediaDocument = gql`
+    mutation createMedia($key: String!, $data: String!) {
+  created: createMedia(key: $key, data: $data)
 }
     `;
 export const GetProjectConfigsDocument = gql`
@@ -865,6 +947,22 @@ export function getSdk(
         variables,
       );
     },
+    getDeepMediaItem(
+      variables: IGetDeepMediaItemQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<IGetDeepMediaItemQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<IGetDeepMediaItemQuery>(
+            GetDeepMediaItemDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        "getDeepMediaItem",
+        "query",
+        variables,
+      );
+    },
     createMediaUpload(
       variables: ICreateMediaUploadMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
@@ -892,6 +990,37 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         "deleteMedia",
+        "mutation",
+        variables,
+      );
+    },
+    addMediaDownload(
+      variables: IAddMediaDownloadMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<IAddMediaDownloadMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<IAddMediaDownloadMutation>(
+            AddMediaDownloadDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        "addMediaDownload",
+        "mutation",
+        variables,
+      );
+    },
+    createMedia(
+      variables: ICreateMediaMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<ICreateMediaMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<ICreateMediaMutation>(CreateMediaDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        "createMedia",
         "mutation",
         variables,
       );

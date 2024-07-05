@@ -1,0 +1,25 @@
+name: API
+run-name: ${{ github.ref_type == 'tag' && 'Publish' || 'Build' }} ${{ github.ref_type == 'tag' && github.ref_name || 'SDK' }}
+on:
+  push:
+    branches: '*'
+    tags:
+      - sdk-*
+    paths:
+      - .github/workflows/*
+      - sdk/**
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+    with:
+      directory: sdk
+
+  publish:
+    if: ${{ github.ref_type == 'tag' }}
+    needs: tests
+    uses: ./.github/workflows/publish-package.yml
+    with:
+      directory: sdk
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

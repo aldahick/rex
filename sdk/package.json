@@ -23,6 +23,8 @@
   "scripts": {
     "build": "pnpm generate && tsc",
     "build:ci": "tsc",
+    "lint": "biome check src",
+    "test": "echo 'No tests yet'",
     "generate": "graphql-codegen -c codegen.graphql.ts"
   },
   "dependencies": {

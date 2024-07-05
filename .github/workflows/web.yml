@@ -8,6 +8,7 @@ on:
       - web-*
     paths:
       - .github/workflows/*
+      - sdk/**
       - web/**
 
 permissions:
@@ -23,7 +24,7 @@ jobs:
   publish:
     if: ${{ github.ref_type == 'tag' }}
     needs: tests
-    uses: ./.github/workflows/publish.yml
+    uses: ./.github/workflows/publish-docker.yml
     with:
       directory: web
       imageName: ghcr.io/aldahick/rex-web
