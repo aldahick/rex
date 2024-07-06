@@ -53,8 +53,6 @@ jobs:
           outputs: type=image,name=${{ inputs.imageName }},push-by-digest=true,name-canonical=true,push=true
           push: true
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            WEB_DIR=web
       - name: Export digest
         run: |
           mkdir -p /tmp/digests
