@@ -37,7 +37,7 @@ export const withAuthRexSdk =
   ): Promise<TypedResponse<never> | T> => {
     const auth = await getCookieAuth(args.request);
     if (!auth) {
-      const loginUrl = `/login?${new URLSearchParams({ from: args.request.url })}`;
+      const loginUrl = `/login?${new URLSearchParams({ from: new URL(args.request.url).pathname })}`;
       return redirect(loginUrl);
     }
     const sdk = getRexSdk(auth.token);
