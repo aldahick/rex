@@ -36,5 +36,5 @@ export const FileListItem: React.FC<{ child: IMediaItem }> = ({ child }) => {
       </div>
     );
   }
-  return <Link to={`/media/${child.key}`}>{listItem}</Link>;
+  return <Link to={`/media/${encodeURIComponent(child.key)}`}>{listItem}</Link>;
 };
