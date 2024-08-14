@@ -108,13 +108,15 @@ export class UserManager {
     if (await query.count()) {
       throw new Error(`User ${email} already exists`);
     }
-    return await this.db.users.create({
-      email,
-      username,
-      ...(password
-        ? { passwordHash: await this.authManager.hashPassword(password) }
-        : {}),
-    });
+    return await this.db.users
+      .create({
+        email,
+        username,
+        ...(password
+          ? { passwordHash: await this.authManager.hashPassword(password) }
+          : {}),
+      })
+      .selectAll();
   }
 
   async update(

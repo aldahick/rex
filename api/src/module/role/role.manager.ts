@@ -20,10 +20,12 @@ export class RoleManager {
   }
 
   async create(name: string): Promise<RoleModel> {
-    return await this.db.roles.create({
-      name,
-      permissions: [],
-    });
+    return await this.db.roles
+      .create({
+        name,
+        permissions: [],
+      })
+      .selectAll();
   }
 
   async delete(roleId: string): Promise<void> {

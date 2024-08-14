@@ -23,12 +23,14 @@ export class ProgressManager {
     return await this.db.progress.whereIn("id", ids);
   }
 
-  async create(action: string): Promise<ProgressModel> {
-    return await this.db.progress.create({
-      action,
-      createdAt: new Date(),
-      status: IProgressStatus.Created,
-    });
+  async create(action: string) {
+    return await this.db.progress
+      .create({
+        action,
+        createdAt: new Date(),
+        status: IProgressStatus.Created,
+      })
+      .selectAll();
   }
 
   async addLogs(
