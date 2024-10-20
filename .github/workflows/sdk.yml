@@ -1,4 +1,4 @@
-name: API
+name: SDK
 run-name: ${{ github.ref_type == 'tag' && 'Publish' || 'Build' }} ${{ github.ref_type == 'tag' && github.ref_name || 'SDK' }}
 on:
   push:
