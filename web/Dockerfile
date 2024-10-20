@@ -19,7 +19,7 @@ RUN pnpm build:ci
 WORKDIR /rex/web
 COPY web/postcss.config.js web/tailwind.config.ts web/tsconfig.json web/vite.config.ts ./
 COPY web/public public
-COPY web/app app
+COPY web/src src
 RUN pnpm build
 
 FROM base AS server

@@ -17,5 +17,5 @@
     "esModuleInterop": false,
     "types": ["vite/client"]
   },
-  "include": ["app"]
+  "include": ["src"]
 }

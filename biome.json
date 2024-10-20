@@ -56,8 +56,6 @@
         "vitest.config.mts",
         "vite.config.ts",
         "codegen*.ts",
-        "app/root.tsx",
-        "app/routes/*.tsx",
         "*.config.js",
         "*.config.ts"
       ],

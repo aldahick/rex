@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "concurrently 'vite build' 'tsc --noEmit'",
-    "lint": "biome check app",
+    "lint": "biome check src",
     "test": "echo 'No tests yet'"
   },
   "engines": {
