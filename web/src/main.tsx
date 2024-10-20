@@ -2,13 +2,13 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Layout } from "./components/util/Layout";
-import { IndexRoute } from "./routes/_index";
+import { IndexRoute } from "./routes";
 import { CatRoute } from "./routes/cat";
 import { LoginRoute } from "./routes/login";
 import { LogoutRoute } from "./routes/logout";
-import { MediaRoute } from "./routes/media.$";
-import { ProjectRoute } from "./routes/project.$adapterType.($boardId).($sprintId)";
-import ProjectsRoute from "./routes/projects";
+import { MediaRoute } from "./routes/media";
+import { ProjectRoute } from "./routes/project";
+import { ProjectsRoute } from "./routes/projects";
 
 const router = createBrowserRouter([
   {

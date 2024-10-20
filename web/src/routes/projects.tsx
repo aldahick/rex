@@ -6,7 +6,7 @@ import { EditProjectConfig } from "../components/project/EditProjectConfig";
 import { FormContainer } from "../components/util/FormContainer";
 import { toStartCase } from "../utils/string.util";
 
-export default function ProjectsRoute() {
+export const ProjectsRoute: React.FC = () => {
   const { data } = useGetProjectConfigsQuery();
   const projectConfigs = data?.user.projectConfigs;
   const [adapterType, setAdapterType] = useState(
@@ -43,4 +43,4 @@ export default function ProjectsRoute() {
       </Stack>
     </FormContainer>
   );
-}
+};
