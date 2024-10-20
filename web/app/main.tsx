@@ -5,6 +5,7 @@ import { Layout } from "./components/util/Layout";
 import { IndexRoute } from "./routes/_index";
 import { CatRoute } from "./routes/cat";
 import { LoginRoute } from "./routes/login";
+import { LogoutRoute } from "./routes/logout";
 import { MediaRoute } from "./routes/media.$";
 import { ProjectRoute } from "./routes/project.$adapterType.($boardId).($sprintId)";
 import ProjectsRoute from "./routes/projects";
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginRoute />,
+      },
+      {
+        path: "logout",
+        element: <LogoutRoute />,
       },
       {
         path: "media/*",
