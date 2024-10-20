@@ -1,12 +1,12 @@
 import { IAuthPermission } from "@aldahick/rex-sdk";
-import { Link, useLoaderData } from "@remix-run/react";
 import { GlobeIcon, MapIcon } from "lucide-react";
 import React from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth.hook";
 import { AthenaIcon } from "../../images/logos/AthenaIcon";
 import githubDarkLogoUrl from "../../images/logos/github-dark.png";
 import linkedInLogoUrl from "../../images/logos/linkedin.png";
 import stravaLogoUrl from "../../images/logos/strava.svg";
-import { IndexLoader } from "../../routes/_index";
 import { SocialBadge } from "../util/SocialBadge";
 import { HexSelect } from "./HexSelect";
 
@@ -31,8 +31,8 @@ export const HomeLinks: React.FC<HomeLinksProps> = ({
   primaryBackground = YELLOW,
   secondaryBackground = BLUE,
 }) => {
-  const { auth } = useLoaderData<IndexLoader>();
-  const authSuffix = auth ? "Out" : "In";
+  const auth = useAuth();
+  const authSuffix = auth.token ? "Out" : "In";
 
   return (
     <HexSelect background={[primaryBackground, secondaryBackground]}>
@@ -103,7 +103,7 @@ export const HomeLinks: React.FC<HomeLinksProps> = ({
           ),
         },
         bottomLeft: {
-          element: auth?.permissions.includes(IAuthPermission.Projects) ? (
+          element: auth.isAuthorized(IAuthPermission.Projects) ? (
             <Link to="/projects" style={{ textAlign: "center" }}>
               <h3>🐗</h3>
               <span>View project statistics</span>
@@ -120,7 +120,7 @@ export const HomeLinks: React.FC<HomeLinksProps> = ({
           ),
         },
         bottomRight: {
-          element: auth?.permissions.includes(IAuthPermission.Media) ? (
+          element: auth.isAuthorized(IAuthPermission.Media) ? (
             <Link to="/media" style={{ textAlign: "center" }}>
               <h3>📁</h3>
               <span>Manage media</span>

@@ -71,7 +71,7 @@
     },
     {
       "include": [
-        "graphql*sdk.ts"
+        "src/node.ts"
       ],
       "linter": {
         "rules": {

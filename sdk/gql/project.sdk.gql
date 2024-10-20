@@ -1,12 +1,3 @@
-query getProjectConfigs {
-  user {
-    projectConfigs {
-      ...ProjectConfigFragment
-      apiToken
-    }
-  }
-}
-
 mutation updateProjectConfig($params: UpdateProjectConfigParams!) {
   updated: updateProjectConfig(params: $params)
 }
@@ -15,13 +6,22 @@ mutation deleteProjectConfig($adapterType: ProjectAdapterType!) {
   deleted: deleteProjectConfig(adapterType: $adapterType)
 }
 
+query getProjectConfigs {
+  user {
+    projectConfigs {
+      ...ProjectConfig
+      apiToken
+    }
+  }
+}
+
 query getProjectBoards($adapterType: ProjectAdapterType!) {
   project(adapterType: $adapterType) {
     config {
-      ...ProjectConfigFragment
+      ...ProjectConfig
     }
     boards {
-      ...ProjectBoardFragment
+      ...ProjectBoard
     }
   }
 }
@@ -29,13 +29,13 @@ query getProjectBoards($adapterType: ProjectAdapterType!) {
 query getProjectBoard($adapterType: ProjectAdapterType!, $boardId: Int!) {
   project(adapterType: $adapterType) {
     config {
-      ...ProjectConfigFragment
+      ...ProjectConfig
     }
     boards {
-      ...ProjectBoardFragment
+      ...ProjectBoard
     }
     sprints(boardId: $boardId) {
-      ...ProjectSprintFragment
+      ...ProjectSprint
     }
   }
 }
@@ -43,54 +43,58 @@ query getProjectBoard($adapterType: ProjectAdapterType!, $boardId: Int!) {
 query getProjectSprint($adapterType: ProjectAdapterType!, $boardId: Int!, $sprintId: Int!) {
   project(adapterType: $adapterType) {
     config {
-      ...ProjectConfigFragment
+      ...ProjectConfig
     }
     boards {
-      ...ProjectBoardFragment
+      ...ProjectBoard
     }
     sprints(boardId: $boardId) {
-      ...ProjectSprintFragment
+      ...ProjectSprint
     }
     issues(sprintId: $sprintId) {
-      id
-      key
-      type
-      state
-      title
-      storyPoints
-      implementer {
-        id
-        name
-        email
-      }
-      sprints {
-        ...ProjectSprintFragment
-      }
-      statusDurations {
-        status
-        workingDays
-        workingDuration
-        fullDuration
-      }
+      ...ProjectIssue
     }
   }
 }
 
-fragment ProjectConfigFragment on ProjectConfig {
+fragment ProjectConfig on ProjectConfig {
   adapterType
   host
   email
 }
 
-fragment ProjectBoardFragment on ProjectBoard {
+fragment ProjectBoard on ProjectBoard {
   id
   name
 }
 
-fragment ProjectSprintFragment on ProjectSprint {
+fragment ProjectSprint on ProjectSprint {
   id
   name
   state
   start
   end
+}
+
+fragment ProjectIssue on ProjectIssue {
+  id
+  key
+  type
+  state
+  title
+  storyPoints
+  implementer {
+    id
+    name
+    email
+  }
+  sprints {
+    ...ProjectSprint
+  }
+  statusDurations {
+    status
+    workingDays
+    workingDuration
+    fullDuration
+  }
 }

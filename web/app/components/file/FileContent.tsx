@@ -1,8 +1,9 @@
 import { IMediaItem } from "@aldahick/rex-sdk";
-import { Await, useAsyncValue, useLoaderData } from "@remix-run/react";
 import mime from "mime";
 import React from "react";
-import { MediaLoader } from "../../routes/media.$";
+import { Await, useAsyncValue } from "react-router-dom";
+import { config } from "../../config";
+import { useAuth } from "../../hooks/useAuth.hook";
 
 const TextContent: React.FC<{ mimeType: string }> = ({ mimeType }) => {
   const text = useAsyncValue() as string;
@@ -19,10 +20,13 @@ export const FileContent: React.FC<{
   item: IMediaItem;
   onClick?: () => void;
 }> = ({ item, onClick }) => {
-  const { auth, config } = useLoaderData<MediaLoader>();
+  const auth = useAuth();
   const mimeType = mime.getType(item.key);
-  const params = new URLSearchParams({ key: item.key, token: auth.token });
-  const contentUrl = `${config.publicApiUrl}v1/media/content?${params}`;
+  const params = new URLSearchParams({
+    key: item.key,
+    token: auth.token?.token ?? "",
+  });
+  const contentUrl = `${config.apiUrl}/v1/media/content?${params}`;
 
   switch (mimeType) {
     case "audio/mp4":

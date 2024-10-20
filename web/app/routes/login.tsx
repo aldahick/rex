@@ -1,93 +1,32 @@
-import { IAuthTokenParams } from "@aldahick/rex-sdk";
-import { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
-import { redirect, useLoaderData } from "@remix-run/react";
-import { z } from "zod";
+import { IAuthTokenFragment } from "@aldahick/rex-sdk";
+import { useGetConfigQuery } from "@aldahick/rex-sdk/react";
+import React from "react";
+import { useNavigate } from "react-router";
 import { AuthGoogleButton } from "../components/auth/AuthGoogleButton";
 import { AuthLoginForm } from "../components/auth/AuthLoginForm";
 import { DividerText } from "../components/util/DividerText";
 import { FormContainer } from "../components/util/FormContainer";
-import { config } from "../config.server";
-import { authCookie } from "../cookies.server";
-import { getRexSdk } from "../rex.sdk";
-import { formToObject } from "../utils/form.util";
+import { useAuth } from "../hooks/useAuth.hook";
 
-export const meta: MetaFunction = () => [
-  {
-    title: "Rex | Log In",
-  },
-];
+export const LoginRoute: React.FC = () => {
+  const { data } = useGetConfigQuery();
+  const auth = useAuth();
+  const navigate = useNavigate();
 
-export type LoginLoader = typeof loader;
-export const loader = async () => {
-  const sdk = getRexSdk();
-  const { config: rexConfig } = await sdk.getConfig();
-  return {
-    config: {
-      ...config,
-      ...rexConfig,
-    },
+  const handleLogin = (token: IAuthTokenFragment) => {
+    auth.set(token);
+    navigate("/");
   };
-};
-
-export default function LoginRoute() {
-  const {
-    config: { googleClientId },
-  } = useLoaderData<LoginLoader>();
 
   return (
     <FormContainer title="Log In">
-      <AuthLoginForm />
-      {googleClientId ? (
+      <AuthLoginForm config={data?.config} onLogin={handleLogin} />
+      {data && (
         <>
           <DividerText>OR</DividerText>
-          <AuthGoogleButton />
+          <AuthGoogleButton onLogin={handleLogin} />
         </>
-      ) : null}
+      )}
     </FormContainer>
   );
-}
-
-export type LoginAction = typeof action;
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const sdk = getRexSdk();
-  const params = formToObject(await request.formData(), loginForm);
-  const { authToken } = await sdk.getAuthToken({ params });
-  const from = new URLSearchParams(request.url).get("from");
-  return redirect(from ?? "/", {
-    headers: {
-      "Set-Cookie": await authCookie.serialize(authToken),
-    },
-  });
 };
-
-const loginForm = z
-  .union([
-    z.object({
-      provider: z.enum(["local"]),
-      username: z.string(),
-      password: z.string(),
-    }),
-    z.object({
-      provider: z.enum(["google"]),
-      idToken: z.string(),
-    }),
-  ])
-  .transform(
-    (form): IAuthTokenParams => ({
-      ...(form.provider === "local"
-        ? {
-            local: {
-              username: form.username,
-              password: form.password,
-            },
-          }
-        : {}),
-      ...(form.provider === "google"
-        ? {
-            google: {
-              idToken: form.idToken,
-            },
-          }
-        : {}),
-    }),
-  );

@@ -25,7 +25,7 @@ type Dot = XYCoord & {
 export class CatGame {
   private readonly dots: Dot[] = [];
 
-  private interval?: NodeJS.Timeout;
+  private intervalRef?: number;
 
   constructor(private settings: CatSettings) {}
 
@@ -47,7 +47,7 @@ export class CatGame {
     if (!this.settings) {
       return;
     }
-    this.interval = setInterval(() => {
+    this.intervalRef = setInterval(() => {
       this.update(context.canvas);
       this.render(context);
     }, 1000 / this.settings.frameRate);
@@ -59,7 +59,7 @@ export class CatGame {
   }
 
   stopInterval() {
-    clearInterval(this.interval);
+    clearInterval(this.intervalRef);
   }
 
   swapPalette() {
@@ -72,7 +72,7 @@ export class CatGame {
     return {
       x: randomInt(canvas.width),
       y: randomInt(canvas.height),
-      theta: startAngles[randomInt(startAngles.length)],
+      theta: startAngles[randomInt(startAngles.length)] as number,
     };
   }
 

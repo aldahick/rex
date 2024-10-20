@@ -1,4 +1,10 @@
-fragment FullAuthToken on AuthToken {
+query getAuthToken($params: AuthTokenParams!) {
+  authToken(params: $params) {
+    ...AuthToken
+  }
+}
+
+fragment AuthToken on AuthToken {
   token
   user {
     id
@@ -9,11 +15,5 @@ fragment FullAuthToken on AuthToken {
       name
       permissions
     }
-  }
-}
-
-query getAuthToken($params: AuthTokenParams!) {
-  authToken(params: $params) {
-    ...FullAuthToken
   }
 }

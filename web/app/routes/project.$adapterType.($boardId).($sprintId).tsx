@@ -1,77 +1,44 @@
 import {
-  IGetProjectBoardQuery,
-  IGetProjectBoardsQuery,
-  IGetProjectSprintQuery,
-  IProjectAdapterType,
-} from "@aldahick/rex-sdk";
-import { MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { Container, Row, Table } from "react-bootstrap";
-import { sortBy } from "remeda";
+  useGetProjectBoardLazyQuery,
+  useGetProjectBoardsLazyQuery,
+  useGetProjectSprintLazyQuery,
+} from "@aldahick/rex-sdk/react";
+import React, { useEffect } from "react";
+import { Container, Row } from "react-bootstrap";
 import { ProjectBoardSprintSelect } from "../components/project/ProjectBoardSprintSelect";
-import { withAuthRexSdk } from "../rex.sdk";
-import { toStartCase } from "../utils/string.util";
+import { ProjectIssues } from "../components/project/ProjectIssues";
+import { useProject } from "../components/project/project.atom";
+import { useProjectParams } from "../components/project/project.hook";
 
-export const meta: MetaFunction = ({ params }) => [
-  { title: `Rex | Project ${toStartCase(params.adapterType ?? "")}` },
-];
+export const ProjectRoute: React.FC = () => {
+  const [getProjectBoards] = useGetProjectBoardsLazyQuery({
+    onCompleted: ({ project }) => setProject(project),
+  });
+  const [getProjectBoard] = useGetProjectBoardLazyQuery({
+    onCompleted: ({ project }) => setProject(project),
+  });
+  const [getProjectSprint] = useGetProjectSprintLazyQuery({
+    onCompleted: ({ project }) => setProject(project),
+  });
+  const { adapterType, boardId, sprintId } = useProjectParams();
+  const [, setProject] = useProject();
 
-export type ProjectParams = "adapterType" | "boardId" | "sprintId";
-
-export type ProjectLoader = typeof loader;
-export const loader = withAuthRexSdk<
-  IGetProjectBoardsQuery | IGetProjectBoardQuery | IGetProjectSprintQuery
->(async (sdk, { params }) => {
-  const adapterType = params.adapterType as IProjectAdapterType;
-  const boardId = params.boardId ? Number.parseInt(params.boardId) : undefined;
-  const sprintId = params.sprintId
-    ? Number.parseInt(params.sprintId)
-    : undefined;
-  if (sprintId && boardId) {
-    return await sdk.getProjectSprint({ adapterType, boardId, sprintId });
-  }
-  if (boardId) {
-    return await sdk.getProjectBoard({ adapterType, boardId });
-  }
-  return await sdk.getProjectBoards({ adapterType });
-});
-
-export default function ProjectRoute() {
-  const { project } = useLoaderData<ProjectLoader>();
+  useEffect(() => {
+    if (boardId && sprintId) {
+      getProjectSprint({ variables: { adapterType, boardId, sprintId } });
+    } else if (boardId) {
+      getProjectBoard({ variables: { adapterType, boardId } });
+    } else {
+      getProjectBoards({ variables: { adapterType } });
+    }
+  }, [adapterType, boardId, sprintId]);
 
   return (
     <Container>
       <Row>
         <ProjectBoardSprintSelect />
       </Row>
-      {"issues" in project && (
-        <Table>
-          <thead>
-            <tr>
-              <th>Key</th>
-              <th>Title</th>
-              <th>State</th>
-              <th>Story Points</th>
-              <th>Implementer</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortBy(project.issues, (i) => i.key.toLowerCase()).map((issue) => (
-              <tr key={issue.id}>
-                <td>
-                  <a href={`${project.config.host}/browse/${issue.key}`}>
-                    {issue.key}
-                  </a>
-                </td>
-                <td>{issue.title}</td>
-                <td>{issue.state}</td>
-                <td>{issue.storyPoints ?? ""}</td>
-                <td>{issue.implementer?.name ?? ""}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      )}
+      <ProjectIssues />
     </Container>
   );
-}
+};

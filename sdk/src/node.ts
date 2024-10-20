@@ -353,25 +353,6 @@ export type IUser = {
   username?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type IFullAuthTokenFragment = {
-  __typename?: "AuthToken";
-  token: string;
-  user: {
-    __typename?: "User";
-    id: string;
-    email: string;
-    username?: string | undefined;
-    roles?:
-      | Array<{
-          __typename?: "Role";
-          id: string;
-          name: string;
-          permissions: IAuthPermission[];
-        }>
-      | undefined;
-  };
-};
-
 export type IGetAuthTokenQueryVariables = Exact<{
   params: IAuthTokenParams;
 }>;
@@ -398,6 +379,25 @@ export type IGetAuthTokenQuery = {
   };
 };
 
+export type IAuthTokenFragment = {
+  __typename?: "AuthToken";
+  token: string;
+  user: {
+    __typename?: "User";
+    id: string;
+    email: string;
+    username?: string | undefined;
+    roles?:
+      | Array<{
+          __typename?: "Role";
+          id: string;
+          name: string;
+          permissions: IAuthPermission[];
+        }>
+      | undefined;
+  };
+};
+
 export type IGetConfigQueryVariables = Exact<{ [key: string]: never }>;
 
 export type IGetConfigQuery = {
@@ -409,11 +409,11 @@ export type IGetConfigQuery = {
   };
 };
 
-export type IGetMediaItemQueryVariables = Exact<{
+export type IGetBaseMediaItemQueryVariables = Exact<{
   key: Scalars["String"]["input"];
 }>;
 
-export type IGetMediaItemQuery = {
+export type IGetBaseMediaItemQuery = {
   __typename?: "Query";
   mediaItem?:
     | {
@@ -499,20 +499,33 @@ export type ICreateMediaMutation = {
   created: boolean;
 };
 
-export type IGetProjectConfigsQueryVariables = Exact<{ [key: string]: never }>;
+export type IBaseMediaItemFragment = {
+  __typename?: "MediaItem";
+  key: string;
+  type: IMediaItemType;
+  children?:
+    | Array<{ __typename?: "MediaItem"; key: string; type: IMediaItemType }>
+    | undefined;
+};
 
-export type IGetProjectConfigsQuery = {
-  __typename?: "Query";
-  user: {
-    __typename?: "User";
-    projectConfigs: Array<{
-      __typename?: "ProjectConfig";
-      apiToken: string;
-      adapterType: IProjectAdapterType;
-      host: string;
-      email: string;
-    }>;
-  };
+export type IDeepMediaItemFragment = {
+  __typename?: "MediaItem";
+  key: string;
+  type: IMediaItemType;
+  children?:
+    | Array<{
+        __typename?: "MediaItem";
+        key: string;
+        type: IMediaItemType;
+        children?:
+          | Array<{
+              __typename?: "MediaItem";
+              key: string;
+              type: IMediaItemType;
+            }>
+          | undefined;
+      }>
+    | undefined;
 };
 
 export type IUpdateProjectConfigMutationVariables = Exact<{
@@ -531,6 +544,22 @@ export type IDeleteProjectConfigMutationVariables = Exact<{
 export type IDeleteProjectConfigMutation = {
   __typename?: "Mutation";
   deleted: boolean;
+};
+
+export type IGetProjectConfigsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type IGetProjectConfigsQuery = {
+  __typename?: "Query";
+  user: {
+    __typename?: "User";
+    projectConfigs: Array<{
+      __typename?: "ProjectConfig";
+      apiToken: string;
+      adapterType: IProjectAdapterType;
+      host: string;
+      email: string;
+    }>;
+  };
 };
 
 export type IGetProjectBoardsQueryVariables = Exact<{
@@ -638,26 +667,59 @@ export type IGetProjectSprintQuery = {
   };
 };
 
-export type IProjectConfigFragmentFragment = {
+export type IProjectConfigFragment = {
   __typename?: "ProjectConfig";
   adapterType: IProjectAdapterType;
   host: string;
   email: string;
 };
 
-export type IProjectBoardFragmentFragment = {
+export type IProjectBoardFragment = {
   __typename?: "ProjectBoard";
   id: number;
   name: string;
 };
 
-export type IProjectSprintFragmentFragment = {
+export type IProjectSprintFragment = {
   __typename?: "ProjectSprint";
   id: number;
   name: string;
   state: string;
   start?: Date | undefined;
   end?: Date | undefined;
+};
+
+export type IProjectIssueFragment = {
+  __typename?: "ProjectIssue";
+  id: string;
+  key: string;
+  type: string;
+  state: string;
+  title: string;
+  storyPoints?: number | undefined;
+  implementer?:
+    | {
+        __typename?: "ProjectUser";
+        id: string;
+        name: string;
+        email?: string | undefined;
+      }
+    | undefined;
+  sprints: Array<{
+    __typename?: "ProjectSprint";
+    id: number;
+    name: string;
+    state: string;
+    start?: Date | undefined;
+    end?: Date | undefined;
+  }>;
+  statusDurations: Array<{
+    __typename?: "ProjectIssueStatusDuration";
+    status: string;
+    workingDays: number;
+    workingDuration: number;
+    fullDuration: number;
+  }>;
 };
 
 export type ICreateUserMutationVariables = Exact<{
@@ -675,8 +737,8 @@ export type IUpdateUserMutationVariables = Exact<{
 
 export type IUpdateUserMutation = { __typename?: "Mutation"; updated: boolean };
 
-export const FullAuthTokenFragmentDoc = gql`
-    fragment FullAuthToken on AuthToken {
+export const AuthTokenFragmentDoc = gql`
+    fragment AuthToken on AuthToken {
   token
   user {
     id
@@ -690,21 +752,45 @@ export const FullAuthTokenFragmentDoc = gql`
   }
 }
     `;
-export const ProjectConfigFragmentFragmentDoc = gql`
-    fragment ProjectConfigFragment on ProjectConfig {
+export const BaseMediaItemFragmentDoc = gql`
+    fragment BaseMediaItem on MediaItem {
+  key
+  type
+  children {
+    key
+    type
+  }
+}
+    `;
+export const DeepMediaItemFragmentDoc = gql`
+    fragment DeepMediaItem on MediaItem {
+  key
+  type
+  children {
+    key
+    type
+    children {
+      key
+      type
+    }
+  }
+}
+    `;
+export const ProjectConfigFragmentDoc = gql`
+    fragment ProjectConfig on ProjectConfig {
   adapterType
   host
   email
 }
     `;
-export const ProjectBoardFragmentFragmentDoc = gql`
-    fragment ProjectBoardFragment on ProjectBoard {
+export const ProjectBoardFragmentDoc = gql`
+    fragment ProjectBoard on ProjectBoard {
   id
   name
 }
     `;
-export const ProjectSprintFragmentFragmentDoc = gql`
-    fragment ProjectSprintFragment on ProjectSprint {
+export const ProjectSprintFragmentDoc = gql`
+    fragment ProjectSprint on ProjectSprint {
   id
   name
   state
@@ -712,13 +798,37 @@ export const ProjectSprintFragmentFragmentDoc = gql`
   end
 }
     `;
+export const ProjectIssueFragmentDoc = gql`
+    fragment ProjectIssue on ProjectIssue {
+  id
+  key
+  type
+  state
+  title
+  storyPoints
+  implementer {
+    id
+    name
+    email
+  }
+  sprints {
+    ...ProjectSprint
+  }
+  statusDurations {
+    status
+    workingDays
+    workingDuration
+    fullDuration
+  }
+}
+    ${ProjectSprintFragmentDoc}`;
 export const GetAuthTokenDocument = gql`
     query getAuthToken($params: AuthTokenParams!) {
   authToken(params: $params) {
-    ...FullAuthToken
+    ...AuthToken
   }
 }
-    ${FullAuthTokenFragmentDoc}`;
+    ${AuthTokenFragmentDoc}`;
 export const GetConfigDocument = gql`
     query getConfig {
   config {
@@ -727,34 +837,20 @@ export const GetConfigDocument = gql`
   }
 }
     `;
-export const GetMediaItemDocument = gql`
-    query getMediaItem($key: String!) {
+export const GetBaseMediaItemDocument = gql`
+    query getBaseMediaItem($key: String!) {
   mediaItem(key: $key) {
-    key
-    type
-    children {
-      key
-      type
-    }
+    ...BaseMediaItem
   }
 }
-    `;
+    ${BaseMediaItemFragmentDoc}`;
 export const GetDeepMediaItemDocument = gql`
     query getDeepMediaItem($key: String!) {
   mediaItem(key: $key) {
-    key
-    type
-    children {
-      key
-      type
-      children {
-        key
-        type
-      }
-    }
+    ...DeepMediaItem
   }
 }
-    `;
+    ${DeepMediaItemFragmentDoc}`;
 export const CreateMediaUploadDocument = gql`
     mutation createMediaUpload($key: String!) {
   uploadUrl: createMediaUpload(key: $key)
@@ -781,16 +877,6 @@ export const CreateMediaDocument = gql`
   created: createMedia(key: $key, data: $data)
 }
     `;
-export const GetProjectConfigsDocument = gql`
-    query getProjectConfigs {
-  user {
-    projectConfigs {
-      ...ProjectConfigFragment
-      apiToken
-    }
-  }
-}
-    ${ProjectConfigFragmentFragmentDoc}`;
 export const UpdateProjectConfigDocument = gql`
     mutation updateProjectConfig($params: UpdateProjectConfigParams!) {
   updated: updateProjectConfig(params: $params)
@@ -801,75 +887,67 @@ export const DeleteProjectConfigDocument = gql`
   deleted: deleteProjectConfig(adapterType: $adapterType)
 }
     `;
+export const GetProjectConfigsDocument = gql`
+    query getProjectConfigs {
+  user {
+    projectConfigs {
+      ...ProjectConfig
+      apiToken
+    }
+  }
+}
+    ${ProjectConfigFragmentDoc}`;
 export const GetProjectBoardsDocument = gql`
     query getProjectBoards($adapterType: ProjectAdapterType!) {
   project(adapterType: $adapterType) {
     config {
-      ...ProjectConfigFragment
+      ...ProjectConfig
     }
     boards {
-      ...ProjectBoardFragment
+      ...ProjectBoard
     }
   }
 }
-    ${ProjectConfigFragmentFragmentDoc}
-${ProjectBoardFragmentFragmentDoc}`;
+    ${ProjectConfigFragmentDoc}
+${ProjectBoardFragmentDoc}`;
 export const GetProjectBoardDocument = gql`
     query getProjectBoard($adapterType: ProjectAdapterType!, $boardId: Int!) {
   project(adapterType: $adapterType) {
     config {
-      ...ProjectConfigFragment
+      ...ProjectConfig
     }
     boards {
-      ...ProjectBoardFragment
+      ...ProjectBoard
     }
     sprints(boardId: $boardId) {
-      ...ProjectSprintFragment
+      ...ProjectSprint
     }
   }
 }
-    ${ProjectConfigFragmentFragmentDoc}
-${ProjectBoardFragmentFragmentDoc}
-${ProjectSprintFragmentFragmentDoc}`;
+    ${ProjectConfigFragmentDoc}
+${ProjectBoardFragmentDoc}
+${ProjectSprintFragmentDoc}`;
 export const GetProjectSprintDocument = gql`
     query getProjectSprint($adapterType: ProjectAdapterType!, $boardId: Int!, $sprintId: Int!) {
   project(adapterType: $adapterType) {
     config {
-      ...ProjectConfigFragment
+      ...ProjectConfig
     }
     boards {
-      ...ProjectBoardFragment
+      ...ProjectBoard
     }
     sprints(boardId: $boardId) {
-      ...ProjectSprintFragment
+      ...ProjectSprint
     }
     issues(sprintId: $sprintId) {
-      id
-      key
-      type
-      state
-      title
-      storyPoints
-      implementer {
-        id
-        name
-        email
-      }
-      sprints {
-        ...ProjectSprintFragment
-      }
-      statusDurations {
-        status
-        workingDays
-        workingDuration
-        fullDuration
-      }
+      ...ProjectIssue
     }
   }
 }
-    ${ProjectConfigFragmentFragmentDoc}
-${ProjectBoardFragmentFragmentDoc}
-${ProjectSprintFragmentFragmentDoc}`;
+    ${ProjectConfigFragmentDoc}
+${ProjectBoardFragmentDoc}
+${ProjectSprintFragmentDoc}
+${ProjectIssueFragmentDoc}`;
 export const CreateUserDocument = gql`
     mutation createUser($params: CreateUserParams!) {
   created: createUser(params: $params) {
@@ -932,17 +1010,18 @@ export function getSdk(
         variables,
       );
     },
-    getMediaItem(
-      variables: IGetMediaItemQueryVariables,
+    getBaseMediaItem(
+      variables: IGetBaseMediaItemQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
-    ): Promise<IGetMediaItemQuery> {
+    ): Promise<IGetBaseMediaItemQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<IGetMediaItemQuery>(GetMediaItemDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        "getMediaItem",
+          client.request<IGetBaseMediaItemQuery>(
+            GetBaseMediaItemDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        "getBaseMediaItem",
         "query",
         variables,
       );
@@ -1025,22 +1104,6 @@ export function getSdk(
         variables,
       );
     },
-    getProjectConfigs(
-      variables?: IGetProjectConfigsQueryVariables,
-      requestHeaders?: GraphQLClientRequestHeaders,
-    ): Promise<IGetProjectConfigsQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<IGetProjectConfigsQuery>(
-            GetProjectConfigsDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        "getProjectConfigs",
-        "query",
-        variables,
-      );
-    },
     updateProjectConfig(
       variables: IUpdateProjectConfigMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
@@ -1070,6 +1133,22 @@ export function getSdk(
           ),
         "deleteProjectConfig",
         "mutation",
+        variables,
+      );
+    },
+    getProjectConfigs(
+      variables?: IGetProjectConfigsQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<IGetProjectConfigsQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<IGetProjectConfigsQuery>(
+            GetProjectConfigsDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        "getProjectConfigs",
+        "query",
         variables,
       );
     },

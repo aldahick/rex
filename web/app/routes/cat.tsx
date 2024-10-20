@@ -1,12 +1,8 @@
-import { MetaFunction } from "@remix-run/node";
+import React from "react";
 import { CatCanvas } from "../components/cat/CatCanvas";
 
-export const meta: MetaFunction = () => [{ title: "Rex | Cat" }];
-
-export default function CatRoute() {
-  return (
-    <div style={{ marginTop: "1em" }}>
-      <CatCanvas />
-    </div>
-  );
-}
+export const CatRoute: React.FC = () => (
+  <div style={{ marginTop: "1em" }}>
+    <CatCanvas />
+  </div>
+);

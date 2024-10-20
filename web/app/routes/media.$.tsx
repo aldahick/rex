@@ -1,15 +1,12 @@
 import { IMediaItem, IMediaItemType } from "@aldahick/rex-sdk";
-import { MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useGetBaseMediaItemQuery } from "@aldahick/rex-sdk/react";
+import React from "react";
+import { useParams } from "react-router-dom";
+import { clone } from "remeda";
 import romans from "romans";
 import { FileBrowser } from "../components/file/FileBrowser";
 import { FileSeries } from "../components/file/FileSeries";
-import { config } from "../config.server";
-import { withAuthRexSdk } from "../rex.sdk";
-
-export const meta: MetaFunction = ({ params }) => [
-  { title: `Rex | Media${params["*"] ? `: ${params["*"]}` : ""}` },
-];
+import { useRoot } from "../components/file/file.atom";
 
 const getPathIndex = (path: string): number => {
   const prefix = path.split("/").slice(-1)[0]?.split(".")[0];
@@ -42,19 +39,23 @@ export const sortMediaItems = (a: IMediaItem, b: IMediaItem): number => {
   return a.key.localeCompare(b.key);
 };
 
-export type MediaLoader = typeof loader;
-export const loader = withAuthRexSdk(async (sdk, { params, auth }) => {
-  const key = params["*"] ?? "";
-  const { mediaItem } = await sdk.getMediaItem({ key });
-  mediaItem?.children?.sort(sortMediaItems);
-  return { root: mediaItem, auth, config };
-});
-
-export default function MediaRoute() {
-  const { root } = useLoaderData<MediaLoader>();
+export const MediaRoute: React.FC = () => {
+  const params = useParams();
+  useGetBaseMediaItemQuery({
+    variables: {
+      key: params["*"] ?? "",
+    },
+    onCompleted: (data) => {
+      const mediaItem = clone(data.mediaItem);
+      mediaItem?.children?.sort(sortMediaItems);
+      setRoot(mediaItem);
+      console.log(mediaItem);
+    },
+  });
+  const [root, setRoot] = useRoot();
 
   if (root?.type === IMediaItemType.Series) {
     return <FileSeries />;
   }
   return <FileBrowser />;
-}
+};

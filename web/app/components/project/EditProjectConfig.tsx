@@ -1,23 +1,33 @@
-import { IProjectConfig } from "@aldahick/rex-sdk";
-import { Link, useActionData } from "@remix-run/react";
-import React, { useEffect } from "react";
+import { IProjectConfig, IUpdateProjectConfigParams } from "@aldahick/rex-sdk";
+import { useUpdateProjectConfigMutation } from "@aldahick/rex-sdk/react";
+import React, { useState } from "react";
 import { Button, FloatingLabel, Form } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { useStatus } from "../../hooks/useStatus.hook";
-import { ProjectsAction } from "../../routes/projects";
 
 export const EditProjectConfig: React.FC<{
   projectConfig: Partial<IProjectConfig> & Pick<IProjectConfig, "adapterType">;
 }> = ({ projectConfig }) => {
   const status = useStatus();
-  const actionData = useActionData<ProjectsAction>();
+  const [updateProjectConfig] = useUpdateProjectConfigMutation();
+  const [fields, setFields] = useState<IUpdateProjectConfigParams>({
+    apiToken: projectConfig.apiToken ?? "",
+    adapterType: projectConfig.adapterType,
+    email: projectConfig.email ?? "",
+    host: projectConfig.host ?? "",
+  });
 
-  useEffect(() => {
-    if (actionData?.updated) {
+  const handleChange =
+    (key: keyof IProjectConfig) => (evt: React.ChangeEvent<HTMLInputElement>) =>
+      setFields((prev) => ({ ...prev, [key]: evt.target.value }));
+
+  const handleSave = () => {
+    updateProjectConfig({ variables: { params: fields } }).then(() => {
       status.success(
         `Successfully updated project settings for ${projectConfig.adapterType.toLowerCase()}`,
       );
-    }
-  }, [actionData]);
+    });
+  };
 
   return (
     <>
@@ -26,7 +36,8 @@ export const EditProjectConfig: React.FC<{
           name="apiToken"
           type="password"
           required
-          defaultValue={projectConfig.apiToken ?? ""}
+          value={fields.apiToken}
+          onChange={handleChange("apiToken")}
         />
       </FloatingLabel>
       <FloatingLabel label="Email">
@@ -34,21 +45,25 @@ export const EditProjectConfig: React.FC<{
           name="email"
           type="email"
           required
-          defaultValue={projectConfig.email ?? ""}
+          value={fields.email}
+          onChange={handleChange("email")}
         />
       </FloatingLabel>
       <FloatingLabel label="Host">
         <Form.Control
           name="host"
           required
-          defaultValue={projectConfig.host ?? ""}
+          value={fields.host}
+          onChange={handleChange("host")}
         />
       </FloatingLabel>
       <div className="flex justify-around">
         <Link to={`/project/${projectConfig.adapterType}`}>
           <Button>View</Button>
         </Link>
-        <Button type="submit">Save</Button>
+        <Button type="submit" onClick={handleSave}>
+          Save
+        </Button>
       </div>
     </>
   );

@@ -1,26 +1,12 @@
-query getMediaItem($key: String!) {
+query getBaseMediaItem($key: String!) {
   mediaItem(key: $key) {
-    key
-    type
-    children {
-      key
-      type
-    }
+    ...BaseMediaItem
   }
 }
 
 query getDeepMediaItem($key: String!) {
   mediaItem(key: $key) {
-    key
-    type
-    children {
-      key
-      type
-      children {
-        key
-        type
-      }
-    }
+    ...DeepMediaItem
   }
 }
 
@@ -40,4 +26,26 @@ mutation addMediaDownload($url: String!, $destinationKey: String!, $sync: Boolea
 
 mutation createMedia($key: String!, $data: String!) {
   created: createMedia(key: $key, data: $data)
+}
+
+fragment BaseMediaItem on MediaItem {
+  key
+  type
+  children {
+    key
+    type
+  }
+}
+
+fragment DeepMediaItem on MediaItem {
+  key
+  type
+  children {
+    key
+    type
+    children {
+      key
+      type
+    }
+  }
 }

@@ -1,12 +1,11 @@
-import { useLoaderData } from "@remix-run/react";
 import React, { useState } from "react";
 import { Container, Row } from "react-bootstrap";
-import { MediaLoader } from "../../routes/media.$";
 import { Pagination } from "../util/Pagination";
 import { FileContent } from "./FileContent";
+import { useRoot } from "./file.atom";
 
 export const FileSeries: React.FC = () => {
-  const { root } = useLoaderData<MediaLoader>();
+  const [root] = useRoot();
   const [page, setPage] = useState(0);
 
   if (!root?.children?.length) {

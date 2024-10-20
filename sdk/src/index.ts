@@ -1,7 +1,7 @@
 import { GraphQLClient } from "graphql-request";
-import { getSdk } from "./graphql.sdk.js";
+import { getSdk } from "./node.js";
 
-export * from "./graphql.sdk.js";
+export * from "./node.js";
 
 export type RexSdk = ReturnType<typeof getSdk>;
 

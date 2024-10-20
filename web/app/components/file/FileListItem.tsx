@@ -1,10 +1,9 @@
 import { IMediaItem, IMediaItemType } from "@aldahick/rex-sdk";
-import { Link } from "@remix-run/react";
-import { useAtom } from "jotai";
 import { CopyIcon, FileIcon, FolderIcon } from "lucide-react";
 import React from "react";
 import { ListGroup } from "react-bootstrap";
-import { openFileAtom } from "./file.atom";
+import { Link } from "react-router-dom";
+import { useOpenFile } from "./file.atom";
 
 const typeIcons = {
   [IMediaItemType.Directory]: FolderIcon,
@@ -13,7 +12,7 @@ const typeIcons = {
 };
 
 export const FileListItem: React.FC<{ child: IMediaItem }> = ({ child }) => {
-  const [, setOpenFile] = useAtom(openFileAtom);
+  const [, setOpenFile] = useOpenFile();
   const Icon = typeIcons[child.type];
 
   const handleFileOpen = () => {

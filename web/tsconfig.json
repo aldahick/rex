@@ -15,7 +15,7 @@
     "noUncheckedIndexedAccess": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": false,
-    "types": ["@remix-run/node", "vite/client"]
+    "types": ["vite/client"]
   },
   "include": ["app"]
 }

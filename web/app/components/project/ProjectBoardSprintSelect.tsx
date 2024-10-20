@@ -1,40 +1,39 @@
-import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
-import React from "react";
+import React, { useState } from "react";
 import { Button, FloatingLabel, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { sortBy } from "remeda";
-import {
-  ProjectLoader,
-  ProjectParams,
-} from "../../routes/project.$adapterType.($boardId).($sprintId)";
-import { getFormInput } from "../../utils/form.util";
 import { FormCol } from "../util/FormContainer";
+import { useProject } from "./project.atom";
+import { ProjectParamKey, useProjectParams } from "./project.hook";
 
 export const ProjectBoardSprintSelect: React.FC = () => {
-  const { project } = useLoaderData<ProjectLoader>();
   const navigate = useNavigate();
-  const params = useParams<ProjectParams>();
+  const [params, setParams] = useState(useProjectParams());
+  const [project] = useProject();
 
-  const {
-    config: { adapterType },
-  } = project;
+  if (!project) {
+    return null;
+  }
 
-  const handleBoardSelect = (evt: React.MouseEvent) => {
-    const boardId = getFormInput(
-      evt.currentTarget.parentElement,
-      "boardId",
-    )?.value;
-    if (boardId) {
-      navigate(`/project/${adapterType}/${boardId}`);
+  const handleChange =
+    (key: ProjectParamKey) => (evt: React.ChangeEvent<HTMLSelectElement>) => {
+      setParams((prev) => ({
+        ...prev,
+        [key]: evt.target.value,
+      }));
+    };
+
+  const handleBoardSelect = () => {
+    if (params.boardId) {
+      navigate(`/project/${params.adapterType}/${params.boardId}`);
     }
   };
 
-  const handleSprintSelect = (evt: React.MouseEvent) => {
-    const sprintId = getFormInput(
-      evt.currentTarget.parentElement,
-      "sprintId",
-    )?.value;
-    if (params.boardId && sprintId) {
-      navigate(`/project/${adapterType}/${params.boardId}/${sprintId}`);
+  const handleSprintSelect = () => {
+    if (params.boardId && params.sprintId) {
+      navigate(
+        `/project/${params.adapterType}/${params.boardId}/${params.sprintId}`,
+      );
     }
   };
 
@@ -42,7 +41,11 @@ export const ProjectBoardSprintSelect: React.FC = () => {
     <FormCol>
       <div className="flex justify-between">
         <FloatingLabel label="Board" className="w-full">
-          <Form.Select name="boardId" defaultValue={params.boardId}>
+          <Form.Select
+            name="boardId"
+            value={params.boardId}
+            onChange={handleChange("boardId")}
+          >
             {sortBy(project.boards, (b) => b.name.toLocaleLowerCase()).map(
               ({ id, name }) => (
                 <option key={id} value={id}>
@@ -57,7 +60,11 @@ export const ProjectBoardSprintSelect: React.FC = () => {
       {"sprints" in project && (
         <div className="flex justify-between">
           <FloatingLabel label="Sprint" className="w-full">
-            <Form.Select name="sprintId" defaultValue={params.sprintId}>
+            <Form.Select
+              name="sprintId"
+              value={params.sprintId}
+              onChange={handleChange("sprintId")}
+            >
               {sortBy(project.sprints, (s) =>
                 s.start ? new Date(s.start).getTime() : 0,
               )

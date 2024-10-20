@@ -13,7 +13,7 @@ const statusVariants = [
   "light",
   "dark",
 ] as const;
-type StatusVariant = (typeof statusVariants)[number];
+export type StatusVariant = (typeof statusVariants)[number];
 
 const statusAtom = atom<{
   header: React.ReactNode;
@@ -50,20 +50,21 @@ export const StatusProvider: React.FC = () => {
   );
 };
 
-type StatusSetter = (
+export type StatusDispatcher = (
   message: React.ReactNode,
   header?: React.ReactNode,
 ) => void;
+export type StatusDispatchers = Record<StatusVariant, StatusDispatcher>;
 
-export const useStatus = () => {
+export const useStatus = (): StatusDispatchers => {
   const [, setStatus] = useAtom(statusAtom);
-  const buildStatusSetter =
-    (variant: StatusVariant): StatusSetter =>
+  const getDispatcher =
+    (variant: StatusVariant): StatusDispatcher =>
     (message, header = toStartCase(variant)) => {
       setStatus({ message, header, variant });
     };
 
   return Object.fromEntries(
-    statusVariants.map((variant) => [variant, buildStatusSetter(variant)]),
-  ) as Record<StatusVariant, StatusSetter>;
+    statusVariants.map((variant) => [variant, getDispatcher(variant)]),
+  ) as StatusDispatchers;
 };

@@ -13,7 +13,7 @@ const config: CodegenConfig = {
     afterAllFileWrite: "biome check --write --unsafe",
   },
   generates: {
-    "src/graphql.sdk.ts": {
+    "src/node.ts": {
       documents: "gql/*.sdk.gql",
       plugins: [
         "typescript",
@@ -22,6 +22,17 @@ const config: CodegenConfig = {
       ],
       config: {
         gqlImport: "graphql-request#gql",
+      },
+    },
+    "src/react.ts": {
+      documents: "gql/*.sdk.gql",
+      plugins: [
+        "typescript",
+        "typescript-operations",
+        "typescript-react-apollo",
+      ],
+      config: {
+        noExport: true,
       },
     },
   },

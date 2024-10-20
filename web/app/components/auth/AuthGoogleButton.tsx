@@ -1,46 +1,38 @@
+import { IAuthTokenFragment } from "@aldahick/rex-sdk";
+import { useGetAuthTokenLazyQuery } from "@aldahick/rex-sdk/react";
 import {
   CredentialResponse,
   GoogleLogin,
   GoogleOAuthProvider,
 } from "@react-oauth/google";
-import { useLoaderData, useSubmit } from "@remix-run/react";
 import React from "react";
+import { config } from "../../config";
 import { useStatus } from "../../hooks/useStatus.hook";
-import { LoginLoader } from "../../routes/login";
-import { objectToForm } from "../../utils/form.util";
 
-export const AuthGoogleButton: React.FC = () => {
-  const {
-    config: { googleClientId },
-  } = useLoaderData<LoginLoader>();
+export const AuthGoogleButton: React.FC<{
+  onLogin: (token: IAuthTokenFragment) => void;
+}> = ({ onLogin }) => {
+  const [getAuthToken] = useGetAuthTokenLazyQuery();
   const status = useStatus();
-  const submit = useSubmit();
 
   const handleSuccess = (response: CredentialResponse) => {
     if (!response.credential) {
-      status.error("No credential returned from Google OAuth");
+      status.danger("No credential returned from Google OAuth");
       return;
     }
-    submit(
-      objectToForm({
-        provider: "google",
-        idToken: response.credential,
-      }),
-      { method: "POST" },
-    );
+    getAuthToken({
+      variables: { params: { google: { idToken: response.credential } } },
+      onCompleted: ({ authToken }) => onLogin(authToken),
+    });
   };
 
   const handleError = () => {
-    status.error("Failed to fetch OAuth token from Google. Not sure why!");
+    status.danger("Failed to fetch OAuth token from Google. Not sure why!");
   };
-
-  if (!googleClientId) {
-    return null;
-  }
 
   return (
     <GoogleOAuthProvider
-      clientId={googleClientId}
+      clientId={config.googleClientId}
       onScriptLoadError={handleError}
     >
       <GoogleLogin
