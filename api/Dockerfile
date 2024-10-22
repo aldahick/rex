@@ -12,7 +12,7 @@ FROM base AS builder
 RUN pnpm install --frozen-lockfile
 
 WORKDIR /rex/sdk
-COPY sdk/tsconfig.json ./
+COPY sdk/tsconfig.json sdk/react.d.ts sdk/react.js ./
 COPY sdk/src src
 RUN pnpm build:ci
 
