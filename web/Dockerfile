@@ -23,13 +23,13 @@ COPY web/src src
 RUN pnpm build
 
 FROM base AS server
-
-RUN pnpm install --prod --frozen-lockfile
+RUN npm i -g serve
 
 WORKDIR /rex
 COPY --from=builder /rex/sdk/dist sdk/dist
-COPY --from=builder /rex/web/build web/build
-COPY --from=builder /rex/web/public web/public
 
 WORKDIR /rex/web
-CMD pnpm start
+COPY --from=builder /rex/web/dist dist
+COPY --from=builder /rex/web/public public
+
+CMD ["serve", "-s", "dist", "-l", "tcp://0.0.0.0:3000"]
