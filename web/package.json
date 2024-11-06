@@ -10,7 +10,7 @@
     "test": "echo 'No tests yet'"
   },
   "engines": {
-    "node": "^20.15"
+    "node": "^22.11"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
     "clsx": "^2.1.1",
     "graphql": "^16.9.0",
     "jotai": "^2.10.1",
-    "lucide-react": "^0.453.0",
+    "lucide-react": "^0.454.0",
     "mime": "^4.0.4",
     "pluralize": "^8.0.0",
     "react": "^18.3.1",
@@ -37,19 +37,19 @@
     "react-dom": "^18.3.1",
     "react-router": "^6.27.0",
     "react-router-dom": "^6.27.0",
-    "remeda": "^2.15.2",
+    "remeda": "^2.16.0",
     "romans": "^2.0.16"
   },
   "devDependencies": {
     "@types/pluralize": "^0.0.33",
-    "@types/react": "^18.3.11",
+    "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
-    "sass": "^1.80.3",
+    "sass": "^1.80.6",
     "tailwindcss": "^3.4.14",
-    "vite": "^5.4.9"
+    "vite": "^5.4.10"
   },
   "browserslist": {
     "production": [
