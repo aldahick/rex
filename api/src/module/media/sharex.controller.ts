@@ -1,4 +1,3 @@
-import { randomBytes } from "node:crypto";
 import path from "node:path";
 import { IAuthPermission } from "@aldahick/rex-sdk";
 import {
@@ -11,6 +10,7 @@ import {
   post,
 } from "@athenajs/core";
 import mime from "mime";
+import { randomString } from "remeda";
 import { RexConfig } from "../../config.js";
 import { RexContext } from "../auth/auth.context.js";
 import { AuthManager } from "../auth/auth.manager.js";
@@ -63,7 +63,7 @@ export class SharexController {
       };
     }
     const extension = mime.getExtension(file?.mimetype);
-    const filename = `${this.createId()}.${extension}`;
+    const filename = `${randomString(8)}.${extension}`;
     const key = this.getKey(filename);
     await this.mediaManager.create(email, key, file.file);
     const resource = `${this.config.media.sharexUrl}/${filename}`;
@@ -101,10 +101,6 @@ export class SharexController {
     const key = this.getKey(filename);
     await this.mediaManager.delete(email, key);
     return "Deleted";
-  }
-
-  private createId(): string {
-    return randomBytes(8).toString("base64").replace(/\=.*$/, "");
   }
 
   private getKey(filename: string): string {
