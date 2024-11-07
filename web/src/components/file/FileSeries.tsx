@@ -11,11 +11,15 @@ export const FileSeries: React.FC = () => {
   if (!root?.children?.length) {
     return null;
   }
-
   const selected = root.children[page];
   if (!selected) {
     return null;
   }
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    window.scrollTo(0, 0);
+  };
 
   const maxIndex = root.children.length - 1;
 
@@ -24,13 +28,13 @@ export const FileSeries: React.FC = () => {
       <Row>
         <FileContent
           item={selected}
-          onClick={() => setPage(Math.min(maxIndex, page + 1))}
+          onClick={() => handlePageChange(Math.min(maxIndex, page + 1))}
         />
       </Row>
       <Row>
         <Pagination
           page={page}
-          onChange={setPage}
+          onChange={handlePageChange}
           count={root.children.length}
         />
       </Row>
