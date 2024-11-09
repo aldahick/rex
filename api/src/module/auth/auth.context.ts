@@ -34,7 +34,7 @@ export class AuthContextGenerator implements ContextGenerator {
     private readonly userManager: UserManager,
   ) {}
 
-  generateContext(req: ContextRequest): Promise<RexContext> {
+  httpContext(req: ContextRequest): Promise<RexContext> {
     const token = this.getToken(req);
     if (!token) {
       return Promise.resolve(new RexContext(this.userManager));
