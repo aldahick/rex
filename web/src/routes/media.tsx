@@ -49,7 +49,6 @@ export const MediaRoute: React.FC = () => {
       const mediaItem = clone(data.mediaItem);
       mediaItem?.children?.sort(sortMediaItems);
       setRoot(mediaItem);
-      console.log(mediaItem);
     },
   });
   const [root, setRoot] = useRoot();
