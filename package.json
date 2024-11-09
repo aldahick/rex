@@ -4,17 +4,14 @@
   "private": true,
   "version": "1.1.4",
   "scripts": {
-    "version": "bash scripts/version.sh",
-    "build:api": "cd api && pnpm build",
-    "build:sdk": "cd sdk && pnpm build",
-    "build:web": "cd web && pnpm build"
+    "version": "bash scripts/version.sh"
   },
   "engines": {
     "node": "^22.11"
   },
   "pnpm": {
     "overrides": {
-      "protobufjs@>=7.0.0 <7.2.5": ">=7.2.5"
+      "whatwg-url@<14": "^14"
     }
   },
   "devDependencies": {
