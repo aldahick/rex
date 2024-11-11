@@ -23,11 +23,7 @@ RUN pnpm build
 
 FROM base AS server
 
-# install ffprobe
-RUN wget -q http://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz \
-  && tar xJf /tmp/ffmpeg-release-64bit-static.tar.xz -C /tmp \
-  && mv /tmp/ffmpeg-3.0-64bit-static/ffprobe /usr/local/bin/ \
-  && rm -rf /tmp/ffmpeg
+RUN apk add ffmpeg
 
 RUN pnpm install --prod --frozen-lockfile
 
@@ -37,4 +33,4 @@ COPY gql gql
 ENV GRAPHQL_SCHEMA_DIRS=/rex/gql
 
 WORKDIR /rex/api
-CMD node --enable-source-maps dist/main.js
+CMD ["node", "--enable-source-maps", "dist/main.js"]
