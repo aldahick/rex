@@ -5,7 +5,7 @@ import { RexConfig } from "../../config.js";
 const mocks = vi.hoisted(() => ({
   rakeDb: vi.fn(),
 }));
-vi.mock("rake-db", () => ({
+vi.mock("orchid-orm/migrations", () => ({
   rakeDb: mocks.rakeDb,
 }));
 
