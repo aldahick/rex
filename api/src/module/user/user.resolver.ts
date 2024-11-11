@@ -40,7 +40,7 @@ export class UserResolver {
     if (id && (await context.isAuthorized(IAuthPermission.AdminUsers))) {
       userId = id;
     }
-    return this.makeGql(await this.userManager.fetch(userId));
+    return this.makeGql(await this.userManager.fetch({ id: userId }));
   }
 
   @resolveQuery()

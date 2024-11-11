@@ -76,6 +76,8 @@ type ICreateUserParams = {
 type IMediaItem = {
   __typename?: "MediaItem";
   children?: Maybe<IMediaItem[]>;
+  /** Duration of this media in seconds. Only set for video and audio files. */
+  duration?: Maybe<Scalars["Int"]["output"]>;
   key: Scalars["String"]["output"];
   type: IMediaItemType;
 };
@@ -422,6 +424,7 @@ type IGetBaseMediaItemQuery = {
               __typename?: "MediaItem";
               key: string;
               type: IMediaItemType;
+              duration?: number | undefined;
             }>
           | undefined;
       }
@@ -495,7 +498,12 @@ type IBaseMediaItemFragment = {
   key: string;
   type: IMediaItemType;
   children?:
-    | Array<{ __typename?: "MediaItem"; key: string; type: IMediaItemType }>
+    | Array<{
+        __typename?: "MediaItem";
+        key: string;
+        type: IMediaItemType;
+        duration?: number | undefined;
+      }>
     | undefined;
 };
 
@@ -750,6 +758,7 @@ export const BaseMediaItemFragmentDoc = gql`
   children {
     key
     type
+    duration
   }
 }
     `;

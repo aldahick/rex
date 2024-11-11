@@ -65,11 +65,11 @@ export class AuthResolver {
       if (!googlePayload) {
         throw new Error("Invalid Google token");
       }
-      const userId = await this.userManager.fetchId(googlePayload.email);
-      if (!userId) {
+      const user = await this.userManager.fetch({ email: googlePayload.email });
+      if (!user) {
         throw Error(`User not found: ${googlePayload.email}`);
       }
-      return userId;
+      return user.id;
     }
 
     if (local) {

@@ -23,6 +23,12 @@ RUN pnpm build
 
 FROM base AS server
 
+# install ffprobe
+RUN wget -q http://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz \
+  && tar xJf /tmp/ffmpeg-release-64bit-static.tar.xz -C /tmp \
+  && mv /tmp/ffmpeg-3.0-64bit-static/ffprobe /usr/local/bin/ \
+  && rm -rf /tmp/ffmpeg
+
 RUN pnpm install --prod --frozen-lockfile
 
 COPY --from=builder /rex/sdk/dist sdk/dist

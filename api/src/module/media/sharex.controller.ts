@@ -49,23 +49,19 @@ export class SharexController {
   ): Promise<UploadResponse> {
     const { userId } = context;
     if (!(userId && (await context.isAuthorized(IAuthPermission.Media)))) {
-      res.status(403);
-      return {
+      return res.status(403).send({
         error: "Unauthorized",
-      };
+      });
     }
-    const email = await this.userManager.fetchEmail(userId);
+    const user = await context.getUser();
     const file = await req.file();
     if (!file) {
-      res.status(400);
-      return {
-        error: "No file uploaded",
-      };
+      return res.status(400).send({ error: "No file uploaded" });
     }
     const extension = mime.getExtension(file?.mimetype);
     const filename = `${randomString(8)}.${extension}`;
     const key = this.getKey(filename);
-    await this.mediaManager.create(email, key, file.file);
+    await this.mediaManager.create(user.email, key, file.file);
     const resource = `${this.config.media.sharexUrl}/${filename}`;
     const token = this.authManager.signToken(userId);
     const deleteUrl = `${resource}/delete?token=${token}`;
@@ -80,10 +76,14 @@ export class SharexController {
     const { filename } = req.params as { filename: string };
     const key = this.getKey(filename);
     for (const email of await this.mediaManager.getAllEmails()) {
-      const stats = await this.mediaManager.stat({ email }, key);
+      const stats = await this.mediaManager.stat(email, key);
       if (stats) {
-        const content = this.mediaController.getContentDetails(req, key, stats);
-        const stream = this.mediaManager.createReadStream({ email }, key);
+        const content = this.mediaController.getContentResponse(
+          req,
+          key,
+          stats,
+        );
+        const stream = this.mediaManager.createReadStream(email, key);
         return res.status(content.status).headers(content.headers).send(stream);
       }
     }
@@ -94,9 +94,9 @@ export class SharexController {
   async delete(req: HttpRequest, res: HttpResponse, context: RexContext) {
     const { userId } = context;
     if (!(userId && (await context.isAuthorized(IAuthPermission.Media)))) {
-      return res.status(403).send("Unauthorized");
+      return res.status(403).send({ error: "Unauthorized" });
     }
-    const email = await this.userManager.fetchEmail(userId);
+    const { email } = await this.userManager.fetch({ id: userId });
     const { filename } = req.params as { filename: string };
     const key = this.getKey(filename);
     await this.mediaManager.delete(email, key);

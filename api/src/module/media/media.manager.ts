@@ -1,42 +1,43 @@
-import {
-  promises as fs,
-  Dirent,
-  Stats,
-  createReadStream,
-  createWriteStream,
-} from "node:fs";
+import { Dirent, Stats } from "node:fs";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { IMediaItem, IMediaItemType, IProgressStatus } from "@aldahick/rex-sdk";
 import { Logger, injectable } from "@athenajs/core";
 import axios from "axios";
+import { getAudioDurationInSeconds } from "get-audio-duration";
+import { getVideoDurationInSeconds } from "get-video-duration";
+import mime from "mime";
 import { RexConfig } from "../../config.js";
 import { UserModel } from "../../model/index.js";
+import { FileUsageService } from "../../service/file/file-usage.service.js";
+import {
+  FileService,
+  ReadableStreamOptions,
+} from "../../service/file/file.service.js";
 import { ProgressManager } from "../progress/progress.manager.js";
-
-export type MediaStats = Stats;
 
 @injectable()
 export class MediaManager {
   constructor(
     private readonly config: RexConfig,
+    private readonly fileService: FileService,
+    private readonly fileUsageService: FileUsageService,
     private readonly logger: Logger,
     private readonly progressManager: ProgressManager,
   ) {}
 
   async download({
-    user,
+    email,
     url,
     destinationKey,
     progressId,
   }: {
-    user: Pick<UserModel, "id" | "email">;
+    email: string;
     url: string;
     destinationKey: string;
     progressId?: string;
   }): Promise<void> {
-    const filename = this.toFilename(user, destinationKey);
-    await fs.mkdir(path.dirname(filename), { recursive: true });
+    const filename = this.resolveKey(email, destinationKey);
     const { data: stream, headers } = await axios.get<Readable>(url, {
       responseType: "stream",
     });
@@ -50,7 +51,7 @@ export class MediaManager {
         destinationKey,
         progressId,
         url,
-        userId: user.id,
+        email,
       });
     };
     stream.pause();
@@ -71,7 +72,7 @@ export class MediaManager {
         loggedPercents.push(percentComplete);
       }
     });
-    stream.pipe(createWriteStream(filename));
+    stream.pipe(await this.fileService.createWriteStream(filename));
     stream.on("end", () => {
       if (progressId) {
         this.progressManager
@@ -104,153 +105,103 @@ export class MediaManager {
     key: string,
     data: string | Readable,
   ): Promise<void> {
-    const filename = this.toFilename({ email }, key);
-    await fs.mkdir(path.dirname(filename), { recursive: true });
-    await fs.writeFile(filename, data);
+    await this.fileService.write(this.resolveKey(email, key), data);
   }
 
   async delete(email: string, key: string): Promise<void> {
-    const path = this.toFilename({ email }, key);
-    const stats = await fs.stat(path);
-    if (stats.isDirectory()) {
-      const children = await fs.readdir(path);
-      if (children.length) {
-        throw new Error("Cannot delete directory unless it's empty");
-      }
-      await fs.rmdir(path);
-    } else {
-      await fs.rm(path);
-    }
+    await this.fileService.delete(this.resolveKey(email, key));
   }
 
-  async list(
-    user: Pick<UserModel, "id" | "email">,
-    dir: string,
-  ): Promise<IMediaItem[]> {
-    const baseDir = this.toFilename(user, dir);
-    let entries: Dirent[];
-    try {
-      entries = (await fs.readdir(baseDir, { withFileTypes: true })).filter(
-        (f) => !f.name.startsWith("."),
-      );
-    } catch (err) {
-      if (err instanceof Error && "code" in err) {
-        if ((err as NodeJS.ErrnoException).code === "ENOTDIR") {
-          return [];
-        }
-      }
-      await fs.mkdir(baseDir, { recursive: true });
-      return [];
-    }
-    return Promise.all(
+  async list(email: string, key: string): Promise<IMediaItem[]> {
+    const dir = this.resolveKey(email, key);
+    const entries = (await this.fileService.list(dir)).filter(
+      (f) => !f.name.startsWith("."),
+    );
+    return await Promise.all(
       entries.map(async (entry) => {
         return {
-          key: path.join(dir, entry.name).replace(/\\/g, "/"),
-          type: await this.getType(entry, path.resolve(baseDir, entry.name)),
+          key: path.join(key, entry.name).replace(/\\/g, "/"),
+          type: await this.getType(entry, path.join(dir, entry.name)),
         };
       }),
     );
   }
 
   createReadStream(
-    user: Pick<UserModel, "email">,
+    email: string,
     key: string,
-    options?: { start: number; end: number },
+    options?: ReadableStreamOptions,
   ): Readable {
-    return createReadStream(this.toFilename(user, key), options);
+    return this.fileService.createReadStream(
+      this.resolveKey(email, key),
+      options,
+    );
   }
 
-  async stat(
-    user: Pick<UserModel, "email">,
-    key: string,
-  ): Promise<MediaStats | undefined> {
-    try {
-      return await fs.stat(this.toFilename(user, key));
-    } catch {
-      return undefined;
-    }
+  async stat(email: string, key: string) {
+    return await this.fileService.stat(this.resolveKey(email, key));
   }
 
-  async get(user: Pick<UserModel, "email">, key: string) {
-    const stats = await this.stat(user, key);
+  async get(email: string, key: string) {
+    const stats = await this.stat(email, key);
     if (!stats) {
       return undefined;
     }
-
     return {
       key,
-      type: await this.getType(stats, this.toFilename(user, key)),
+      type: await this.getType(stats, this.resolveKey(email, key)),
     };
-  }
-
-  async getType(
-    stats: Dirent | Stats,
-    filePath: string,
-  ): Promise<IMediaItemType> {
-    if (!stats.isDirectory()) {
-      return IMediaItemType.File;
-    }
-    const series = await fs
-      .stat(path.resolve(filePath, ".series"))
-      .catch(() => undefined);
-    return series?.isFile() ? IMediaItemType.Series : IMediaItemType.Directory;
-  }
-
-  /**
-   * @returns the user's remaining media data limit, in bytes
-   */
-  async getRemainingSpace(user: Pick<UserModel, "email">): Promise<number> {
-    const max = this.config.media.dataLimit;
-    if (typeof max !== "number") {
-      throw new Error("Cannot upload files: no data limit is configured");
-    }
-    return max - (await this.getUsedSpace(user));
-  }
-
-  async getUsedSpace(
-    user: Pick<UserModel, "email">,
-    key?: string,
-  ): Promise<number> {
-    const dirPath = this.toFilename(user, key ?? "");
-    const children = await fs
-      .readdir(dirPath, { withFileTypes: true })
-      .catch(() => []);
-    let total = 0;
-    for (const child of children) {
-      if (child.isFile()) {
-        const stats = await fs.stat(path.resolve(dirPath, child.name));
-        total += stats.size;
-      } else {
-        const childPath = this.toFilename(
-          user,
-          path.resolve(key ?? "", child.name),
-        );
-        total += await this.getUsedSpace(user, childPath);
-      }
-    }
-    return total;
   }
 
   /**
    * @returns all emails of users who have media
    */
   async getAllEmails(): Promise<string[]> {
-    return await fs.readdir(this.root);
+    const entries = await this.fileService.list("");
+    return entries.map(({ name }) => name);
   }
 
-  toFilename(user: Pick<UserModel, "email">, key: string): string {
-    return path.resolve(
-      this.root,
-      user.email,
-      key.replace(/^\//, "").replace(/\.\./g, ""),
+  /**
+   * @returns undefined for files without a duration (non-video/audio)
+   */
+  async getDuration(email: string, key: string) {
+    const mimeType = mime.getType(path.basename(key));
+    const stream = this.fileService.getFilename(this.resolveKey(email, key));
+    if (mimeType?.startsWith("audio/")) {
+      return Math.floor(await getAudioDurationInSeconds(stream));
+    }
+    if (mimeType?.startsWith("video/")) {
+      return Math.floor(await getVideoDurationInSeconds(stream));
+    }
+  }
+
+  async getType(stats: Dirent | Stats, key: string): Promise<IMediaItemType> {
+    if (!stats.isDirectory()) {
+      return IMediaItemType.File;
+    }
+    const series = await this.fileService.stat(path.join(key, ".series"));
+    return series?.isFile() ? IMediaItemType.Series : IMediaItemType.Directory;
+  }
+
+  /**
+   * @returns the user's remaining media data limit, in bytes
+   */
+  async getRemainingSpace(email: string): Promise<number> {
+    const max = this.config.media.dataLimit;
+    if (typeof max !== "number") {
+      throw new Error("Cannot upload files: no data limit is configured");
+    }
+    return max - (await this.fileUsageService.getUsedSpace(email));
+  }
+
+  async getUsedSpace(email: string, key: string) {
+    return await this.fileUsageService.getUsedSpace(
+      this.resolveKey(email, key),
     );
   }
 
-  get root(): string {
-    const { dir } = this.config.media;
-    if (!dir) {
-      throw new Error("Missing environment variable MEDIA_DIR");
-    }
-    return path.resolve(dir);
+  resolveKey(user: UserModel | string, key: string) {
+    const email = typeof user === "string" ? user : user.email;
+    return path.join(email, key);
   }
 }

@@ -17,30 +17,8 @@ export class UserManager {
     return (await this.db.users.where({ id }).count()) === 1;
   }
 
-  async fetchId(email: string): Promise<string | undefined> {
-    const users = await this.db.users.where({ email }).select("id");
-    return users[0]?.id;
-  }
-
-  async fetchEmail(id: string): Promise<string> {
-    return (await this.db.users.find(id).select("email")).email;
-  }
-
-  async fetchPermissions(userId: string): Promise<Set<IAuthPermission>> {
-    const roles = await this.db.userRoles
-      .where({ userId })
-      .join("role")
-      .select("role.permissions");
-    const permissions = roles.flatMap((r) => r.permissions);
-    return new Set(permissions as IAuthPermission[]);
-  }
-
-  async fetch(id: string): Promise<UserModel> {
-    const user = await this.getSafe(id);
-    if (!user) {
-      throw new Error(`user id=${id} not found`);
-    }
-    return user;
+  async fetch(filter: { id: string } | { email: string }): Promise<UserModel> {
+    return await this.db.users.selectAll().where(filter).take();
   }
 
   async fetchMany(ids: string[]): Promise<Map<string, UserModel>> {
@@ -52,9 +30,24 @@ export class UserManager {
     return await this.db.users.where().selectAll();
   }
 
-  async getSafe(id: string): Promise<UserModel | undefined> {
-    const [user] = await this.db.users.selectAll().where({ id });
-    return user;
+  async fetchPermissions(id: string) {
+    const roles = await this.db.userRoles
+      .where({ userId: id })
+      .join("role")
+      .select("role.permissions");
+    return new Set(
+      roles.flatMap((role) =>
+        role.permissions.map((value) => {
+          const permission = Object.values(IAuthPermission).find(
+            (p) => p === value,
+          );
+          if (!permission) {
+            throw new Error(`Permission value invalid: "${permission}"`);
+          }
+          return permission;
+        }),
+      ),
+    );
   }
 
   async fetchRolesByUser(userId: string): Promise<RoleModel[]> {
@@ -104,10 +97,6 @@ export class UserManager {
     username?: string;
     password?: string;
   }): Promise<UserModel> {
-    const query = this.whereEmailOrUsername(email, username);
-    if (await query.count()) {
-      throw new Error(`User ${email} already exists`);
-    }
     return await this.db.users
       .create({
         email,

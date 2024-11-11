@@ -9,7 +9,7 @@ import {
 import mime from "mime";
 import { RexContext } from "../auth/auth.context.js";
 import { UserManager } from "../user/user.manager.js";
-import { MediaManager, MediaStats } from "./media.manager.js";
+import { MediaManager } from "./media.manager.js";
 
 const HTTP_SUCCESS = 200;
 const HTTP_PARTIAL = 206;
@@ -46,14 +46,18 @@ export class MediaController {
       throw new Error("Forbidden");
     }
 
-    const user = { email: await this.userManager.fetchEmail(userId) };
-    const stats = await this.mediaManager.stat(user, key);
+    const { email } = await context.getUser();
+    const stats = await this.mediaManager.stat(email, key);
     if (!stats?.isFile()) {
       throw new Error(`Media "${key}" not found`);
     }
 
-    const content = this.getContentDetails(req, key, stats);
-    const stream = this.mediaManager.createReadStream(user, key, content.range);
+    const content = this.getContentResponse(req, key, stats);
+    const stream = this.mediaManager.createReadStream(
+      email,
+      key,
+      content.range,
+    );
     return res.status(content.status).headers(content.headers).send(stream);
   }
 
@@ -71,8 +75,8 @@ export class MediaController {
     if (!userId) {
       throw new Error("Forbidden");
     }
-    const email = await this.userManager.fetchEmail(userId);
-    const fileSize = await this.mediaManager.getRemainingSpace({ email });
+    const { email } = await context.getUser();
+    const fileSize = await this.mediaManager.getRemainingSpace(email);
     const data = await req.file({ limits: { fileSize } });
     if (!data) {
       throw new Error("Missing a multipart file");
@@ -81,10 +85,10 @@ export class MediaController {
     return { ok: true };
   }
 
-  getContentDetails(
+  getContentResponse(
     req: HttpRequest,
     key: string,
-    { size }: MediaStats,
+    { size }: { size: number },
   ): ContentDetails {
     const mimeType = mime.getType(key) ?? "text/plain";
     const { start, end } = this.getRange(req, size);

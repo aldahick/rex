@@ -6,8 +6,7 @@ import "reflect-metadata";
 import { resolve as resolvePath } from "node:path";
 import { pathToFileURL } from "node:url";
 import { container } from "@athenajs/core";
-import { rakeDb } from "rake-db";
-
+import { rakeDb } from "orchid-orm/migrations";
 import { RexConfig } from "../../config.js";
 import { BaseTable } from "../../model/base.table.js";
 

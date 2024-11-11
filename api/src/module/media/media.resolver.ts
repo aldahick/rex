@@ -21,7 +21,6 @@ import { UserModel } from "../../model/index.js";
 import { RexContext } from "../auth/auth.context.js";
 import { ProgressManager } from "../progress/progress.manager.js";
 import { ProgressResolver } from "../progress/progress.resolver.js";
-import { UserManager } from "../user/user.manager.js";
 import { MediaManager } from "./media.manager.js";
 
 @resolver()
@@ -31,7 +30,6 @@ export class MediaResolver {
     private readonly mediaManager: MediaManager,
     private readonly progressManager: ProgressManager,
     private readonly progressResolver: ProgressResolver,
-    private readonly userManager: UserManager,
   ) {}
 
   @resolveQuery()
@@ -40,8 +38,8 @@ export class MediaResolver {
     { key }: IQueryMediaItemArgs,
     context: RexContext,
   ): Promise<IQuery["mediaItem"]> {
-    const user = await this.fetchUser(context);
-    return this.mediaManager.get(user, key);
+    const { email } = await this.fetchUser(context);
+    return this.mediaManager.get(email, key);
   }
 
   @resolveMutation()
@@ -50,11 +48,11 @@ export class MediaResolver {
     { url, destinationKey, sync }: IMutationAddMediaDownloadArgs,
     context: RexContext,
   ): Promise<IMutation["addMediaDownload"]> {
-    const user = await this.fetchUser(context);
+    const { email } = await this.fetchUser(context);
     const progress = await this.progressManager.create("addMediaDownload");
     if (sync) {
       await this.mediaManager.download({
-        user,
+        email,
         url,
         destinationKey,
       });
@@ -67,7 +65,7 @@ export class MediaResolver {
       this.progressManager.resolveSafe(
         progress.id,
         this.mediaManager.download({
-          user,
+          email,
           url,
           destinationKey,
           progressId: progress.id,
@@ -83,8 +81,8 @@ export class MediaResolver {
     { key, data }: IMutationCreateMediaArgs,
     context: RexContext,
   ): Promise<IMutation["createMedia"]> {
-    const user = await this.fetchUser(context);
-    await this.mediaManager.create(user.email, key, data);
+    const { email } = await this.fetchUser(context);
+    await this.mediaManager.create(email, key, data);
     return true;
   }
 
@@ -106,8 +104,8 @@ export class MediaResolver {
     { key }: IMutationDeleteMediaArgs,
     context: RexContext,
   ): Promise<IMutation["deleteMedia"]> {
-    const user = await this.fetchUser(context);
-    await this.mediaManager.delete(user.email, key);
+    const { email } = await this.fetchUser(context);
+    await this.mediaManager.delete(email, key);
     return true;
   }
 
@@ -117,9 +115,21 @@ export class MediaResolver {
     args: never,
     context: RexContext,
   ): Promise<IMediaItem["children"][]> {
-    const user = await this.fetchUser(context);
+    const { email } = await this.fetchUser(context);
     return Promise.all(
-      parents.map((parent) => this.mediaManager.list(user, parent.key)),
+      parents.map(({ key }) => this.mediaManager.list(email, key)),
+    );
+  }
+
+  @resolveField("MediaItem.duration", true)
+  async duration(
+    items: IMediaItem[],
+    args: never,
+    context: RexContext,
+  ): Promise<IMediaItem["duration"][]> {
+    const { email } = await this.fetchUser(context);
+    return Promise.all(
+      items.map(({ key }) => this.mediaManager.getDuration(email, key)),
     );
   }
 
@@ -131,9 +141,10 @@ export class MediaResolver {
     ) {
       throw new Error("Forbidden");
     }
+    const user = await context.getUser();
     return {
-      id: context.userId,
-      email: await this.userManager.fetchEmail(context.userId),
+      id: user.id,
+      email: user.email,
     };
   }
 }

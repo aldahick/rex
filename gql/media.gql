@@ -13,6 +13,8 @@ extend type Query {
 type MediaItem {
   key: String!
   type: MediaItemType!
+  "Duration of this media in seconds. Only set for video and audio files."
+  duration: Int
   children: [MediaItem!]
 }
 

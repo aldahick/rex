@@ -8,7 +8,7 @@ export class UserTable extends BaseTable {
   columns = this.setColumns((t) => ({
     id: t.uuid().primaryKey(),
     email: t.text().unique(),
-    username: t.text().nullable(),
+    username: t.text().unique().nullable(),
     passwordHash: t.text().nullable(),
     jiraHost: t.text().nullable(),
     jiraApiToken: t.text().nullable(),

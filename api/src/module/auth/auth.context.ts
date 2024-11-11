@@ -4,11 +4,13 @@ import {
   ContextRequest,
   contextGenerator,
 } from "@athenajs/core";
+import { UserModel } from "../../model/user.model.js";
 import { UserManager } from "../user/user.manager.js";
 import { AuthManager } from "./auth.manager.js";
 
 export class RexContext {
   private permissions?: Set<IAuthPermission>;
+  private user?: UserModel;
 
   constructor(
     private readonly userManager: UserManager,
@@ -20,10 +22,23 @@ export class RexContext {
     if (!this.userId) {
       return false;
     }
-    if (!this.permissions) {
-      this.permissions = await this.userManager.fetchPermissions(this.userId);
-    }
+    await this.getUser().catch(() => undefined);
     return permissions.every((p) => this.permissions?.has(p));
+  }
+
+  async getUser() {
+    if (this.user) {
+      return this.user;
+    }
+    if (!this.userId) {
+      throw new Error();
+    }
+    // TODO replace with better-performing single query once ORM works better
+    [this.user, this.permissions] = await Promise.all([
+      await this.userManager.fetch({ id: this.userId }),
+      await this.userManager.fetchPermissions(this.userId),
+    ]);
+    return this.user;
   }
 }
 

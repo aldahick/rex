@@ -11,6 +11,15 @@ const typeIcons = {
   [IMediaItemType.Series]: CopyIcon,
 };
 
+const getDurationLabel = (totalSeconds: number) => {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = (totalSeconds % 60).toString().padStart(2, "0");
+  if (minutes) {
+    return `${minutes}m ${seconds}s`;
+  }
+  return `${seconds}s`;
+};
+
 export const FileListItem: React.FC<{ child: IMediaItem }> = ({ child }) => {
   const [, setOpenFile] = useOpenFile();
   const Icon = typeIcons[child.type];
@@ -24,6 +33,11 @@ export const FileListItem: React.FC<{ child: IMediaItem }> = ({ child }) => {
       <div className="flex">
         <Icon type={child.type} className="mr-4" />
         <span>{child.key.split("/").slice(-1)[0]}</span>
+        {typeof child.duration === "number" && (
+          <span className="grow text-end">
+            {getDurationLabel(child.duration)}
+          </span>
+        )}
       </div>
     </ListGroup.Item>
   );
