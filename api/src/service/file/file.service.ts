@@ -41,7 +41,6 @@ export class FileService {
   async stat(key: string) {
     const filename = this.getFilename(key);
     try {
-      await fs.mkdir(filename, { recursive: true });
       return await fs.stat(filename);
     } catch {}
   }
@@ -67,7 +66,10 @@ export class FileService {
   }
 
   getFilename(key: string) {
-    return path.resolve(this.root, key.replace(/^\//, "").replace(/\.\./g, ""));
+    return path.resolve(
+      this.root,
+      key.replace(/^\//, "").replace(/\.{2}/g, ""),
+    );
   }
 
   get root(): string {
