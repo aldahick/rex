@@ -28,7 +28,7 @@
     "generate": "graphql-codegen -c codegen.graphql.ts"
   },
   "dependencies": {
-    "@apollo/client": "^3.12.3",
+    "@apollo/client": "^3.12.6",
     "graphql-request": "6.1.0"
   },
   "devDependencies": {
