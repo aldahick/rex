@@ -27,4 +27,4 @@ jobs:
     uses: ./.github/workflows/publish-docker.yml
     with:
       directory: web
-      imageName: ghcr.io/aldahick/rex-web
+      tag: ghcr.io/aldahick/rex-web
