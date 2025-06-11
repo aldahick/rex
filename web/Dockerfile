@@ -17,7 +17,7 @@ COPY sdk/src src
 RUN pnpm build:ci
 
 WORKDIR /rex/web
-COPY web/postcss.config.js web/tailwind.config.ts web/tsconfig.json web/vite.config.ts web/index.html ./
+COPY web/tailwind.config.ts web/tsconfig.json web/vite.config.ts web/index.html ./
 COPY web/public public
 COPY web/src src
 RUN pnpm build

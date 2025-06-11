@@ -992,12 +992,15 @@ export function getSdk(
     getAuthToken(
       variables: IGetAuthTokenQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<IGetAuthTokenQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<IGetAuthTokenQuery>(GetAuthTokenDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
+          client.request<IGetAuthTokenQuery>({
+            document: GetAuthTokenDocument,
+            variables,
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
           }),
         "getAuthToken",
         "query",
@@ -1007,12 +1010,15 @@ export function getSdk(
     getConfig(
       variables?: IGetConfigQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<IGetConfigQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<IGetConfigQuery>(GetConfigDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
+          client.request<IGetConfigQuery>({
+            document: GetConfigDocument,
+            variables,
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
           }),
         "getConfig",
         "query",
@@ -1022,14 +1028,16 @@ export function getSdk(
     getBaseMediaItem(
       variables: IGetBaseMediaItemQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<IGetBaseMediaItemQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<IGetBaseMediaItemQuery>(
-            GetBaseMediaItemDocument,
+          client.request<IGetBaseMediaItemQuery>({
+            document: GetBaseMediaItemDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
+          }),
         "getBaseMediaItem",
         "query",
         variables,
@@ -1038,14 +1046,16 @@ export function getSdk(
     getDeepMediaItem(
       variables: IGetDeepMediaItemQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<IGetDeepMediaItemQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<IGetDeepMediaItemQuery>(
-            GetDeepMediaItemDocument,
+          client.request<IGetDeepMediaItemQuery>({
+            document: GetDeepMediaItemDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
+          }),
         "getDeepMediaItem",
         "query",
         variables,
@@ -1054,14 +1064,16 @@ export function getSdk(
     createMediaUpload(
       variables: ICreateMediaUploadMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<ICreateMediaUploadMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<ICreateMediaUploadMutation>(
-            CreateMediaUploadDocument,
+          client.request<ICreateMediaUploadMutation>({
+            document: CreateMediaUploadDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
+          }),
         "createMediaUpload",
         "mutation",
         variables,
@@ -1070,12 +1082,15 @@ export function getSdk(
     deleteMedia(
       variables: IDeleteMediaMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<IDeleteMediaMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<IDeleteMediaMutation>(DeleteMediaDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
+          client.request<IDeleteMediaMutation>({
+            document: DeleteMediaDocument,
+            variables,
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
           }),
         "deleteMedia",
         "mutation",
@@ -1085,14 +1100,16 @@ export function getSdk(
     addMediaDownload(
       variables: IAddMediaDownloadMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<IAddMediaDownloadMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<IAddMediaDownloadMutation>(
-            AddMediaDownloadDocument,
+          client.request<IAddMediaDownloadMutation>({
+            document: AddMediaDownloadDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
+          }),
         "addMediaDownload",
         "mutation",
         variables,
@@ -1101,12 +1118,15 @@ export function getSdk(
     createMedia(
       variables: ICreateMediaMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<ICreateMediaMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<ICreateMediaMutation>(CreateMediaDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
+          client.request<ICreateMediaMutation>({
+            document: CreateMediaDocument,
+            variables,
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
           }),
         "createMedia",
         "mutation",
@@ -1116,14 +1136,16 @@ export function getSdk(
     updateProjectConfig(
       variables: IUpdateProjectConfigMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<IUpdateProjectConfigMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<IUpdateProjectConfigMutation>(
-            UpdateProjectConfigDocument,
+          client.request<IUpdateProjectConfigMutation>({
+            document: UpdateProjectConfigDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
+          }),
         "updateProjectConfig",
         "mutation",
         variables,
@@ -1132,14 +1154,16 @@ export function getSdk(
     deleteProjectConfig(
       variables: IDeleteProjectConfigMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<IDeleteProjectConfigMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<IDeleteProjectConfigMutation>(
-            DeleteProjectConfigDocument,
+          client.request<IDeleteProjectConfigMutation>({
+            document: DeleteProjectConfigDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
+          }),
         "deleteProjectConfig",
         "mutation",
         variables,
@@ -1148,14 +1172,16 @@ export function getSdk(
     getProjectConfigs(
       variables?: IGetProjectConfigsQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<IGetProjectConfigsQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<IGetProjectConfigsQuery>(
-            GetProjectConfigsDocument,
+          client.request<IGetProjectConfigsQuery>({
+            document: GetProjectConfigsDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
+          }),
         "getProjectConfigs",
         "query",
         variables,
@@ -1164,14 +1190,16 @@ export function getSdk(
     getProjectBoards(
       variables: IGetProjectBoardsQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<IGetProjectBoardsQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<IGetProjectBoardsQuery>(
-            GetProjectBoardsDocument,
+          client.request<IGetProjectBoardsQuery>({
+            document: GetProjectBoardsDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
+          }),
         "getProjectBoards",
         "query",
         variables,
@@ -1180,14 +1208,16 @@ export function getSdk(
     getProjectBoard(
       variables: IGetProjectBoardQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<IGetProjectBoardQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<IGetProjectBoardQuery>(
-            GetProjectBoardDocument,
+          client.request<IGetProjectBoardQuery>({
+            document: GetProjectBoardDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
+          }),
         "getProjectBoard",
         "query",
         variables,
@@ -1196,14 +1226,16 @@ export function getSdk(
     getProjectSprint(
       variables: IGetProjectSprintQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<IGetProjectSprintQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<IGetProjectSprintQuery>(
-            GetProjectSprintDocument,
+          client.request<IGetProjectSprintQuery>({
+            document: GetProjectSprintDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
+          }),
         "getProjectSprint",
         "query",
         variables,
@@ -1212,12 +1244,15 @@ export function getSdk(
     createUser(
       variables: ICreateUserMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<ICreateUserMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<ICreateUserMutation>(CreateUserDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
+          client.request<ICreateUserMutation>({
+            document: CreateUserDocument,
+            variables,
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
           }),
         "createUser",
         "mutation",
@@ -1227,12 +1262,15 @@ export function getSdk(
     updateUser(
       variables: IUpdateUserMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit["signal"],
     ): Promise<IUpdateUserMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<IUpdateUserMutation>(UpdateUserDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
+          client.request<IUpdateUserMutation>({
+            document: UpdateUserDocument,
+            variables,
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
           }),
         "updateUser",
         "mutation",

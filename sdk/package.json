@@ -28,15 +28,15 @@
     "generate": "graphql-codegen -c codegen.graphql.ts"
   },
   "dependencies": {
-    "@apollo/client": "^3.12.6",
-    "graphql-request": "6.1.0"
+    "@apollo/client": "^3.13.8",
+    "graphql-request": "7.2.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.3",
-    "@graphql-codegen/typescript": "^4.1.2",
-    "@graphql-codegen/typescript-graphql-request": "^6.2.0",
-    "@graphql-codegen/typescript-operations": "^4.4.0",
-    "@graphql-codegen/typescript-react-apollo": "^4.3.2",
-    "tsc-watch": "^6.2.1"
+    "@graphql-codegen/cli": "^5.0.7",
+    "@graphql-codegen/typescript": "^4.1.6",
+    "@graphql-codegen/typescript-graphql-request": "^6.3.0",
+    "@graphql-codegen/typescript-operations": "^4.6.1",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.3",
+    "tsc-watch": "^7.1.1"
   }
 }

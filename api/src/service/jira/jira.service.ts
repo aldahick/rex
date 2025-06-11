@@ -5,8 +5,8 @@ export type {
   Issue as JiraIssue,
   Sprint as JiraSprint,
   User as JiraUser,
-} from "jira.js/out/agile/models/index.js";
-export type { Changelog as JiraChangelog } from "jira.js/out/version3/models/index.js";
+} from "jira.js/agile/models/index";
+export type { Changelog as JiraChangelog } from "jira.js/version3/models/index";
 
 export interface JiraApiConfig {
   host: string;
