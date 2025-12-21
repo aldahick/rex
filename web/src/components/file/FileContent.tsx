@@ -28,46 +28,43 @@ export const FileContent: React.FC<{
   });
   const contentUrl = `${config.apiUrl}/v1/media/content?${params}`;
 
-  switch (mimeType) {
-    case "audio/mp4":
-    case "audio/mpeg":
-      // biome-ignore lint/a11y/useMediaCaption: nope
-      return <audio controls autoPlay src={contentUrl} />;
-    case "application/mp4":
-    case "video/mp4":
-    case "video/quicktime":
-      return (
-        // biome-ignore lint/a11y/useMediaCaption: nope
-        <video
-          playsInline
-          controls
-          autoPlay
-          src={contentUrl}
-          style={{ maxWidth: "100%" }}
-        />
-      );
-    case "image/jpg":
-    case "image/jpeg":
-    case "image/png":
-    case "image/gif":
-      return (
-        <img
-          alt={item.key}
-          src={contentUrl}
-          onClick={onClick}
-          onKeyUp={onClick}
-          style={{ maxWidth: "100%" }}
-        />
-      );
-    case "text/html":
-    case "text/plain": {
-      return (
-        <Await resolve={fetch(contentUrl).then((r) => r.text())}>
-          <TextContent mimeType={mimeType} />
-        </Await>
-      );
-    }
-    default:
-      return <span>Unknown MIME type {mimeType}</span>;
+  if (mimeType?.startsWith("audio")) {
+    // biome-ignore lint/a11y/useMediaCaption: nope
+    return <audio controls autoPlay src={contentUrl} />;
   }
+
+  if (mimeType?.startsWith("video/") || mimeType === "application/mp4") {
+    return (
+      // biome-ignore lint/a11y/useMediaCaption: nope
+      <video
+        playsInline
+        controls
+        autoPlay
+        src={contentUrl}
+        style={{ maxWidth: "100%" }}
+      />
+    );
+  }
+
+  if (mimeType?.startsWith("image/")) {
+    return (
+      <img
+        alt={item.key}
+        src={contentUrl}
+        onClick={onClick}
+        onKeyUp={onClick}
+        style={{ maxWidth: "100%" }}
+      />
+    );
+  }
+
+  if (mimeType?.startsWith("text/")) {
+    return (
+      <Await resolve={fetch(contentUrl).then((r) => r.text())}>
+        <TextContent mimeType={mimeType} />
+      </Await>
+    );
+  }
+
+  return <span>Unknown MIME type {mimeType}</span>;
 };
