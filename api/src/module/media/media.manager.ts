@@ -119,9 +119,16 @@ export class MediaManager {
     );
     return await Promise.all(
       entries.map(async (entry) => {
+        const fullKey = path.join(key, entry.name).replace(/\\/g, "/");
+        const stats = entry.isSymbolicLink()
+          ? await this.fileService.stat(fullKey)
+          : entry;
+        if (!stats) {
+          throw new Error(`Failed to get stats for key ${fullKey}`);
+        }
         return {
-          key: path.join(key, entry.name).replace(/\\/g, "/"),
-          type: await this.getType(entry, path.join(dir, entry.name)),
+          key: fullKey,
+          type: await this.getType(stats, path.join(dir, entry.name)),
         };
       }),
     );
