@@ -2,7 +2,7 @@
   "name": "@aldahick/rex",
   "license": "MIT",
   "private": true,
-  "version": "1.1.13",
+  "version": "1.1.14",
   "packageManager": "pnpm@9.14.1",
   "scripts": {
     "version": "bash scripts/version.sh",
