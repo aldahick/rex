@@ -2,7 +2,7 @@ import { createReadStream, createWriteStream } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { Readable } from "node:stream";
-import { injectable } from "@athenajs/core";
+import { Logger, injectable } from "@athenajs/core";
 import { RexConfig } from "../../config.js";
 
 export interface ReadableStreamOptions {
@@ -12,7 +12,10 @@ export interface ReadableStreamOptions {
 
 @injectable()
 export class FileService {
-  constructor(private readonly config: RexConfig) {}
+  constructor(
+    private readonly config: RexConfig,
+    private readonly logger: Logger,
+  ) {}
 
   createReadStream(key: string, options?: ReadableStreamOptions) {
     return createReadStream(this.getFilename(key), options);
@@ -42,7 +45,9 @@ export class FileService {
     const filename = this.getFilename(key);
     try {
       return await fs.stat(filename);
-    } catch {}
+    } catch (err) {
+      this.logger.error(`Failed to get stats for key ${key}`, err);
+    }
   }
 
   async write(key: string, data: string | Readable) {

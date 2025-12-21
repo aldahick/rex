@@ -7,6 +7,7 @@ import axios from "axios";
 import { getAudioDurationInSeconds } from "get-audio-duration";
 import { getVideoDurationInSeconds } from "get-video-duration";
 import mime from "mime";
+import { filter, isTruthy } from "remeda";
 import { RexConfig } from "../../config.js";
 import { UserModel } from "../../model/index.js";
 import { FileUsageService } from "../../service/file/file-usage.service.js";
@@ -117,14 +118,15 @@ export class MediaManager {
     const entries = (await this.fileService.list(dir)).filter(
       (f) => !f.name.startsWith("."),
     );
-    return await Promise.all(
+    const results = await Promise.all(
       entries.map(async (entry) => {
         const fullKey = path.join(key, entry.name).replace(/\\/g, "/");
         const stats = entry.isSymbolicLink()
           ? await this.fileService.stat(fullKey)
           : entry;
         if (!stats) {
-          throw new Error(`Failed to get stats for key ${fullKey}`);
+          this.logger.error(`Failed to get stats for key ${fullKey}`);
+          return;
         }
         return {
           key: fullKey,
@@ -132,6 +134,7 @@ export class MediaManager {
         };
       }),
     );
+    return filter(results, isTruthy);
   }
 
   createReadStream(
