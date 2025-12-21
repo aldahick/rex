@@ -120,7 +120,8 @@ export class MediaManager {
     );
     const results = await Promise.all(
       entries.map(async (entry) => {
-        const fullKey = path.join(key, entry.name).replace(/\\/g, "/");
+        const fullKey = path.join(dir, entry.name);
+        const localKey = path.join(key, entry.name).replace(/\\/g, "/");
         const stats = entry.isSymbolicLink()
           ? await this.fileService.stat(fullKey)
           : entry;
@@ -129,7 +130,7 @@ export class MediaManager {
           return;
         }
         return {
-          key: fullKey,
+          key: localKey,
           type: await this.getType(stats, path.join(dir, entry.name)),
         };
       }),
