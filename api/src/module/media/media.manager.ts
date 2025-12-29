@@ -120,19 +120,11 @@ export class MediaManager {
     );
     const results = await Promise.all(
       entries.map(async (entry) => {
-        let fullKey = path.join(dir, entry.name);
-        let localKey = path.join(key, entry.name).replace(/\\/g, "/");
-        let stats = entry.isSymbolicLink()
+        const fullKey = path.join(dir, entry.name);
+        const localKey = path.join(key, entry.name).replace(/\\/g, "/");
+        const stats = entry.isSymbolicLink()
           ? await this.fileService.stat(fullKey)
           : entry;
-        if (stats?.isDirectory()) {
-          const children = await this.fileService.list(fullKey);
-          if (children.length === 1 && children[0]) {
-            stats = children[0];
-            fullKey += `/${stats.name}`;
-            localKey += `/${stats.name}`;
-          }
-        }
         if (!stats) {
           this.logger.error(`Failed to get stats for key ${fullKey}`);
           return;
