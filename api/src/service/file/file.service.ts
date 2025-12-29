@@ -45,8 +45,9 @@ export class FileService {
     const filename = this.getFilename(key);
     try {
       return await fs.stat(filename);
-    } catch (err) {
-      this.logger.error(`Failed to get stats for key ${key}`, err);
+    } catch {
+      // ignore error
+      return undefined;
     }
   }
 
