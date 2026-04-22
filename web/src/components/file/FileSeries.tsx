@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { Container, Row } from "react-bootstrap";
+import { useSearchParams } from "react-router";
 import { Pagination } from "../util/Pagination";
 import { FileContent } from "./FileContent";
 import { useRoot } from "./file.atom";
 
 export const FileSeries: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const initialPage = Number.parseInt(searchParams.get("p") ?? "0", 10);
+  const [page, setPage] = useState(
+    Number.isNaN(initialPage) || initialPage < 0 ? 0 : initialPage,
+  );
   const [root] = useRoot();
-  const [page, setPage] = useState(0);
 
   if (!root?.children?.length) {
     return null;
